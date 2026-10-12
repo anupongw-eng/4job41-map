@@ -1,0 +1,23 @@
+4 JOP 41 v24 — Landmark label visibility fix
+================================================
+
+Issue:
+- Key labels were hidden at the initial map zoom because the visibility threshold was too high.
+
+Fix:
+- Desktop label threshold: 14.7
+- Mobile label threshold: 15.5
+- Labels are re-evaluated immediately after map load
+- Stronger white label background/border for readability
+
+Key labels:
+- อาคาร QS
+- Zone E
+- ศูนย์ PGPR
+- Zone G
+- สนามฟุตบอล
+- โรงพยาบาล
+- อาคารขวัญเมือง
+- คณะเกษตรศาสตร์ฯ
+
+Marker coordinates are unchanged.

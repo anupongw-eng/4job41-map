@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "last_updated": "2026-10-12",
   "events": {
     "4": [
@@ -169,25 +169,25 @@
         "id": "volleyball_w_day5",
         "title": "วอลเลย์บอล (หญิง)",
         "time": "13:00–16:00",
-        "point": "GYM",
+        "point": "ACT",
         "place": "สนามกีฬาในร่ม/โดม (หมุดเลขที่ 4)",
         "status": "confirmed",
-        "lat": 16.750885906084104,
-        "lon": 100.19312953583223,
-        "coord_status": "verified_master",
-        "coord_source": "4JOP41 master"
+        "lat": 16.751441802825738,
+        "lon": 100.19289804945338,
+        "coord_status": "verified_user",
+        "coord_source": "user-confirmed coordinate"
       },
       {
         "id": "volleyball_m_day5",
         "title": "วอลเลย์บอล (ชาย)",
         "time": "13:00–16:00",
-        "point": "GYM",
+        "point": "ACT",
         "place": "สนามกีฬาในร่ม/โดม (หมุดเลขที่ 4)",
         "status": "confirmed",
-        "lat": 16.750885906084104,
-        "lon": 100.19312953583223,
-        "coord_status": "verified_master",
-        "coord_source": "4JOP41 master"
+        "lat": 16.751441802825738,
+        "lon": 100.19289804945338,
+        "coord_status": "verified_user",
+        "coord_source": "user-confirmed coordinate"
       },
       {
         "id": "staff_welcome_dinner",
@@ -303,25 +303,25 @@
         "id": "volleyball_w_day6",
         "title": "วอลเลย์บอล (หญิง)",
         "time": "13:00–16:00",
-        "point": "GYM",
+        "point": "ACT",
         "place": "สนามกีฬาในร่ม/โดม (หมุดเลขที่ 4)",
         "status": "confirmed",
-        "lat": 16.750885906084104,
-        "lon": 100.19312953583223,
-        "coord_status": "verified_master",
-        "coord_source": "4JOP41 master"
+        "lat": 16.751441802825738,
+        "lon": 100.19289804945338,
+        "coord_status": "verified_user",
+        "coord_source": "user-confirmed coordinate"
       },
       {
         "id": "volleyball_m_day6",
         "title": "วอลเลย์บอล (ชาย)",
         "time": "13:00–16:00",
-        "point": "GYM",
+        "point": "ACT",
         "place": "สนามกีฬาในร่ม/โดม (หมุดเลขที่ 4)",
         "status": "confirmed",
-        "lat": 16.750885906084104,
-        "lon": 100.19312953583223,
-        "coord_status": "verified_master",
-        "coord_source": "4JOP41 master"
+        "lat": 16.751441802825738,
+        "lon": 100.19289804945338,
+        "coord_status": "verified_user",
+        "coord_source": "user-confirmed coordinate"
       }
     ],
     "7": [
@@ -426,14 +426,13 @@
         "id": "traditional_sports",
         "title": "การแข่งขันกีฬาพื้นบ้าน",
         "time": "13:00–16:00",
-        "point": "ACT",
+        "point": "GYM",
         "place": "อาคารกีฬาอเนกประสงค์ (โดม หมุดเลขที่ 5)",
         "status": "confirmed",
-        "map_note": "ใช้จุดอาคารกิจกรรมข้างอาคารอเนกประสงค์เป็นจุดอ้างอิงจาก master ปัจจุบัน",
-        "lat": 16.75144833170893,
-        "lon": 100.1928839629854,
-        "coord_status": "verified_master",
-        "coord_source": "4JOP41 master"
+        "lat": 16.750870335843896,
+        "lon": 100.19313140162897,
+        "coord_status": "verified_user",
+        "coord_source": "user-confirmed coordinate"
       },
       {
         "id": "summary_meeting",
