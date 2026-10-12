@@ -51,7 +51,6 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,122,69,.45)}70%{box-shadow:0 0 0 14px rgba(31,122,69,0)}100%{box-shadow:0 0 0 0 rgba(31,122,69,0)}}
 @media(prefers-reduced-motion:reduce){.eventpulse{animation:none}}
 
-
 .finder{margin-top:10px}
 .finder-results{display:grid;gap:7px;margin-top:8px}
 .finder-item{border:1px solid var(--line);border-radius:10px;padding:9px;background:#fff;cursor:pointer}
@@ -61,7 +60,6 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 .finder-tag{display:inline-block;font-size:10px;border-radius:999px;background:#eef4f0;padding:2px 6px;margin-top:5px}
 .noresult{font-size:12px;color:var(--muted);padding:8px 2px;line-height:1.45}
 
-
 .guidegrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
 .guidebtn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 7px;font-weight:800;cursor:pointer;text-align:center}
 .guidebtn.active{background:#e5f1e9;color:#145d35;border-color:#b9d3c2}
@@ -69,7 +67,6 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 .guidetitle{font-weight:900}
 .guidemeta{font-size:12px;color:var(--muted);line-height:1.45;margin-top:4px}
 .guide-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
-
 
 .mobile-home{display:none}
 .bottomnav{display:none}
@@ -103,7 +100,6 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   .bottomnav span{display:block;font-size:18px;line-height:1;margin-bottom:3px}
 }
 
-
 .release-logo{width:56px;height:56px;object-fit:contain;display:block}
 .mobile-logo-img{width:54px;height:54px;object-fit:contain;display:block}
 .service-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
@@ -111,12 +107,10 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 .service-link small{display:block;color:var(--muted);font-weight:500;font-size:11px;margin-top:2px}
 .release-note{margin-top:10px;padding:9px 10px;border-radius:10px;background:#eef6f1;border:1px solid #cfe2d6;font-size:11px;line-height:1.4;color:#294736}
 
-
 .map-fallback{display:none;position:absolute;inset:0;z-index:10;background:#f4f7f5;padding:20px;align-items:center;justify-content:center}
 .map-fallback.show{display:flex}
 .fallback-card{max-width:460px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;text-align:center}
 .fallback-card h3{margin:0 0 8px}
-
 
 .desktop-brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .desktop-brand h1{margin:0}
@@ -137,6 +131,11 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   .title{margin:12px 0 7px}
 }
 
+.map-label.label-hidden{display:none}
+@media(max-width:760px){
+  .map-label{font-size:10px;padding:2px 4px}
+}
+
 </style>
 </head>
 <body>
@@ -146,7 +145,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <img class="release-logo" src="logo-4job.png" alt="โลโก้งาน 4 จอบ">
     <div>
       <h1>4 จอบแห่งชาติ ครั้งที่ 41</h1>
-      <div class="sub">Public Release v14 — อาคาร 3D จากข้อมูลแผนที่จริง</div>
+      <div class="sub">Public Release v17 — อาคาร 3D จากข้อมูลแผนที่จริง</div>
     </div>
   </div>
   
@@ -155,7 +154,6 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   <div class="title">ค้นหากิจกรรม</div>
   <input id="activitySearch" class="search" placeholder="เช่น เซทแมลง, พิธีเปิด, ฟุตบอล, เข้าด้ามจอบ…">
   <div id="activityResults" class="finder-results"></div>
-
 
   <div class="sidebar-section"><details class="collapsible" open><summary>จุดสำคัญ</summary><div class="inside">
   <div class="quick">
@@ -166,7 +164,6 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <button class="q" data-id="KW">ที่พักหญิง<small>อาคารขวัญเมือง</small></button>
     <button class="q" data-id="HOSP">โรงพยาบาล<small>24 ชั่วโมง</small></button>
   </div></div></details></div>
-
 
   <div class="title">ฉันต้องการไป…</div>
   <div class="guidegrid">
@@ -201,7 +198,6 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <button class="btn" id="go" style="width:100%">เปิดเส้นทางใน Google Maps</button>
   </div>
 
-
   <div class="title">กิจกรรมตามวัน</div>
   <div class="daybar">
     <button class="daybtn active" data-day="4">4 พ.ย.</button>
@@ -212,10 +208,10 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   </div>
   <div id="dayEvents" class="eventbox"></div>
 
-
-  <div class="release-note"><b>ข้อมูลการเข้า–ออก:</b> ประตู 2 เปิดใช้งานช่วง 06:00–18:00 น. และบริเวณหน้าโรงพยาบาลห้ามจอดรอหรือรับ–ส่งกีดขวางเส้นทาง</div>
-  <div class="title">บริการออนไลน์</div>
-  <div class="release-note"><b>ข้อมูลการเข้า–ออก:</b> ประตู 2 เปิดใช้งานช่วง 06:00–18:00 น. และบริเวณหน้าโรงพยาบาลห้ามจอดรอหรือรับ–ส่งกีดขวางเส้นทาง</div>
+  
+  <div class="release-note"><b>ข้อมูลการเข้า–ออก:</b> ประตู 2 เปิดใช้งานช่วง 06:00–18:00 น. และบริเวณหน้าโรงพยาบาล ห้ามจอดรอหรือรับ–ส่งกีดขวางเส้นทาง</div>
+<div class="title">บริการออนไลน์</div>
+  
     <div class="service-row">
     <a class="service-link" href="https://transit.nu.ac.th/" target="_blank" rel="noopener">
       NU Transit
@@ -243,7 +239,6 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     และยังไม่สร้าง Zone polygon จนกว่าจะยืนยันขอบเขตจริง
   </div>
 </aside>
-
 
 <main class="mapwrap">
   <section id="mobileHome" class="mobile-home">
@@ -305,7 +300,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <button id="top">มุมบน</button>
     <button id="tilt">3D</button>
   </div>
-  <div class="status">Public Release v14 • ตำแหน่ง marker และ label anchor ใช้พิกัด master ที่ยืนยันแล้ว • อาคาร 3D ใช้ footprint/height จากข้อมูลแผนที่จริง • การนำทางส่งต่อไปยัง Google Maps และ NU Transit</div>
+  <div class="status">Public Release v17 • ตำแหน่ง marker และ label anchor ใช้พิกัด master ที่ยืนยันแล้ว • label สำคัญจะแสดงเมื่อซูมเข้าเพียงพอ • อาคาร 3D ใช้ footprint/height จากข้อมูลแผนที่จริง • การนำทางส่งต่อไปยัง Google Maps และ NU Transit</div>
 
   <nav class="bottomnav" aria-label="เมนูหลัก">
     <button class="active" data-tab="home"><span>⌂</span>หน้าแรก</button>
@@ -353,22 +348,22 @@ const markers = [];
 const pts = [];
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-
 const LABEL_IDS = ["QS","E","PGPR","G","FB1","HOSP","KW","AG"];
 const LABEL_TEXT = {
-  QS:"QS",
+  QS:"อาคาร QS",
   E:"Zone E",
-  PGPR:"PGPR",
+  PGPR:"ศูนย์ PGPR",
   G:"Zone G",
   FB1:"สนามฟุตบอล",
   HOSP:"โรงพยาบาล",
-  KW:"ขวัญเมือง",
+  KW:"อาคารขวัญเมือง",
   AG:"คณะเกษตรศาสตร์ฯ"
 };
 const LABEL_OFFSETS = {
   QS:[18,-18], E:[18,-18], PGPR:[18,-18], G:[18,-18],
   FB1:[18,-18], HOSP:[18,-18], KW:[18,-18], AG:[18,-18]
 };
+const landmarkLabelMarkers=[];
 function addLandmarkLabels(){
   for(const id of LABEL_IDS){
     const x=markers.find(m=>m.id===id);
@@ -376,10 +371,22 @@ function addLandmarkLabels(){
     const el=document.createElement("div");
     el.className="map-label";
     el.textContent=LABEL_TEXT[id]||id;
-    new maplibregl.Marker({element:el,anchor:"left",offset:LABEL_OFFSETS[id]||[14,-14]})
+    const lm=new maplibregl.Marker({element:el,anchor:"left",offset:LABEL_OFFSETS[id]||[14,-14]})
       .setLngLat([x.lon,x.lat]).addTo(map);
+    landmarkLabelMarkers.push({id,marker:lm,el});
+  }
+  updateLabelVisibility();
+}
+function updateLabelVisibility(){
+  const z=map.getZoom();
+  const mobile=window.matchMedia("(max-width:760px)").matches;
+  const threshold=mobile?16.2:15.6;
+  for(const x of landmarkLabelMarkers){
+    x.el.classList.toggle("label-hidden", z<threshold);
   }
 }
+map.on("zoom",updateLabelVisibility);
+window.addEventListener("resize",updateLabelVisibility);
 
 map.on("load",()=>{
   const layers=map.getStyle().layers||[];
@@ -430,7 +437,7 @@ map.on("load",()=>{
 
   const bounds=new maplibregl.LngLatBounds();
   DATA.features.filter(f=>f.properties.status!=="obsolete_for_competition").forEach(f=>bounds.extend(f.geometry.coordinates));
-  map.fitBounds(bounds,{padding:45,pitch:55,bearing:-18,maxZoom:16.4});
+  map.fitBounds(bounds,{padding:45,pitch:55,bearing:-18,maxZoom:16.55});
   addLandmarkLabels();
 });
 
@@ -473,12 +480,12 @@ const EVENTS = {
   "4":[
     {id:"opening",title:"พิธีเปิด / งานเลี้ยงต้อนรับ",time:"17:00–22:00",point:"E",place:"Zone E — ลานกิจกรรมประตู 5",status:"confirmed"}
   ],
-  "5":[],
-  "6":[],
+  "5":[], // ยังไม่ได้ผูกกำหนดการรายกิจกรรม
+  "6":[], // ยังไม่ได้ผูกกำหนดการรายกิจกรรม
   "7":[
     {id:"closing",title:"พิธีปิด",time:"17:00–22:00",point:"E",place:"Zone E — ลานกิจกรรมประตู 5",status:"confirmed"}
   ],
-  "8":[]
+  "8":[] // ยังไม่ได้ผูกกำหนดการรายกิจกรรม
 };
 
 let eventMarker = null;
@@ -488,7 +495,7 @@ function renderDay(day){
   const evs=EVENTS[day]||[];
   if(eventMarker){eventMarker.remove();eventMarker=null;}
   if(!evs.length){
-    box.innerHTML=`<div class="emptyday">ยังไม่ได้ผูกกำหนดการรายกิจกรรมของวันที่ ${day} พฤศจิกายน 2569 เข้ากับแผนที่ในรุ่นนี้ เพื่อหลีกเลี่ยงการเติมข้อมูลที่ยังไม่ได้ยืนยัน</div>`;
+    box.innerHTML=`<div class="emptyday">ยังไม่ได้ผูกกำหนดการรายกิจกรรมของวันที่ ${day} พฤศจิกายน 2569 เข้ากับแผนที่ กรุณาตรวจสอบกำหนดการฉบับปัจจุบัน<br><a href="https://ww5.agi.nu.ac.th/4jobb41/schedule" target="_blank" rel="noopener">เปิดกำหนดการงาน</a></div>`;
     return;
   }
   box.innerHTML=evs.map(e=>`
@@ -511,7 +518,6 @@ function renderDay(day){
 
 document.querySelectorAll(".daybtn").forEach(b=>b.addEventListener("click",()=>renderDay(b.dataset.day)));
 renderDay("4");
-
 
 const ACTIVITIES = [
   {
@@ -609,7 +615,6 @@ function renderActivities(query=""){
 const activitySearch=document.getElementById("activitySearch");
 activitySearch.addEventListener("input",e=>renderActivities(e.target.value));
 renderActivities("__initial__");
-
 
 const GUIDE = {
   student: {
@@ -744,7 +749,6 @@ document.querySelectorAll(".guidebtn").forEach(b=>b.addEventListener("click",()=
 }));
 document.getElementById("guideDest").addEventListener("change",renderGuide);
 
-
 function mobileShowHome(){
   const h=document.getElementById("mobileHome");
   h?.classList.remove("hidden");
@@ -855,7 +859,6 @@ function renderMobileActivities(q=""){
   mar.querySelectorAll("[data-mpoint]").forEach(x=>x.onclick=()=>mobileFocusPoint(x.dataset.mpoint));
 }
 mas?.addEventListener("input",e=>renderMobileActivities(e.target.value));
-
 
 let mapLoadedOk=false;
 map.on("load",()=>{ mapLoadedOk=true; });
