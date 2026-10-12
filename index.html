@@ -422,20 +422,30 @@ function addLandmarkLabels(){
     landmarkLabelMarkers.push({id,marker:lm,el});
   }
   updateLabelVisibility();
+  if(eventLabelMarker){ eventLabelMarker.getElement().style.display="none"; }
+  if(eventMarker){ eventMarker.getElement().style.display="none"; }
 }
 function updateLabelVisibility(){
   const z=map.getZoom();
   const mobile=window.matchMedia("(max-width:760px)").matches;
   const mobileCore=new Set(["QS","E","FB1","HOSP","PGPR","AG"]);
+  const mobileHome=document.getElementById("mobileHome");
+  const onMobileHome=mobile && mobileHome && !mobileHome.classList.contains("hidden");
+
   for(const x of landmarkLabelMarkers){
     let hide=false;
-    if(mobile){
-      // Core public landmarks are always visible on mobile.
-      // Additional labels appear after zooming in.
+
+    if(onMobileHome){
+      // The mobile home screen covers the map; hide map labels so they do not
+      // bleed through above the home cards.
+      hide=true;
+    }else if(mobile){
+      // On the actual map tab, keep the most useful labels visible.
       hide = mobileCore.has(x.id) ? false : z < 15.4;
     }else{
       hide = z < 14.7;
     }
+
     x.el.classList.toggle("label-hidden", hide);
   }
 }
@@ -1304,11 +1314,17 @@ function mobileShowHome(){
   const h=document.getElementById("mobileHome");
   h?.classList.remove("hidden");
   document.getElementById("mobileSheet").style.display="none";
+  updateLabelVisibility();
 }
 function mobileShowMap(){
   document.getElementById("mobileHome")?.classList.add("hidden");
   document.getElementById("mobileSheet").style.display="none";
-  setTimeout(()=>map.resize(),80);
+  setTimeout(()=>{
+    map.resize();
+    if(eventLabelMarker){ eventLabelMarker.getElement().style.display="block"; }
+    if(eventMarker){ eventMarker.getElement().style.display="block"; }
+    updateLabelVisibility();
+  },80);
 }
 function mobileOpenSheet(title,body){
   mobileShowMap();
