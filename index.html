@@ -147,6 +147,13 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 .day-event-actions .btn{padding:8px 9px}
 .schedule-missing{font-size:12px;line-height:1.45;color:#6a4a00;background:#fff8e8;border:1px solid #f0dfb9;border-radius:10px;padding:9px 10px}
 
+
+.event-context-label{
+  font-size:11px;font-weight:900;background:rgba(255,250,235,.97);
+  border:1px solid #e7c98f;border-radius:7px;padding:3px 6px;
+  white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.14);color:#4c3510
+}
+
 </style>
 </head>
 <body>
@@ -156,7 +163,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <img class="release-logo" src="logo-4job.png" alt="โลโก้งาน 4 จอบ">
     <div>
       <h1>4 จอบแห่งชาติ ครั้งที่ 41</h1>
-      <div class="sub">Public Release v24 — อาคาร 3D จากข้อมูลแผนที่จริง</div>
+      <div class="sub">Public Release v25 — อาคาร 3D จากข้อมูลแผนที่จริง</div>
     </div>
   </div>
   
@@ -312,7 +319,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <button id="top">มุมบน</button>
     <button id="tilt">3D</button>
   </div>
-  <div class="status">Public Release v24 • ตำแหน่ง marker และ label anchor ใช้พิกัด master ที่ยืนยันแล้ว • label จุดสำคัญจะแสดงตั้งแต่มุมมองเริ่มต้น และยังยึดพิกัด master เดิม • อาคาร 3D ใช้ footprint/height จากข้อมูลแผนที่จริง • การนำทางส่งต่อไปยัง Google Maps และ NU Transit</div>
+  <div class="status">Public Release v25 • ตำแหน่ง marker และ label anchor ใช้พิกัด master ที่ยืนยันแล้ว • label จุดสำคัญจะแสดงตั้งแต่มุมมองเริ่มต้น และเมื่อเลือกกิจกรรม ระบบจะแสดงป้ายชื่อกิจกรรมตรงพิกัดนั้นโดยไม่ทำให้หน้าแรกแน่นเกินไป • อาคาร 3D ใช้ footprint/height จากข้อมูลแผนที่จริง • การนำทางส่งต่อไปยัง Google Maps และ NU Transit</div>
 
   <nav class="bottomnav" aria-label="เมนูหลัก">
     <button class="active" data-tab="home"><span>⌂</span>หน้าแรก</button>
@@ -956,6 +963,7 @@ function renderDay(day){
   const box=document.getElementById("dayEvents");
   const evs=EVENTS[day]||[];
   if(eventMarker){eventMarker.remove();eventMarker=null;}
+  if(eventLabelMarker){eventLabelMarker.remove();eventLabelMarker=null;}
 
   if(!evs.length){
     const msg = `ยังไม่ได้ผูกกำหนดการรายกิจกรรมของวันที่ ${day} พฤศจิกายน 2569 เข้ากับแผนที่`;
@@ -1004,12 +1012,21 @@ function renderDay(day){
 
   box.querySelectorAll("[data-event-lat][data-event-lon]").forEach(btn=>btn.addEventListener("click",()=>{
     const lat=parseFloat(btn.dataset.eventLat), lon=parseFloat(btn.dataset.eventLon);
+    const title=btn.dataset.eventTitle||"จุดกิจกรรม";
     if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
     map.flyTo({center:[lon,lat],zoom:18,pitch:60,bearing:-18,essential:true});
+
     const pulse=document.createElement("div");
     pulse.className="eventpulse";
     if(eventMarker) eventMarker.remove();
     eventMarker=new maplibregl.Marker({element:pulse,anchor:"center"}).setLngLat([lon,lat]).addTo(map);
+
+    const lab=document.createElement("div");
+    lab.className="event-context-label";
+    lab.textContent=title;
+    if(eventLabelMarker) eventLabelMarker.remove();
+    eventLabelMarker=new maplibregl.Marker({element:lab,anchor:"bottom",offset:[0,-14]})
+      .setLngLat([lon,lat]).addTo(map);
   }));
 }
 
