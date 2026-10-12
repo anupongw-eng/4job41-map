@@ -121,6 +121,22 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 .desktop-brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .desktop-brand h1{margin:0}
 .release-logo{width:64px;height:64px;object-fit:contain;flex:0 0 auto}
+
+.sidebar-section{margin-top:12px}
+.collapsible{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
+.collapsible summary{list-style:none;cursor:pointer;padding:10px 12px;font-weight:900;display:flex;justify-content:space-between;align-items:center}
+.collapsible summary::-webkit-details-marker{display:none}
+.collapsible summary:after{content:"▾";font-size:12px;color:var(--muted)}
+.collapsible[open] summary:after{content:"▴"}
+.collapsible .inside{padding:0 10px 10px}
+.map-label{font-size:11px;font-weight:900;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:6px;padding:2px 5px;white-space:nowrap;box-shadow:0 2px 7px rgba(0,0,0,.10)}
+@media(min-width:761px){
+  .side{padding:14px}
+  .quick{gap:6px}
+  .q{padding:8px}
+  .title{margin:12px 0 7px}
+}
+
 </style>
 </head>
 <body>
@@ -130,7 +146,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <img class="release-logo" src="logo-4job.png" alt="โลโก้งาน 4 จอบ">
     <div>
       <h1>4 จอบแห่งชาติ ครั้งที่ 41</h1>
-      <div class="sub">Public Release v13 — อาคาร 3D จากข้อมูลแผนที่จริง</div>
+      <div class="sub">Public Release v14 — อาคาร 3D จากข้อมูลแผนที่จริง</div>
     </div>
   </div>
   
@@ -141,7 +157,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   <div id="activityResults" class="finder-results"></div>
 
 
-  <div class="title">จุดสำคัญ</div>
+  <div class="sidebar-section"><details class="collapsible" open><summary>จุดสำคัญ</summary><div class="inside">
   <div class="quick">
     <button class="q" data-id="E">พิธีเปิด–ปิด<small>Zone E</small></button>
     <button class="q" data-id="QS">อาคาร QS<small>Zone A</small></button>
@@ -149,7 +165,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <button class="q" data-id="PGPR">เข้าด้ามจอบ<small>ศูนย์ PGPR</small></button>
     <button class="q" data-id="KW">ที่พักหญิง<small>อาคารขวัญเมือง</small></button>
     <button class="q" data-id="HOSP">โรงพยาบาล<small>24 ชั่วโมง</small></button>
-  </div>
+  </div></div></details></div>
 
 
   <div class="title">ฉันต้องการไป…</div>
@@ -214,13 +230,13 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     แผนที่นี้ใช้พิกัดที่ยืนยันแล้วเป็นฐาน และส่งต่อการนำทางจริงไปยัง Google Maps เพื่อหลีกเลี่ยงการวาดเส้นทางผิดถนน
   </div>
 
-  <div class="title">เส้นทางงาน</div>
+  <div class="sidebar-section"><details class="collapsible"><summary>เส้นทางงาน</summary><div class="inside">
   <div class="row">
     <a id="r1" class="btn blue" target="_blank">R1</a>
     <a id="r4" class="btn blue" target="_blank">R4</a>
     <a id="r5" class="btn blue" target="_blank">R5</a>
     <a id="r6" class="btn blue" target="_blank">R6</a>
-  </div>
+  </div></div></details></div>
 
   <div class="note">
     3D ในรุ่นนี้ใช้ footprint/ความสูงอาคารจากข้อมูล vector map จริงเมื่อมีข้อมูล ไม่ได้สร้างรูปอาคารด้วย AI
@@ -289,7 +305,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <button id="top">มุมบน</button>
     <button id="tilt">3D</button>
   </div>
-  <div class="status">Public Release v13 • ตำแหน่ง marker ใช้พิกัด master ที่ยืนยันแล้ว • อาคาร 3D ใช้ footprint/height จากข้อมูลแผนที่จริง • การนำทางส่งต่อไปยัง Google Maps และ NU Transit</div>
+  <div class="status">Public Release v14 • ตำแหน่ง marker และ label anchor ใช้พิกัด master ที่ยืนยันแล้ว • อาคาร 3D ใช้ footprint/height จากข้อมูลแผนที่จริง • การนำทางส่งต่อไปยัง Google Maps และ NU Transit</div>
 
   <nav class="bottomnav" aria-label="เมนูหลัก">
     <button class="active" data-tab="home"><span>⌂</span>หน้าแรก</button>
@@ -336,6 +352,34 @@ map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"bottom-r
 const markers = [];
 const pts = [];
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+
+const LABEL_IDS = ["QS","E","PGPR","G","FB1","HOSP","KW","AG"];
+const LABEL_TEXT = {
+  QS:"QS",
+  E:"Zone E",
+  PGPR:"PGPR",
+  G:"Zone G",
+  FB1:"สนามฟุตบอล",
+  HOSP:"โรงพยาบาล",
+  KW:"ขวัญเมือง",
+  AG:"คณะเกษตรศาสตร์ฯ"
+};
+const LABEL_OFFSETS = {
+  QS:[18,-18], E:[18,-18], PGPR:[18,-18], G:[18,-18],
+  FB1:[18,-18], HOSP:[18,-18], KW:[18,-18], AG:[18,-18]
+};
+function addLandmarkLabels(){
+  for(const id of LABEL_IDS){
+    const x=markers.find(m=>m.id===id);
+    if(!x) continue;
+    const el=document.createElement("div");
+    el.className="map-label";
+    el.textContent=LABEL_TEXT[id]||id;
+    new maplibregl.Marker({element:el,anchor:"left",offset:LABEL_OFFSETS[id]||[14,-14]})
+      .setLngLat([x.lon,x.lat]).addTo(map);
+  }
+}
 
 map.on("load",()=>{
   const layers=map.getStyle().layers||[];
@@ -386,7 +430,8 @@ map.on("load",()=>{
 
   const bounds=new maplibregl.LngLatBounds();
   DATA.features.filter(f=>f.properties.status!=="obsolete_for_competition").forEach(f=>bounds.extend(f.geometry.coordinates));
-  map.fitBounds(bounds,{padding:55,pitch:55,bearing:-18});
+  map.fitBounds(bounds,{padding:45,pitch:55,bearing:-18,maxZoom:16.4});
+  addLandmarkLabels();
 });
 
 document.getElementById("top").onclick=()=>map.easeTo({pitch:0,bearing:0,duration:700});
@@ -531,6 +576,7 @@ function renderActivities(query=""){
   const box=document.getElementById("activityResults");
   const q=query.trim().toLowerCase();
   let rows=ACTIVITIES;
+  if(query==="__initial__"){box.innerHTML="";return;}
   if(q){
     rows=ACTIVITIES.filter(a=>
       a.title.toLowerCase().includes(q) ||
@@ -562,7 +608,7 @@ function renderActivities(query=""){
 
 const activitySearch=document.getElementById("activitySearch");
 activitySearch.addEventListener("input",e=>renderActivities(e.target.value));
-renderActivities("");
+renderActivities("__initial__");
 
 
 const GUIDE = {
