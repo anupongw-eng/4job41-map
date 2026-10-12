@@ -133,7 +133,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 
 .map-label.label-hidden{display:none}
 @media(max-width:760px){
-  .map-label{font-size:10px;padding:2px 4px}
+  .map-label{font-size:10px;padding:2px 4px;max-width:120px;overflow:hidden;text-overflow:ellipsis}
 }
 
 
@@ -399,9 +399,17 @@ function addLandmarkLabels(){
 function updateLabelVisibility(){
   const z=map.getZoom();
   const mobile=window.matchMedia("(max-width:760px)").matches;
-  const threshold=mobile?15.5:14.7;
+  const mobileCore=new Set(["QS","E","FB1","HOSP","PGPR","AG"]);
   for(const x of landmarkLabelMarkers){
-    x.el.classList.toggle("label-hidden", z<threshold);
+    let hide=false;
+    if(mobile){
+      // At the opening mobile view show only the most useful landmarks.
+      // When zoomed in, reveal all verified landmark labels.
+      hide = z < 15.4 ? !mobileCore.has(x.id) : false;
+    }else{
+      hide = z < 14.7;
+    }
+    x.el.classList.toggle("label-hidden", hide);
   }
 }
 map.on("zoom",updateLabelVisibility);
