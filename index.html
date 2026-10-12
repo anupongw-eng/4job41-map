@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f7a45">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="4 จอบ 41">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>4 JOP 41 — Public Release v12</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.css">
+<style>
+:root {
+ --panel:#fff; --text:#17221b; --muted:#67736d; --line:#dfe6e1; --green:#1f7a45; --blue:#2457a6;
+}
+*{box-sizing:border-box} html,body{margin:0;height:100%;font-family:system-ui,-apple-system,"Noto Sans Thai",sans-serif;color:var(--text)}
+.app{display:grid;grid-template-columns:330px 1fr;height:100%}
+.side{background:rgba(255,255,255,.98);border-right:1px solid var(--line);padding:16px;overflow:auto}
+.mapwrap{position:relative;min-width:0} #map{height:100%;width:100%}
+h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-bottom:12px}
+.search,select{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:10px;font-size:15px;background:#fff}
+.title{font-weight:800;font-size:13px;margin:16px 0 8px}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.q{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px;text-align:left;font-weight:800;cursor:pointer}
+.q small{display:block;font-weight:500;color:var(--muted);margin-top:2px}
+.card{border:1px solid var(--line);border-radius:12px;padding:11px;background:#fff;margin-top:9px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{border:0;border-radius:9px;padding:9px 11px;background:var(--green);color:#fff;font-weight:800;cursor:pointer;text-decoration:none;text-align:center}
+.btn.blue{background:var(--blue)}
+.note{font-size:12px;line-height:1.45;color:#6a4a00;background:#fff8e8;border:1px solid #f0dfb9;padding:9px 10px;border-radius:10px;margin-top:10px}
+.mapui{position:absolute;right:14px;top:14px;z-index:2;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:12px;padding:8px;display:flex;gap:6px}
+.mapui button{border:0;background:#eef3ef;border-radius:8px;padding:8px 10px;font-weight:800;cursor:pointer}
+.status{position:absolute;left:14px;bottom:14px;z-index:2;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:11px;max-width:min(720px,calc(100% - 28px))}
+.marker{width:18px;height:18px;border:3px solid #fff;border-radius:50%;box-shadow:0 3px 9px rgba(0,0,0,.28)}
+.label{font-size:11px;font-weight:800;background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:6px;padding:2px 5px;white-space:nowrap;transform:translate(12px,-10px)}
+.popup-title{font-weight:900;font-size:15px;margin-bottom:4px} .muted{color:var(--muted);font-size:11px}
+@media(max-width:760px){.app{grid-template-columns:1fr;grid-template-rows:auto 1fr}.side{max-height:40vh;border-right:0;border-bottom:1px solid var(--line);padding:12px}}
+
+.daybar{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.daybtn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 4px;font-weight:800;cursor:pointer}
+.daybtn.active{background:#e5f1e9;color:#145d35;border-color:#b9d3c2}
+.eventbox{margin-top:8px;border:1px solid var(--line);border-radius:11px;padding:10px;background:#fff}
+.eventtime{font-weight:900;color:#1f7a45}
+.eventtitle{font-weight:900;margin-top:2px}
+.eventmeta{font-size:12px;color:var(--muted);line-height:1.4;margin-top:2px}
+.emptyday{font-size:12px;color:var(--muted);padding:8px 2px;line-height:1.45}
+.eventpulse{width:26px;height:26px;border-radius:50%;border:3px solid #fff;background:#1f7a45;box-shadow:0 0 0 0 rgba(31,122,69,.45);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,122,69,.45)}70%{box-shadow:0 0 0 14px rgba(31,122,69,0)}100%{box-shadow:0 0 0 0 rgba(31,122,69,0)}}
+@media(prefers-reduced-motion:reduce){.eventpulse{animation:none}}
+
+
+.finder{margin-top:10px}
+.finder-results{display:grid;gap:7px;margin-top:8px}
+.finder-item{border:1px solid var(--line);border-radius:10px;padding:9px;background:#fff;cursor:pointer}
+.finder-item:hover{border-color:#b8c9be}
+.finder-item .ft{font-weight:900}
+.finder-item .fm{font-size:12px;color:var(--muted);line-height:1.4;margin-top:2px}
+.finder-tag{display:inline-block;font-size:10px;border-radius:999px;background:#eef4f0;padding:2px 6px;margin-top:5px}
+.noresult{font-size:12px;color:var(--muted);padding:8px 2px;line-height:1.45}
+
+
+.guidegrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.guidebtn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 7px;font-weight:800;cursor:pointer;text-align:center}
+.guidebtn.active{background:#e5f1e9;color:#145d35;border-color:#b9d3c2}
+.guidebox{margin-top:8px;border:1px solid var(--line);border-radius:11px;padding:10px;background:#fff}
+.guidetitle{font-weight:900}
+.guidemeta{font-size:12px;color:var(--muted);line-height:1.45;margin-top:4px}
+.guide-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+
+
+.mobile-home{display:none}
+.bottomnav{display:none}
+.mobile-sheet{display:none}
+.home-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.home-action{border:1px solid var(--line);background:#fff;border-radius:14px;padding:14px 12px;text-align:left;cursor:pointer}
+.home-action strong{display:block;font-size:15px}
+.home-action small{display:block;color:var(--muted);font-size:11px;line-height:1.35;margin-top:3px}
+.hero-note{background:#eef6f1;border:1px solid #cfe2d6;border-radius:14px;padding:12px;margin-top:12px}
+.hero-note b{display:block;margin-bottom:3px}
+.mobile-sheet{position:absolute;left:10px;right:10px;bottom:76px;z-index:4;background:rgba(255,255,255,.98);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 12px 34px rgba(0,0,0,.14);max-height:46%;overflow:auto}
+.sheet-title{font-weight:900;margin-bottom:8px}
+.sheet-close{float:right;border:0;background:#eef3ef;border-radius:8px;padding:5px 8px;cursor:pointer}
+@media(max-width:760px){
+  body{overflow:hidden}
+  .app{display:block;height:100%}
+  .side{display:none}
+  .mapwrap{height:100%}
+  .mapui{top:10px;right:10px}
+  .status{bottom:74px;left:10px;right:10px;max-width:none;font-size:10px}
+  .mobile-home{display:block;position:absolute;inset:0;z-index:3;background:#f4f7f5;padding:14px 14px 86px;overflow:auto}
+  .mobile-home.hidden{display:none}
+  .mobile-brand{display:flex;align-items:center;gap:10px}
+  .mobile-logo{width:44px;height:44px;border-radius:13px;background:linear-gradient(145deg,#1f7a45,#2f9b5b);color:#fff;display:grid;place-items:center;font-weight:900}
+  .mobile-title{font-size:19px;font-weight:900;line-height:1.2}
+  .mobile-sub{font-size:11px;color:var(--muted);margin-top:2px}
+  .mobile-search{margin-top:14px}
+  .bottomnav{display:grid;grid-template-columns:repeat(4,1fr);position:absolute;left:0;right:0;bottom:0;z-index:6;background:rgba(255,255,255,.98);border-top:1px solid var(--line);padding:7px 6px calc(7px + env(safe-area-inset-bottom))}
+  .bottomnav button{border:0;background:transparent;border-radius:10px;padding:8px 4px;font-weight:800;font-size:11px;color:#4f5c55;cursor:pointer}
+  .bottomnav button.active{background:#e7f1ea;color:#145d35}
+  .bottomnav span{display:block;font-size:18px;line-height:1;margin-bottom:3px}
+}
+
+
+.release-logo{width:56px;height:56px;object-fit:contain;display:block}
+.mobile-logo-img{width:54px;height:54px;object-fit:contain;display:block}
+.service-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.service-link{display:block;text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;color:var(--text);font-weight:800}
+.service-link small{display:block;color:var(--muted);font-weight:500;font-size:11px;margin-top:2px}
+.release-note{margin-top:10px;padding:9px 10px;border-radius:10px;background:#eef6f1;border:1px solid #cfe2d6;font-size:11px;line-height:1.4;color:#294736}
+
+
+.map-fallback{display:none;position:absolute;inset:0;z-index:10;background:#f4f7f5;padding:20px;align-items:center;justify-content:center}
+.map-fallback.show{display:flex}
+.fallback-card{max-width:460px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;text-align:center}
+.fallback-card h3{margin:0 0 8px}
+
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <h1>4 จอบแห่งชาติ ครั้งที่ 41</h1>
+  <div class="sub">Public Release v12 — อาคาร 3D จากข้อมูลแผนที่จริง</div>
+  
+  <input id="search" class="search" placeholder="ค้นหา QS, PGPR, P3, ขวัญเมือง…">
+
+  <div class="title">ค้นหากิจกรรม</div>
+  <input id="activitySearch" class="search" placeholder="เช่น เซทแมลง, พิธีเปิด, ฟุตบอล, เข้าด้ามจอบ…">
+  <div id="activityResults" class="finder-results"></div>
+
+
+  <div class="title">จุดสำคัญ</div>
+  <div class="quick">
+    <button class="q" data-id="E">พิธีเปิด–ปิด<small>Zone E</small></button>
+    <button class="q" data-id="QS">อาคาร QS<small>Zone A</small></button>
+    <button class="q" data-id="FB1">สนามฟุตบอล<small>Zone D</small></button>
+    <button class="q" data-id="PGPR">เข้าด้ามจอบ<small>ศูนย์ PGPR</small></button>
+    <button class="q" data-id="KW">ที่พักหญิง<small>อาคารขวัญเมือง</small></button>
+    <button class="q" data-id="HOSP">โรงพยาบาล<small>24 ชั่วโมง</small></button>
+  </div>
+
+
+  <div class="title">ฉันต้องการไป…</div>
+  <div class="guidegrid">
+    <button class="guidebtn active" data-user="student">นิสิต</button>
+    <button class="guidebtn" data-user="staff">อาจารย์/เจ้าหน้าที่</button>
+    <button class="guidebtn" data-user="van">รถตู้</button>
+  </div>
+  <div class="card">
+    <select id="guideDest">
+      <option value="">เลือกจุดหมาย…</option>
+      <option value="E">พิธีเปิด–ปิด / Zone E</option>
+      <option value="QS">อาคาร QS / Zone A</option>
+      <option value="AG">คณะเกษตรศาสตร์ฯ / Zone B</option>
+      <option value="MED">คณะวิทยาศาสตร์การแพทย์ / Zone C</option>
+      <option value="FB1">สนามฟุตบอล / Zone D</option>
+      <option value="G">สนามคล้องโค/ล้มโค / Zone G</option>
+      <option value="PGPR">เข้าด้ามจอบ / ศูนย์ PGPR</option>
+      <option value="KW">อาคารขวัญเมือง / ที่พักหญิง</option>
+      <option value="HOSP">โรงพยาบาล มน.</option>
+    </select>
+    <div id="guideBox" class="guidebox">
+      <div class="guidemeta">เลือกประเภทผู้ใช้และจุดหมาย ระบบจะแนะนำวิธีเดินทางที่เหมาะสมจากข้อมูลที่ยืนยันแล้ว</div>
+    </div>
+  </div>
+
+  <div class="title">นำทาง</div>
+  <div class="card">
+    <select id="from"><option value="">เลือกต้นทาง…</option></select>
+    <div style="height:7px"></div>
+    <select id="to"><option value="">เลือกปลายทาง…</option></select>
+    <div style="height:8px"></div>
+    <button class="btn" id="go" style="width:100%">เปิดเส้นทางใน Google Maps</button>
+  </div>
+
+
+  <div class="title">กิจกรรมตามวัน</div>
+  <div class="daybar">
+    <button class="daybtn active" data-day="4">4 พ.ย.</button>
+    <button class="daybtn" data-day="5">5 พ.ย.</button>
+    <button class="daybtn" data-day="6">6 พ.ย.</button>
+    <button class="daybtn" data-day="7">7 พ.ย.</button>
+    <button class="daybtn" data-day="8">8 พ.ย.</button>
+  </div>
+  <div id="dayEvents" class="eventbox"></div>
+
+
+  <div class="release-note"><b>ข้อมูลการเข้า–ออก:</b> ประตู 2 เปิดใช้งานช่วง 06:00–18:00 น. และบริเวณหน้าโรงพยาบาลห้ามจอดรอหรือรับ–ส่งกีดขวางเส้นทาง</div>
+  <div class="title">บริการออนไลน์</div>
+  <div class="release-note"><b>ข้อมูลการเข้า–ออก:</b> ประตู 2 เปิดใช้งานช่วง 06:00–18:00 น. และบริเวณหน้าโรงพยาบาลห้ามจอดรอหรือรับ–ส่งกีดขวางเส้นทาง</div>
+    <div class="service-row">
+    <a class="service-link" href="https://transit.nu.ac.th/" target="_blank" rel="noopener">
+      NU Transit
+      <small>รถไฟฟ้าประจำทางแบบเรียลไทม์</small>
+    </a>
+    <a class="service-link" href="https://ww5.agi.nu.ac.th/4jobb41/schedule" target="_blank" rel="noopener">
+      กำหนดการ
+      <small>ฉบับปัจจุบันของงาน</small>
+    </a>
+  </div>
+  <div class="release-note">
+    แผนที่นี้ใช้พิกัดที่ยืนยันแล้วเป็นฐาน และส่งต่อการนำทางจริงไปยัง Google Maps เพื่อหลีกเลี่ยงการวาดเส้นทางผิดถนน
+  </div>
+
+  <div class="title">เส้นทางงาน</div>
+  <div class="row">
+    <a id="r1" class="btn blue" target="_blank">R1</a>
+    <a id="r4" class="btn blue" target="_blank">R4</a>
+    <a id="r5" class="btn blue" target="_blank">R5</a>
+    <a id="r6" class="btn blue" target="_blank">R6</a>
+  </div>
+
+  <div class="note">
+    3D ในรุ่นนี้ใช้ footprint/ความสูงอาคารจากข้อมูล vector map จริงเมื่อมีข้อมูล ไม่ได้สร้างรูปอาคารด้วย AI
+    และยังไม่สร้าง Zone polygon จนกว่าจะยืนยันขอบเขตจริง
+  </div>
+</aside>
+
+
+<main class="mapwrap">
+  <section id="mobileHome" class="mobile-home">
+    <div class="mobile-brand">
+      <img class="mobile-logo-img" src="data:image/png;base64,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" alt="โลโก้งาน 4 จอบ">
+      <div>
+        <div class="mobile-title">งานประเพณี 4 จอบแห่งชาติ ครั้งที่ 41</div>
+        <div class="mobile-sub">Interactive Event Guide • มหาวิทยาลัยนเรศวร • 4–8 พ.ย. 2569</div>
+      </div>
+    </div>
+
+    <div class="mobile-search">
+      <input id="mobileActivitySearch" class="search" placeholder="ค้นหา พิธีเปิด, เซทแมลง, ฟุตบอล, PGPR…">
+      <div id="mobileActivityResults" class="finder-results"></div>
+    </div>
+
+    <div class="hero-note">
+      <b>ต้องการไปที่ไหน?</b>
+      เลือกเมนูด้านล่างเพื่อค้นหากิจกรรม ดูแผนที่ หรือนำทางตามประเภทผู้ใช้
+    </div>
+
+    <div class="service-row">
+      <a class="service-link" href="https://transit.nu.ac.th/" target="_blank" rel="noopener">
+        NU Transit
+        <small>ตรวจสอบรถไฟฟ้าประจำทางแบบเรียลไทม์</small>
+      </a>
+      <a class="service-link" href="https://ww5.agi.nu.ac.th/4jobb41/schedule" target="_blank" rel="noopener">
+        กำหนดการงาน
+        <small>ตรวจสอบกำหนดการฉบับปัจจุบัน</small>
+      </a>
+    </div>
+
+    <div class="home-actions">
+      <button class="home-action" data-mobile-action="opening"><strong>พิธีเปิด–ปิด</strong><small>Zone E • ลานกิจกรรมประตู 5</small></button>
+      <button class="home-action" data-mobile-action="qs"><strong>อาคาร QS</strong><small>ลงทะเบียน / กองอำนวยการ / Zone A</small></button>
+      <button class="home-action" data-mobile-action="sports"><strong>สนามกีฬา</strong><small>Zone D • สนามฟุตบอล / Gymnasium</small></button>
+      <button class="home-action" data-mobile-action="pgpr"><strong>เข้าด้ามจอบ</strong><small>ศูนย์ PGPR</small></button>
+      <button class="home-action" data-mobile-action="parking"><strong>ที่จอดรถ</strong><small>ดู P1–P11 บนแผนที่</small></button>
+      <button class="home-action" data-mobile-action="hospital"><strong>โรงพยาบาล</strong><small>รพ.มหาวิทยาลัยนเรศวร • 24 ชม.</small></button>
+    </div>
+  </section>
+
+  <div id="mobileSheet" class="mobile-sheet">
+    <button id="sheetClose" class="sheet-close" type="button">ปิด</button>
+    <div id="sheetContent"></div>
+  </div>
+
+  <div id="map"></div>
+
+  <div id="mapFallback" class="map-fallback">
+    <div class="fallback-card">
+      <h3>ไม่สามารถโหลดแผนที่ 3D ได้</h3>
+      <div class="muted">อาจเกิดจากเครือข่ายหรือเบราว์เซอร์ กรุณาใช้แผนที่ 2D สำรอง</div>
+      <a class="btn block" href="https://www.google.com/maps/search/?api=1&query=16.7448,100.1940" target="_blank" rel="noopener">เปิดแผนที่ 2D สำรอง</a>
+    </div>
+  </div>
+
+  <div class="mapui">
+    <button id="top">มุมบน</button>
+    <button id="tilt">3D</button>
+  </div>
+  <div class="status">Public Release v12 • ตำแหน่ง marker ใช้พิกัด master ที่ยืนยันแล้ว • อาคาร 3D ใช้ footprint/height จากข้อมูลแผนที่จริง • การนำทางส่งต่อไปยัง Google Maps และ NU Transit</div>
+
+  <nav class="bottomnav" aria-label="เมนูหลัก">
+    <button class="active" data-tab="home"><span>⌂</span>หน้าแรก</button>
+    <button data-tab="map"><span>⌖</span>แผนที่</button>
+    <button data-tab="find"><span>⌕</span>ค้นหา</button>
+    <button data-tab="guide"><span>➜</span>นำทาง</button>
+  </nav>
+
+</main>
+</div>
+
+<script type="module">
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.mjs";
+
+const DATA = {"type": "FeatureCollection", "name": "4JOP41_verified_points_v1", "features": [{"type": "Feature", "properties": {"id": "MON", "name": "พระบรมราชานุสาวรีย์สมเด็จพระนเรศวรมหาราช", "category": "Landmark", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19145342111622, 16.749497570363005]}}, {"type": "Feature", "properties": {"id": "TH", "name": "อาคารโรงละคร", "category": "Zone A / Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19289638893403, 16.745830072474078]}}, {"type": "Feature", "properties": {"id": "QS", "name": "อาคาร QS", "category": "Zone A / Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19253034357695, 16.746589967352374]}}, {"type": "Feature", "properties": {"id": "AG", "name": "คณะเกษตรศาสตร์ฯ", "category": "Zone B / Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19547523058051, 16.746025394810328]}}, {"type": "Feature", "properties": {"id": "MED", "name": "คณะวิทยาศาสตร์การแพทย์", "category": "Zone C / Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19158091155131, 16.745569905477748]}}, {"type": "Feature", "properties": {"id": "GYM", "name": "Gymnasium", "category": "Zone D / Sports", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19312953583223, 16.750885906084104]}}, {"type": "Feature", "properties": {"id": "ACT", "name": "อาคารกิจกรรมข้างอาคารอเนกประสงค์", "category": "Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.1928839629854, 16.75144833170893]}}, {"type": "Feature", "properties": {"id": "FB1", "name": "สนามฟุตบอล 1", "category": "Zone D / Sports", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19518017992819, 16.751243364763496]}}, {"type": "Feature", "properties": {"id": "KW", "name": "อาคารขวัญเมือง", "category": "Zone H / ที่พักหญิง", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19955664209454, 16.737132966046715]}}, {"type": "Feature", "properties": {"id": "E", "name": "ลานกิจกรรมประตู 5", "category": "Zone E", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19563727412164, 16.749624934781387]}}, {"type": "Feature", "properties": {"id": "G", "name": "สนามคล้องโค/ล้มโค", "category": "Zone G", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19581938196396, 16.740479934380073]}}, {"type": "Feature", "properties": {"id": "F_OLD", "name": "พื้นที่แปลงเดิม F (ไม่ใช้เป็นจุดแข่งขันเข้าด้ามจอบแล้ว)", "category": "Former Zone F", "status": "obsolete_for_competition"}, "geometry": {"type": "Point", "coordinates": [100.19347143096533, 16.735786255672327]}}, {"type": "Feature", "properties": {"id": "GATE1", "name": "ประตู 1", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.18718641367883, 16.75218338644108]}}, {"type": "Feature", "properties": {"id": "GATE2", "name": "ประตู 2", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.18671707708481, 16.75133742099446]}}, {"type": "Feature", "properties": {"id": "GATE3", "name": "ประตู 3", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19157096071133, 16.740644319662213]}}, {"type": "Feature", "properties": {"id": "GATE4", "name": "ประตู 4", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.1994049974154, 16.74425113280003]}}, {"type": "Feature", "properties": {"id": "GATE5", "name": "ประตู 5", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19661032470695, 16.750562347917707]}}, {"type": "Feature", "properties": {"id": "HOSP", "name": "โรงพยาบาลมหาวิทยาลัยนเรศวร", "category": "Medical", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.18938970316694, 16.749103587615192]}}, {"type": "Feature", "properties": {"id": "MALE", "name": "ที่พักชาย (ห้อง พรบ.)", "category": "Accommodation", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19358314387354, 16.750922767755604]}}, {"type": "Feature", "properties": {"id": "TRANSIT", "name": "สถานีขนส่งมวลชน / รถไฟฟ้าประจำทาง", "category": "NU Transit", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19987085890455, 16.73811115678402]}}, {"type": "Feature", "properties": {"id": "P1", "name": "P1 อาคารอเนกประสงค์", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19365902518804, 16.750414604047712]}}, {"type": "Feature", "properties": {"id": "P2", "name": "P2 ลานสมเด็จฯ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19103032653561, 16.750443662184498]}}, {"type": "Feature", "properties": {"id": "P3", "name": "P3 ศึกษาศาสตร์–มนุษยศาสตร์", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19458457032891, 16.747490606308315]}}, {"type": "Feature", "properties": {"id": "P4", "name": "P4 CITCOM", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19569598260188, 16.74709105034127]}}, {"type": "Feature", "properties": {"id": "P5", "name": "P5 BEC", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19680360165889, 16.747744868759884]}}, {"type": "Feature", "properties": {"id": "P6", "name": "P6 สระว่ายน้ำ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19726637401006, 16.74641906793188]}}, {"type": "Feature", "properties": {"id": "P7", "name": "P7 ร้านหนังสือจุฬาฯ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19299521259316, 16.745075096023943]}}, {"type": "Feature", "properties": {"id": "P8", "name": "P8 อาคารจอดรถ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19268796210132, 16.744621049327723]}}, {"type": "Feature", "properties": {"id": "P9", "name": "P9 วิทยาลัยนานาชาติ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19355281533763, 16.745049669437567]}}, {"type": "Feature", "properties": {"id": "P10", "name": "P10 ที่จอดรถบัส", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.1997485811917, 16.740387706599527]}}, {"type": "Feature", "properties": {"id": "P11", "name": "P11 อาคารขวัญเมือง", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19873123592288, 16.73661372461545]}}, {"type": "Feature", "properties": {"id": "PGPR", "name": "ศูนย์ PGPR", "category": "Zone F / Competition", "status": "verified", "group": "zone"}, "geometry": {"type": "Point", "coordinates": [100.19413569696994, 16.73537946761842]}}]};
+const C = {"GATE5": [100.19661032470695, 16.750562347917707], "E": [100.19563727412164, 16.749624934781387], "HOSP": [100.18938970316694, 16.749103587615192], "GATE1": [100.18718641367883, 16.75218338644108], "QS": [100.19253034357695, 16.746589967352374], "GATE2": [100.18671707708481, 16.75133742099446], "G": [100.19581938196396, 16.740479934380073], "PGPR": [100.19413569696994, 16.73537946761842]};
+
+const colors = {
+ zone:"#1f7a45", landmark:"#2457a6", parking:"#8055b8", gate:"#e98b1c",
+ medical:"#d94141", lodging:"#238fa6", transit:"#238fa6", inactive:"#9b2f2f"
+};
+function group(cat="") {
+ if(cat.includes("Parking")) return "parking";
+ if(cat.includes("Gate")) return "gate";
+ if(cat.includes("Medical")) return "medical";
+ if(cat.includes("Accommodation")) return "lodging";
+ if(cat.includes("Transit")) return "transit";
+ if(cat.includes("Former Zone F")) return "inactive";
+ if(cat.includes("Zone")) return "zone";
+ return "landmark";
+}
+
+const map = new maplibregl.Map({
+ container:"map",
+ style:"https://tiles.openfreemap.org/styles/bright",
+ center:[100.1939,16.7447],
+ zoom:15.2,
+ pitch:55,
+ bearing:-18,
+ antialias:true
+});
+map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"bottom-right");
+
+const markers = [];
+const pts = [];
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+map.on("load",()=>{
+  const layers=map.getStyle().layers||[];
+  let labelLayerId;
+  for(const l of layers){if(l.type==="symbol" && l.layout && l.layout["text-field"]){labelLayerId=l.id;break;}}
+
+  if(!map.getSource("openfreemap")) {
+    map.addSource("openfreemap",{type:"vector",url:"https://tiles.openfreemap.org/planet"});
+  }
+  map.addLayer({
+    id:"3d-buildings",
+    source:"openfreemap",
+    "source-layer":"building",
+    type:"fill-extrusion",
+    minzoom:15,
+    filter:["!=",["get","hide_3d"],true],
+    paint:{
+      "fill-extrusion-color":"#d9dfda",
+      "fill-extrusion-height":[
+        "case",
+        ["has","render_height"],["get","render_height"],
+        6
+      ],
+      "fill-extrusion-base":[
+        "case",
+        ["has","render_min_height"],["get","render_min_height"],
+        0
+      ],
+      "fill-extrusion-opacity":0.82
+    }
+  },labelLayerId);
+
+  for(const f of DATA.features){
+    const [lon,lat]=f.geometry.coordinates, p=f.properties, g=p.group||group(p.category);
+    const el=document.createElement("div");
+    el.className="marker";
+    el.style.background=colors[g]||"#444";
+    const marker=new maplibregl.Marker({element:el,anchor:"center"})
+      .setLngLat([lon,lat])
+      .setPopup(new maplibregl.Popup({offset:16}).setHTML(
+        `<div class="popup-title">${esc(p.name)}</div>
+         <div class="muted">${esc(p.category)}<br>${lat.toFixed(6)}, ${lon.toFixed(6)}</div>
+         <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}" target="_blank" style="display:block;margin-top:8px;text-decoration:none;background:#1f7a45;color:white;padding:8px;border-radius:8px;text-align:center;font-weight:800">นำทางมาที่นี่</a>`
+      )).addTo(map);
+    markers.push({id:p.id,name:(p.name+" "+p.id+" "+p.category).toLowerCase(),lat,lon,marker,p});
+    if(p.status!=="obsolete_for_competition") pts.push({id:p.id,name:p.name,lat,lon});
+  }
+
+  const bounds=new maplibregl.LngLatBounds();
+  DATA.features.filter(f=>f.properties.status!=="obsolete_for_competition").forEach(f=>bounds.extend(f.geometry.coordinates));
+  map.fitBounds(bounds,{padding:55,pitch:55,bearing:-18});
+});
+
+document.getElementById("top").onclick=()=>map.easeTo({pitch:0,bearing:0,duration:700});
+document.getElementById("tilt").onclick=()=>map.easeTo({pitch:55,bearing:-18,duration:700});
+
+document.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>{
+ const x=markers.find(m=>m.id===b.dataset.id); if(!x)return;
+ map.flyTo({center:[x.lon,x.lat],zoom:18,pitch:60,bearing:-18,essential:true});
+ setTimeout(()=>x.marker.togglePopup(),600);
+});
+
+document.getElementById("search").addEventListener("input",e=>{
+ const q=e.target.value.trim().toLowerCase(); if(!q)return;
+ const x=markers.find(m=>m.name.includes(q)); if(!x)return;
+ map.flyTo({center:[x.lon,x.lat],zoom:18,pitch:60,bearing:-18,essential:true});
+});
+
+const from=document.getElementById("from"),to=document.getElementById("to");
+[...pts].sort((a,b)=>a.name.localeCompare(b.name,"th")).forEach(p=>{from.add(new Option(p.name,p.id));to.add(new Option(p.name,p.id));});
+const get=id=>pts.find(p=>p.id===id);
+document.getElementById("go").onclick=()=>{
+ const a=get(from.value),b=get(to.value);
+ if(!a||!b){alert("กรุณาเลือกต้นทางและปลายทาง");return;}
+ if(a.id===b.id){alert("ต้นทางและปลายทางเป็นจุดเดียวกัน");return;}
+ window.open(`https://www.google.com/maps/dir/?api=1&origin=${a.lat},${a.lon}&destination=${b.lat},${b.lon}&travelmode=driving`,"_blank","noopener");
+};
+
+function routeUrl(o,d,w=[]){
+ let u=`https://www.google.com/maps/dir/?api=1&origin=${o[1]},${o[0]}&destination=${d[1]},${d[0]}&travelmode=driving`;
+ if(w.length)u+="&waypoints="+encodeURIComponent(w.map(x=>x[1]+","+x[0]).join("|"));
+ return u;
+}
+document.getElementById("r1").href=routeUrl(C.GATE5,C.HOSP,[C.E]);
+document.getElementById("r4").href=routeUrl(C.QS,C.PGPR,[C.G]);
+document.getElementById("r5").href=routeUrl(C.GATE1,C.QS);
+document.getElementById("r6").href=routeUrl(C.GATE2,C.QS,[C.HOSP]);
+
+const EVENTS = {
+  "4":[
+    {id:"opening",title:"พิธีเปิด / งานเลี้ยงต้อนรับ",time:"17:00–22:00",point:"E",place:"Zone E — ลานกิจกรรมประตู 5",status:"confirmed"}
+  ],
+  "5":[],
+  "6":[],
+  "7":[
+    {id:"closing",title:"พิธีปิด",time:"17:00–22:00",point:"E",place:"Zone E — ลานกิจกรรมประตู 5",status:"confirmed"}
+  ],
+  "8":[]
+};
+
+let eventMarker = null;
+function renderDay(day){
+  document.querySelectorAll(".daybtn").forEach(b=>b.classList.toggle("active",b.dataset.day===day));
+  const box=document.getElementById("dayEvents");
+  const evs=EVENTS[day]||[];
+  if(eventMarker){eventMarker.remove();eventMarker=null;}
+  if(!evs.length){
+    box.innerHTML=`<div class="emptyday">ยังไม่ได้ผูกกำหนดการรายกิจกรรมของวันที่ ${day} พฤศจิกายน 2569 เข้ากับแผนที่ในรุ่นนี้ เพื่อหลีกเลี่ยงการเติมข้อมูลที่ยังไม่ได้ยืนยัน</div>`;
+    return;
+  }
+  box.innerHTML=evs.map(e=>`
+    <div>
+      <div class="eventtime">${e.time}</div>
+      <div class="eventtitle">${e.title}</div>
+      <div class="eventmeta">${e.place}</div>
+      <button class="btn" data-event-point="${e.point}" style="width:100%;margin-top:8px">ดูตำแหน่งบนแผนที่</button>
+    </div>`).join("");
+  box.querySelectorAll("[data-event-point]").forEach(btn=>btn.addEventListener("click",()=>{
+    const x=markers.find(m=>m.id===btn.dataset.eventPoint);
+    if(!x)return;
+    map.flyTo({center:[x.lon,x.lat],zoom:18,pitch:60,bearing:-18,essential:true});
+    setTimeout(()=>x.marker.togglePopup(),600);
+    const pulse=document.createElement("div");
+    pulse.className="eventpulse";
+    eventMarker=new maplibregl.Marker({element:pulse,anchor:"center"}).setLngLat([x.lon,x.lat]).addTo(map);
+  }));
+}
+
+document.querySelectorAll(".daybtn").forEach(b=>b.addEventListener("click",()=>renderDay(b.dataset.day)));
+renderDay("4");
+
+
+const ACTIVITIES = [
+  {
+    title:"พิธีเปิด / งานเลี้ยงต้อนรับ",
+    keywords:["พิธีเปิด","เปิดงาน","งานเลี้ยงต้อนรับ","welcome","opening"],
+    point:"E",
+    place:"Zone E — ลานกิจกรรมประตู 5",
+    time:"4 พฤศจิกายน 2569 เวลา 17:00–22:00",
+    tag:"พิธีการ"
+  },
+  {
+    title:"พิธีปิด",
+    keywords:["พิธีปิด","ปิดงาน","closing"],
+    point:"E",
+    place:"Zone E — ลานกิจกรรมประตู 5",
+    time:"7 พฤศจิกายน 2569 เวลา 17:00–22:00",
+    tag:"พิธีการ"
+  },
+  {
+    title:"การแข่งขันกีฬาเซทแมลง",
+    keywords:["เซทแมลง","set แมลง","แมลง","insect"],
+    point:"AG",
+    place:"Zone B — คณะเกษตรศาสตร์ฯ (AG 2403 / AG 2412)",
+    time:"ตรวจสอบกำหนดการกลางของงาน",
+    tag:"กีฬาทักษะ"
+  },
+  {
+    title:"การแข่งขันกีฬาสากล",
+    keywords:["กีฬาสากล","ฟุตบอล","gymnasium","กีฬา","สนามฟุตบอล"],
+    point:"FB1",
+    place:"Zone D — สนามฟุตบอล 1 / Gymnasium / สนามกีฬา",
+    time:"ตรวจสอบกำหนดการกลางของงาน",
+    tag:"กีฬา"
+  },
+  {
+    title:"การแข่งขันสนามคล้องโค / ล้มโค",
+    keywords:["คล้องโค","ล้มโค","โค","cattle"],
+    point:"G",
+    place:"Zone G — สนามคล้องโค/ล้มโค",
+    time:"ตรวจสอบกำหนดการกลางของงาน",
+    tag:"กีฬาทักษะ"
+  },
+  {
+    title:"การแข่งขันเข้าด้ามจอบ / เตรียมแปลง",
+    keywords:["เข้าด้ามจอบ","ด้ามจอบ","เตรียมแปลง","pgpr"],
+    point:"PGPR",
+    place:"ศูนย์ PGPR",
+    time:"ตรวจสอบกำหนดการกลางของงาน",
+    tag:"กีฬาทักษะ"
+  },
+  {
+    title:"ลงทะเบียน / กองอำนวยการ / จุดประสานงาน",
+    keywords:["ลงทะเบียน","registration","กองอำนวยการ","ประสานงาน","qs"],
+    point:"QS",
+    place:"Zone A — อาคาร QS / อาคารโรงละคร",
+    time:"ตรวจสอบกำหนดการกลางของงาน",
+    tag:"บริการ"
+  }
+];
+
+function renderActivities(query=""){
+  const box=document.getElementById("activityResults");
+  const q=query.trim().toLowerCase();
+  let rows=ACTIVITIES;
+  if(q){
+    rows=ACTIVITIES.filter(a=>
+      a.title.toLowerCase().includes(q) ||
+      a.place.toLowerCase().includes(q) ||
+      a.tag.toLowerCase().includes(q) ||
+      a.keywords.some(k=>k.toLowerCase().includes(q) || q.includes(k.toLowerCase()))
+    );
+  }else{
+    rows=ACTIVITIES.slice(0,4);
+  }
+  if(!rows.length){
+    box.innerHTML='<div class="noresult">ยังไม่พบกิจกรรมที่ตรงกับคำค้นในฐานข้อมูลที่ยืนยันแล้ว</div>';
+    return;
+  }
+  box.innerHTML=rows.map((a,i)=>`
+    <div class="finder-item" data-act="${ACTIVITIES.indexOf(a)}">
+      <div class="ft">${a.title}</div>
+      <div class="fm">${a.place}<br>${a.time}</div>
+      <span class="finder-tag">${a.tag}</span>
+    </div>`).join("");
+  box.querySelectorAll("[data-act]").forEach(el=>el.addEventListener("click",()=>{
+    const a=ACTIVITIES[Number(el.dataset.act)];
+    const x=markers.find(m=>m.id===a.point);
+    if(!x)return;
+    map.flyTo({center:[x.lon,x.lat],zoom:18,pitch:60,bearing:-18,essential:true});
+    setTimeout(()=>x.marker.togglePopup(),550);
+  }));
+}
+
+const activitySearch=document.getElementById("activitySearch");
+activitySearch.addEventListener("input",e=>renderActivities(e.target.value));
+renderActivities("");
+
+
+const GUIDE = {
+  student: {
+    E: {
+      title:"นิสิต → พิธีเปิด–ปิด (Zone E)",
+      text:"สำหรับนิสิตให้ใช้รถไฟฟ้าประจำทาง ม.นเรศวรเป็นหลัก ไม่แนะนำให้นำรถส่วนตัวเข้าพื้นที่งาน จากอาคารขวัญเมืองให้เดินไปสถานีขนส่งมวลชน แล้วใช้ NU Transit ไปยังจุดใกล้ Zone E ก่อนเดินเข้าสู่ลานกิจกรรมประตู 5",
+      focus:"E",
+      origin:"KW",
+      transit:true
+    },
+    QS: {
+      title:"นิสิต → อาคาร QS",
+      text:"ใช้ NU Transit ไปยังจุดจอดใกล้อาคาร QS แล้วเดินเข้าสู่ Zone A โดยตรวจสอบตำแหน่งรถแบบเรียลไทม์ก่อนเดินทาง",
+      focus:"QS",
+      origin:"KW",
+      transit:true
+    },
+    AG: {
+      title:"นิสิต → คณะเกษตรศาสตร์ฯ",
+      text:"ใช้ NU Transit ไปยังจุดจอดใกล้คณะเกษตรศาสตร์ฯ แล้วเดินเข้าสู่ Zone B โดยตรวจสอบตำแหน่งรถแบบเรียลไทม์ก่อนเดินทาง",
+      focus:"AG",
+      origin:"KW",
+      transit:true
+    },
+    MED: {
+      title:"นิสิต → คณะวิทยาศาสตร์การแพทย์",
+      text:"ใช้ NU Transit ไปยังจุดจอดใกล้คณะวิทยาศาสตร์การแพทย์ แล้วเดินเข้าสู่ Zone C โดยตรวจสอบตำแหน่งรถแบบเรียลไทม์ก่อนเดินทาง",
+      focus:"MED",
+      origin:"KW",
+      transit:true
+    },
+    FB1: {
+      title:"นิสิต → สนามฟุตบอล / Zone D",
+      text:"ยังไม่มีจุด NU Transit ใกล้สนามที่ยืนยันไว้ในฐานข้อมูลสาธารณะของงาน รุ่นนี้จึงไม่ระบุจุดลงรถแบบเจาะจง ให้ตรวจสอบ NU Transit แบบเรียลไทม์และเดินต่อจากจุดจอดที่เหมาะสม",
+      focus:"FB1",
+      origin:"KW",
+      transit:true
+    },
+    G: {
+      title:"นิสิต → สนามคล้องโค/ล้มโค",
+      text:"ยังไม่มีจุด NU Transit ใกล้ Zone G ที่ยืนยันไว้ในฐานข้อมูลสาธารณะของงาน จึงควรตรวจสอบ NU Transit แบบเรียลไทม์และใช้การเดินต่อ/รถงานตามประกาศหน้างาน",
+      focus:"G",
+      origin:"KW",
+      transit:true
+    },
+    PGPR: {
+      title:"นิสิต → ศูนย์ PGPR",
+      text:"ปลายทางการแข่งขันเข้าด้ามจอบอยู่ที่ศูนย์ PGPR ซึ่งอยู่ในพื้นที่ฟาร์ม รุ่นนี้ยังไม่มีจุด NU Transit ใกล้ PGPR ที่ยืนยันไว้ จึงไม่ควรสร้างเส้นทางรถไฟฟ้าเอง ให้ใช้ประกาศการเดินทางของงานเมื่อยืนยันแล้ว",
+      focus:"PGPR",
+      origin:"KW",
+      transit:true
+    },
+    KW: {
+      title:"นิสิต → อาคารขวัญเมือง",
+      text:"อาคารขวัญเมืองเป็นที่พักหญิง จุดเชื่อมรถไฟฟ้าประจำทางที่ยืนยันแล้วคือสถานีขนส่งมวลชนใกล้เคียง",
+      focus:"KW",
+      origin:"KW",
+      transit:true
+    },
+    HOSP: {
+      title:"นิสิต → โรงพยาบาล มน.",
+      text:"โรงพยาบาลมหาวิทยาลัยนเรศวรเปิดให้บริการ 24 ชั่วโมง หากเป็นเหตุฉุกเฉินให้ใช้ช่องทางฉุกเฉินของงานและโรงพยาบาลโดยตรง",
+      focus:"HOSP",
+      origin:"KW",
+      transit:false
+    }
+  },
+  staff: {
+    E: {title:"อาจารย์/เจ้าหน้าที่ → Zone E",text:"แนะนำเข้าทางประตู 5 และใช้เส้นทาง R1 ไปยัง Zone E ตามแผนงาน ก่อนเคลื่อนต่อไปยังโรงพยาบาล มน. หากจำเป็น",focus:"E",preset:"r1"},
+    QS: {title:"อาจารย์/เจ้าหน้าที่ → QS",text:"สามารถใช้ R5 จากประตู 1 → QS หรือ R6 จากประตู 2 → หน้ารพ.มน. → QS ตามจุดเข้าที่สะดวก",focus:"QS",preset:"r5"},
+    AG: {title:"อาจารย์/เจ้าหน้าที่ → คณะเกษตรศาสตร์ฯ",text:"ใช้เส้นทางรถส่วนตัวตามถนนมหาวิทยาลัยและเลือกที่จอด P3–P6 ตามความเหมาะสม โดยตรวจสภาพพื้นที่จริงหน้างาน",focus:"AG"},
+    MED: {title:"อาจารย์/เจ้าหน้าที่ → คณะวิทยาศาสตร์การแพทย์",text:"ใช้เส้นทางรถส่วนตัวภายในมหาวิทยาลัยและเลือกที่จอดใกล้เคียงตามพื้นที่ที่เปิดใช้งาน",focus:"MED"},
+    FB1: {title:"อาจารย์/เจ้าหน้าที่ → สนามฟุตบอล",text:"ใช้เส้นทางรถส่วนตัวไป Zone D และเลือกจุดจอดที่ได้รับอนุญาตใกล้พื้นที่กีฬา",focus:"FB1"},
+    G: {title:"อาจารย์/เจ้าหน้าที่ → Zone G",text:"ใช้ R4 จาก QS → สนามคล้องโค/ล้มโค → ศูนย์ PGPR หากต้องปฏิบัติงานต่อในพื้นที่ฟาร์ม",focus:"G",preset:"r4"},
+    PGPR: {title:"อาจารย์/เจ้าหน้าที่ → ศูนย์ PGPR",text:"ใช้ R4 จาก QS → Zone G → ศูนย์ PGPR ซึ่งเป็นสถานที่แข่งขันเข้าด้ามจอบล่าสุด",focus:"PGPR",preset:"r4"},
+    KW: {title:"อาจารย์/เจ้าหน้าที่ → อาคารขวัญเมือง",text:"ใช้เส้นทางรถส่วนตัวไปพื้นที่อาคารขวัญเมือง และใช้ P11 หากเปิดใช้งานตามแผนจอดรถ",focus:"KW"},
+    HOSP: {title:"อาจารย์/เจ้าหน้าที่ → โรงพยาบาล มน.",text:"เดินทางไปโรงพยาบาลได้โดยตรง แต่ไม่ควรจอดรอหรือรับ–ส่งกีดขวางบริเวณหน้าโรงพยาบาล โดยเฉพาะแนว R6",focus:"HOSP"}
+  },
+  van: {
+    E: {title:"รถตู้ → Zone E",text:"แนะนำเข้าประตู 5 และใช้ R1 ไปยัง Zone E จากนั้นเคลื่อนรถออกตามแผน หลีกเลี่ยงการจอดกีดขวางพื้นที่พิธี",focus:"E",preset:"r1"},
+    QS: {title:"รถตู้ → QS",text:"ใช้ R5 จากประตู 1 → QS หรือ R6 จากประตู 2 → หน้ารพ.มน. → QS ทั้งนี้ R6 ห้ามจอดรอหรือรับ–ส่งบริเวณหน้าโรงพยาบาล",focus:"QS",preset:"r6"},
+    AG: {title:"รถตู้ → คณะเกษตรศาสตร์ฯ",text:"เข้าพื้นที่ตามถนนหลักและใช้จุดจอดที่เจ้าหน้าที่กำหนด หลีกเลี่ยงการจอดค้างในจุดรับ–ส่งกิจกรรม",focus:"AG"},
+    MED: {title:"รถตู้ → คณะวิทยาศาสตร์การแพทย์",text:"ใช้ถนนหลักของมหาวิทยาลัยและปฏิบัติตามจุดรับ–ส่ง/จุดจอดที่เจ้าหน้าที่กำหนด",focus:"MED"},
+    FB1: {title:"รถตู้ → สนามฟุตบอล",text:"ไป Zone D ตามถนนหลัก และใช้พื้นที่รับ–ส่งหรือจอดรถตามแผนจราจรหน้างาน",focus:"FB1"},
+    G: {title:"รถตู้ → Zone G",text:"ใช้ R4 จาก QS → Zone G → ศูนย์ PGPR โดยตรวจสภาพถนนและพื้นที่ฟาร์มก่อนเข้า",focus:"G",preset:"r4"},
+    PGPR: {title:"รถตู้ → ศูนย์ PGPR",text:"ใช้ R4 จาก QS → Zone G → ศูนย์ PGPR หากสภาพทางเหมาะสม และปฏิบัติตามเจ้าหน้าที่ควบคุมพื้นที่",focus:"PGPR",preset:"r4"},
+    KW: {title:"รถตู้ → อาคารขวัญเมือง",text:"รับ–ส่งตามจุดที่กำหนดบริเวณที่พักหญิง และหลีกเลี่ยงการจอดกีดขวางเส้นทางรถไฟฟ้าประจำทาง",focus:"KW"},
+    HOSP: {title:"รถตู้ → โรงพยาบาล มน.",text:"ใช้เฉพาะกรณีจำเป็นหรือเหตุฉุกเฉิน ห้ามจอดรอ/รับ–ส่งกีดขวางหน้าโรงพยาบาล",focus:"HOSP"}
+  }
+};
+
+let selectedUser="student";
+function guideFocus(id){
+  const x=markers.find(m=>m.id===id);
+  if(!x)return;
+  map.flyTo({center:[x.lon,x.lat],zoom:18,pitch:60,bearing:-18,essential:true});
+  setTimeout(()=>x.marker.togglePopup(),550);
+}
+function renderGuide(){
+  const dest=document.getElementById("guideDest").value;
+  const box=document.getElementById("guideBox");
+  if(!dest){
+    box.innerHTML='<div class="guidemeta">เลือกประเภทผู้ใช้และจุดหมาย ระบบจะแนะนำวิธีเดินทางที่เหมาะสมจากข้อมูลที่ยืนยันแล้ว</div>';
+    return;
+  }
+  const g=(GUIDE[selectedUser]||{})[dest];
+  if(!g){
+    box.innerHTML='<div class="guidemeta">ยังไม่มีคำแนะนำสำหรับเส้นทางนี้ในฐานข้อมูลที่ยืนยันแล้ว</div>';
+    return;
+  }
+  let actions=`<button class="btn" id="guideFocusBtn">ดูจุดหมาย</button>`;
+  if(g.preset){
+    const href=document.getElementById(g.preset)?.href || "#";
+    actions += `<a class="btn blue" href="${href}" target="_blank" rel="noopener">เปิดเส้นทางงาน</a>`;
+  } else {
+    const x=markers.find(m=>m.id===dest);
+    if(x){
+      actions += `<a class="btn blue" href="https://www.google.com/maps/dir/?api=1&destination=${x.lat},${x.lon}" target="_blank" rel="noopener">Google Maps</a>`;
+    }
+  }
+  box.innerHTML=`
+    <div class="guidetitle">${g.title}</div>
+    <div class="guidemeta">${g.text}</div>
+    <div class="guide-actions">${actions}</div>`;
+  document.getElementById("guideFocusBtn")?.addEventListener("click",()=>guideFocus(g.focus));
+}
+document.querySelectorAll(".guidebtn").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".guidebtn").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  selectedUser=b.dataset.user;
+  renderGuide();
+}));
+document.getElementById("guideDest").addEventListener("change",renderGuide);
+
+
+function mobileShowHome(){
+  const h=document.getElementById("mobileHome");
+  h?.classList.remove("hidden");
+  document.getElementById("mobileSheet").style.display="none";
+}
+function mobileShowMap(){
+  document.getElementById("mobileHome")?.classList.add("hidden");
+  document.getElementById("mobileSheet").style.display="none";
+  setTimeout(()=>map.resize(),80);
+}
+function mobileOpenSheet(title,body){
+  mobileShowMap();
+  const sheet=document.getElementById("mobileSheet");
+  document.getElementById("sheetContent").innerHTML=`<div class="sheet-title">${title}</div>${body}`;
+  sheet.style.display="block";
+}
+function mobileFocusPoint(id){
+  const x=markers.find(m=>m.id===id);
+  if(!x)return;
+  mobileShowMap();
+  map.flyTo({center:[x.lon,x.lat],zoom:18,pitch:60,bearing:-18,essential:true});
+  setTimeout(()=>x.marker.togglePopup(),500);
+}
+
+document.getElementById("sheetClose")?.addEventListener("click",()=>document.getElementById("mobileSheet").style.display="none");
+
+document.querySelectorAll(".bottomnav button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".bottomnav button").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  const tab=b.dataset.tab;
+  if(tab==="home"){ mobileShowHome(); return; }
+  if(tab==="map"){ mobileShowMap(); return; }
+  if(tab==="find"){
+    mobileOpenSheet("ค้นหากิจกรรม",`
+      <input id="sheetSearch" class="search" placeholder="พิมพ์ชื่อกิจกรรมหรือสถานที่…">
+      <div id="sheetResults" class="finder-results"></div>`);
+    const input=document.getElementById("sheetSearch");
+    const results=document.getElementById("sheetResults");
+    const render=(q="")=>{
+      const s=q.trim().toLowerCase();
+      let rows=ACTIVITIES;
+      if(s) rows=ACTIVITIES.filter(a=>a.title.toLowerCase().includes(s)||a.place.toLowerCase().includes(s)||a.keywords.some(k=>k.toLowerCase().includes(s)||s.includes(k.toLowerCase())));
+      results.innerHTML=rows.map(a=>`<div class="finder-item" data-sheet-point="${a.point}"><div class="ft">${a.title}</div><div class="fm">${a.place}<br>${a.time}</div></div>`).join("") || '<div class="noresult">ไม่พบรายการที่ตรงกับคำค้น</div>';
+      results.querySelectorAll("[data-sheet-point]").forEach(el=>el.onclick=()=>mobileFocusPoint(el.dataset.sheetPoint));
+    };
+    input.addEventListener("input",e=>render(e.target.value)); render("");
+    return;
+  }
+  if(tab==="guide"){
+    mobileOpenSheet("นำทางสำหรับผู้เข้าร่วมงาน",`
+      <div class="guidegrid">
+        <button class="guidebtn active" data-muser="student">นิสิต</button>
+        <button class="guidebtn" data-muser="staff">อาจารย์/เจ้าหน้าที่</button>
+        <button class="guidebtn" data-muser="van">รถตู้</button>
+      </div>
+      <div style="height:8px"></div>
+      <select id="mGuideDest">
+        <option value="">เลือกจุดหมาย…</option>
+        <option value="E">พิธีเปิด–ปิด / Zone E</option>
+        <option value="QS">อาคาร QS / Zone A</option>
+        <option value="AG">คณะเกษตรศาสตร์ฯ / Zone B</option>
+        <option value="MED">คณะวิทยาศาสตร์การแพทย์ / Zone C</option>
+        <option value="FB1">สนามฟุตบอล / Zone D</option>
+        <option value="G">สนามคล้องโค/ล้มโค / Zone G</option>
+        <option value="PGPR">เข้าด้ามจอบ / ศูนย์ PGPR</option>
+        <option value="KW">อาคารขวัญเมือง / ที่พักหญิง</option>
+        <option value="HOSP">โรงพยาบาล มน.</option>
+      </select>
+      <div id="mGuideBox" class="guidebox"><div class="guidemeta">เลือกประเภทผู้ใช้และจุดหมาย</div></div>`);
+    let mu="student";
+    const md=document.getElementById("mGuideDest"), mb=document.getElementById("mGuideBox");
+    const draw=()=>{
+      const d=md.value; if(!d){mb.innerHTML='<div class="guidemeta">เลือกประเภทผู้ใช้และจุดหมาย</div>';return;}
+      const g=(GUIDE[mu]||{})[d]; if(!g){mb.innerHTML='<div class="guidemeta">ยังไม่มีคำแนะนำที่ยืนยันแล้ว</div>';return;}
+      const x=markers.find(m=>m.id===d);
+      let second=x?`<a class="btn blue" href="https://www.google.com/maps/dir/?api=1&destination=${x.lat},${x.lon}" target="_blank">Google Maps</a>`:"";
+      if(g.preset){const h=document.getElementById(g.preset)?.href;if(h)second=`<a class="btn blue" href="${h}" target="_blank">เส้นทางงาน</a>`;}
+      mb.innerHTML=`<div class="guidetitle">${g.title}</div><div class="guidemeta">${g.text}</div><div class="guide-actions"><button class="btn" id="mFocus">ดูบนแผนที่</button>${second}</div>`;
+      document.getElementById("mFocus")?.addEventListener("click",()=>mobileFocusPoint(g.focus));
+    };
+    document.querySelectorAll("[data-muser]").forEach(x=>x.addEventListener("click",()=>{
+      document.querySelectorAll("[data-muser]").forEach(y=>y.classList.remove("active"));x.classList.add("active");mu=x.dataset.muser;draw();
+    }));
+    md.addEventListener("change",draw);
+  }
+}));
+
+document.querySelectorAll("[data-mobile-action]").forEach(b=>b.addEventListener("click",()=>{
+  const a=b.dataset.mobileAction;
+  if(a==="opening") mobileFocusPoint("E");
+  if(a==="qs") mobileFocusPoint("QS");
+  if(a==="sports") mobileFocusPoint("FB1");
+  if(a==="pgpr") mobileFocusPoint("PGPR");
+  if(a==="hospital") mobileFocusPoint("HOSP");
+  if(a==="parking"){
+    mobileShowMap();
+    map.flyTo({center:[100.1942,16.7466],zoom:15.7,pitch:45,bearing:-10,essential:true});
+  }
+}));
+
+const mas=document.getElementById("mobileActivitySearch");
+const mar=document.getElementById("mobileActivityResults");
+function renderMobileActivities(q=""){
+  const s=q.trim().toLowerCase();
+  if(!s){mar.innerHTML="";return;}
+  const rows=ACTIVITIES.filter(a=>a.title.toLowerCase().includes(s)||a.place.toLowerCase().includes(s)||a.keywords.some(k=>k.toLowerCase().includes(s)||s.includes(k.toLowerCase()))).slice(0,5);
+  mar.innerHTML=rows.map(a=>`<div class="finder-item" data-mpoint="${a.point}"><div class="ft">${a.title}</div><div class="fm">${a.place}</div></div>`).join("") || '<div class="noresult">ไม่พบกิจกรรมที่ตรงกับคำค้น</div>';
+  mar.querySelectorAll("[data-mpoint]").forEach(x=>x.onclick=()=>mobileFocusPoint(x.dataset.mpoint));
+}
+mas?.addEventListener("input",e=>renderMobileActivities(e.target.value));
+
+
+let mapLoadedOk=false;
+map.on("load",()=>{ mapLoadedOk=true; });
+map.on("error",(e)=>{
+  if(!mapLoadedOk){
+    const f=document.getElementById("mapFallback");
+    if(f) f.classList.add("show");
+  }
+});
+setTimeout(()=>{
+  if(!mapLoadedOk){
+    const f=document.getElementById("mapFallback");
+    if(f) f.classList.add("show");
+  }
+},12000);
+
+</script>
+</body>
+</html>
