@@ -154,6 +154,33 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.14);color:#4c3510
 }
 
+
+@media(max-width:760px){
+  .map-label{
+    display:block !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    font-size:11px !important;
+    line-height:1.15;
+    padding:3px 5px !important;
+    max-width:130px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    z-index:9999 !important;
+    pointer-events:none;
+  }
+  .map-label.label-hidden{display:none !important;}
+}
+
+
+.travel-info{margin:10px 0}
+.travel-info details{border:1px solid var(--line);border-radius:10px;background:#fff;padding:9px 10px}
+.travel-info summary{cursor:pointer;list-style:none}
+.travel-info summary::-webkit-details-marker{display:none}
+.travel-copy{font-size:12px;line-height:1.5;color:var(--muted);padding-top:8px}
+.travel-copy p{margin:5px 0}
+
 </style>
 </head>
 <body>
@@ -183,11 +210,11 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <button class="q" data-id="HOSP">โรงพยาบาล<small>24 ชั่วโมง</small></button>
   </div></div></details></div>
 
-  <div class="title">ฉันต้องการไป…</div>
+  <div class="title"></div>
   <div class="guidegrid">
-    <button class="guidebtn active" data-user="student">นิสิต</button>
-    <button class="guidebtn" data-user="staff">อาจารย์/เจ้าหน้าที่</button>
-    <button class="guidebtn" data-user="van">รถตู้</button>
+    
+    
+    
   </div>
   <div class="card">
     <select id="guideDest">
@@ -403,9 +430,9 @@ function updateLabelVisibility(){
   for(const x of landmarkLabelMarkers){
     let hide=false;
     if(mobile){
-      // At the opening mobile view show only the most useful landmarks.
-      // When zoomed in, reveal all verified landmark labels.
-      hide = z < 15.4 ? !mobileCore.has(x.id) : false;
+      // Core public landmarks are always visible on mobile.
+      // Additional labels appear after zooming in.
+      hide = mobileCore.has(x.id) ? false : z < 15.4;
     }else{
       hide = z < 14.7;
     }
@@ -467,6 +494,7 @@ map.on("load",()=>{
   map.fitBounds(bounds,{padding:45,pitch:55,bearing:-18,maxZoom:16.55});
   addLandmarkLabels();
   setTimeout(updateLabelVisibility, 150);
+  setTimeout(updateLabelVisibility, 900);
 });
 
 document.getElementById("top").onclick=()=>map.easeTo({pitch:0,bearing:0,duration:700});
@@ -1323,9 +1351,9 @@ document.querySelectorAll(".bottomnav button").forEach(b=>b.addEventListener("cl
   if(tab==="guide"){
     mobileOpenSheet("นำทางสำหรับผู้เข้าร่วมงาน",`
       <div class="guidegrid">
-        <button class="guidebtn active" data-muser="student">นิสิต</button>
-        <button class="guidebtn" data-muser="staff">อาจารย์/เจ้าหน้าที่</button>
-        <button class="guidebtn" data-muser="van">รถตู้</button>
+        
+        
+        
       </div>
       <div style="height:8px"></div>
       <select id="mGuideDest">
