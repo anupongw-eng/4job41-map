@@ -181,6 +181,25 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 .travel-copy{font-size:12px;line-height:1.5;color:var(--muted);padding-top:8px}
 .travel-copy p{margin:5px 0}
 
+
+.mobile-schedule{margin-top:16px}
+.mobile-section-head{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:8px}
+.mobile-section-head strong{font-size:18px}
+.mobile-section-head small{font-size:11px;color:var(--muted);text-align:right}
+.mobile-daybar{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.mdaybtn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;font-weight:800;white-space:nowrap}
+.mdaybtn.active{background:#1f7a45;color:#fff;border-color:#1f7a45}
+.mobile-day-events{display:grid;gap:8px;margin-top:9px}
+.mobile-event-card{border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px}
+.mobile-event-time{font-weight:900;color:#b34a16;font-size:12px}
+.mobile-event-title{font-weight:900;margin-top:2px;line-height:1.35}
+.mobile-event-place{font-size:12px;color:var(--muted);line-height:1.4;margin-top:3px}
+.mobile-event-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.mobile-event-actions button,.mobile-event-actions a{min-height:40px;display:flex;align-items:center;justify-content:center;border-radius:9px;font-weight:800;text-decoration:none}
+.mobile-event-actions button{border:1px solid #cfd9d2;background:#f5faf7;color:#1d5e38}
+.mobile-event-actions a{background:#1677e8;color:#fff}
+.mobile-empty{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px;font-size:12px;color:var(--muted)}
+
 </style>
 </head>
 <body>
@@ -258,6 +277,22 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   <div class="release-note"><b>ข้อมูลการเข้า–ออก:</b> ประตู 2 เปิดใช้งานช่วง 06:00–18:00 น. และบริเวณหน้าโรงพยาบาล ห้ามจอดรอหรือรับ–ส่งกีดขวางเส้นทาง</div>
 <div class="title">บริการออนไลน์</div>
   
+
+    <section class="mobile-schedule">
+      <div class="mobile-section-head">
+        <strong>กิจกรรมตามวัน</strong>
+        <small>กำหนดการ 4–7 พฤศจิกายน 2569</small>
+      </div>
+      <div class="mobile-daybar">
+        <button class="mdaybtn active" data-mday="4" type="button">4 พ.ย.</button>
+        <button class="mdaybtn" data-mday="5" type="button">5 พ.ย.</button>
+        <button class="mdaybtn" data-mday="6" type="button">6 พ.ย.</button>
+        <button class="mdaybtn" data-mday="7" type="button">7 พ.ย.</button>
+        <button class="mdaybtn" data-mday="8" type="button">8 พ.ย.</button>
+      </div>
+      <div id="mobileDayEvents" class="mobile-day-events"></div>
+    </section>
+
     <div class="service-row">
     <a class="service-link" href="https://transit.nu.ac.th/" target="_blank" rel="noopener">
       NU Transit
@@ -303,7 +338,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 
     <div class="hero-note">
       <b>ต้องการไปที่ไหน?</b>
-      เลือกเมนูด้านล่างเพื่อค้นหากิจกรรม ดูแผนที่ หรือนำทางตามประเภทผู้ใช้
+      ค้นหากิจกรรม เลือกวัน ดูตำแหน่งบนแผนที่ หรือเปิดนำทางได้โดยตรง
     </div>
 
     <div class="service-row">
@@ -1309,6 +1344,62 @@ document.querySelectorAll(".guidebtn").forEach(b=>b.addEventListener("click",()=
   renderGuide();
 }));
 document.getElementById("guideDest").addEventListener("change",renderGuide);
+
+
+function renderMobileDay(day){
+  const box=document.getElementById("mobileDayEvents");
+  if(!box) return;
+  document.querySelectorAll(".mdaybtn").forEach(b=>b.classList.toggle("active",b.dataset.mday===day));
+  const evs=EVENTS[day]||[];
+
+  if(!evs.length){
+    box.innerHTML=`<div class="mobile-empty">ยังไม่ได้ผูกกำหนดการรายกิจกรรมของวันที่ ${day} พฤศจิกายน 2569 เข้ากับแผนที่</div>`;
+    return;
+  }
+
+  box.innerHTML=evs.map(e=>{
+    const point=markers.find(m=>m.id===e.point);
+    const lat=Number.isFinite(e.lat)?e.lat:(point?point.lat:null);
+    const lon=Number.isFinite(e.lon)?e.lon:(point?point.lon:null);
+    const hasCoord=Number.isFinite(lat)&&Number.isFinite(lon);
+    const nav=hasCoord?`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`:"";
+    return `<div class="mobile-event-card">
+      <div class="mobile-event-time">${e.time}</div>
+      <div class="mobile-event-title">${e.title}</div>
+      <div class="mobile-event-place">${e.place}</div>
+      ${hasCoord?`<div class="mobile-event-actions">
+        <button type="button" data-mobile-event-lat="${lat}" data-mobile-event-lon="${lon}" data-mobile-event-title="${e.title}">ดูบนแผนที่</button>
+        <a href="${nav}" target="_blank" rel="noopener">นำทาง</a>
+      </div>`:`<div class="mobile-empty" style="margin-top:8px">ยังไม่มีพิกัดยืนยัน</div>`}
+    </div>`;
+  }).join("");
+
+  box.querySelectorAll("[data-mobile-event-lat][data-mobile-event-lon]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const lat=parseFloat(btn.dataset.mobileEventLat), lon=parseFloat(btn.dataset.mobileEventLon);
+      if(!Number.isFinite(lat)||!Number.isFinite(lon)) return;
+      mobileShowMap();
+      map.flyTo({center:[lon,lat],zoom:18,pitch:60,bearing:-18,essential:true});
+
+      const pulse=document.createElement("div");
+      pulse.className="eventpulse";
+      if(eventMarker) eventMarker.remove();
+      eventMarker=new maplibregl.Marker({element:pulse,anchor:"center"}).setLngLat([lon,lat]).addTo(map);
+
+      const lab=document.createElement("div");
+      lab.className="event-context-label";
+      lab.textContent=btn.dataset.mobileEventTitle||"กิจกรรม";
+      if(eventLabelMarker) eventLabelMarker.remove();
+      eventLabelMarker=new maplibregl.Marker({element:lab,anchor:"bottom",offset:[0,-14]})
+        .setLngLat([lon,lat]).addTo(map);
+    });
+  });
+}
+
+document.querySelectorAll(".mdaybtn").forEach(b=>{
+  b.addEventListener("click",()=>renderMobileDay(b.dataset.mday));
+});
+renderMobileDay("4");
 
 function mobileShowHome(){
   const h=document.getElementById("mobileHome");
