@@ -1,0 +1,27 @@
+4 JOP 41 v34 FINAL — Finalization
+=================================
+
+Locked from v33:
+- Coordinates unchanged
+- Schedule unchanged
+- Mobile daily schedule retained
+- Mobile map labels retained
+- Google Maps navigation retained
+- NU Transit links retained
+- Real place names retained; no public Zone workflow
+
+Final cleanup:
+- Removed visible RC/Public Release/version wording
+- Removed internal technical wording from public UI
+- Public title set to:
+  แผนที่งานประเพณี 4 จอบแห่งชาติ ครั้งที่ 41
+- Subtitle simplified for public use
+
+Recommended smoke test after upload:
+1) Mobile Home
+2) Mobile Map
+3) 4–7 Nov daily schedules
+4) One activity from each major venue
+5) Google Maps navigation
+6) NU Transit
+7) Desktop view

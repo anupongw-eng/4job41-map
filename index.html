@@ -10,7 +10,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>4 JOP 41 — Public Release v12</title>
+<title>แผนที่งานประเพณี 4 จอบแห่งชาติ ครั้งที่ 41</title>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.css">
 <style>
 :root {
@@ -249,59 +249,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
       <option value="HOSP">โรงพยาบาล มน.</option>
     </select>
     <div id="guideBox" class="guidebox">
-      <div class="guidemeta">เลือกประเภทผู้ใช้และจุดหมาย ระบบจะแนะนำวิธีเดินทางที่เหมาะสมจากข้อมูลที่ยืนยันแล้ว</div>
-    </div>
-  </div>
-
-  <div class="title">นำทาง</div>
-  <div class="card">
-    <select id="from"><option value="">เลือกต้นทาง…</option></select>
-    <div style="height:7px"></div>
-    <select id="to"><option value="">เลือกปลายทาง…</option></select>
-    <div style="height:8px"></div>
-    <button class="btn" id="go" style="width:100%">เปิดเส้นทางใน Google Maps</button>
-  </div>
-
-  <div class="title">กิจกรรมตามวัน</div>
-  <div class="meta" style="margin-bottom:7px">กำหนดการวันที่ 4–7 พฤศจิกายน 2569 ผูกพิกัดรายกิจกรรมและใช้พิกัดที่ยืนยันล่าสุด</div>
-  <div class="daybar">
-    <button class="daybtn active" data-day="4">4 พ.ย.</button>
-    <button class="daybtn" data-day="5">5 พ.ย.</button>
-    <button class="daybtn" data-day="6">6 พ.ย.</button>
-    <button class="daybtn" data-day="7">7 พ.ย.</button>
-    <button class="daybtn" data-day="8">8 พ.ย.</button>
-  </div>
-  <div id="dayEvents" class="eventbox"></div>
-
-  
-  <div class="release-note"><b>ข้อมูลการเข้า–ออก:</b> ประตู 2 เปิดใช้งานช่วง 06:00–18:00 น. และบริเวณหน้าโรงพยาบาล ห้ามจอดรอหรือรับ–ส่งกีดขวางเส้นทาง</div>
-<div class="title">บริการออนไลน์</div>
-<div class="service-row">
-    <a class="service-link" href="https://transit.nu.ac.th/" target="_blank" rel="noopener">
-      NU Transit
-      <small>รถไฟฟ้าประจำทางแบบเรียลไทม์</small>
-    </a>
-    <a class="service-link" href="https://ww5.agi.nu.ac.th/4jobb41/schedule" target="_blank" rel="noopener">
-      กำหนดการ
-      <small>ฉบับปัจจุบันของงาน</small>
-    </a>
-  </div>
-  <div class="release-note">
-    เลือกกิจกรรมหรือสถานที่ แล้วเปิดการนำทางด้วย Google Maps
-  </div>
-
-  <div class="sidebar-section"><details class="collapsible"><summary>เส้นทางงาน</summary><div class="inside">
-  <div class="row">
-    <a id="r1" class="btn blue" target="_blank">R1</a>
-    <a id="r4" class="btn blue" target="_blank">R4</a>
-    <a id="r5" class="btn blue" target="_blank">R5</a>
-    <a id="r6" class="btn blue" target="_blank">R6</a>
-  </div></div></details></div>
-
-  <div class="note">
-    3D ในรุ่นนี้ใช้ footprint/ความสูงอาคารจากข้อมูล vector map จริงเมื่อมีข้อมูล ไม่ได้สร้างรูปอาคารด้วย AI
-    โดยยึดพิกัดสถานที่จริงที่ยืนยันแล้วเป็นหลัก
-  </div>
+      
 </aside>
 
 <main class="mapwrap">
@@ -310,7 +258,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
       <img class="mobile-logo-img" src="logo-4job.png" alt="โลโก้งาน 4 จอบ">
       <div>
         <div class="mobile-title">งานประเพณี 4 จอบแห่งชาติ ครั้งที่ 41</div>
-        <div class="mobile-sub">Interactive Event Guide • มหาวิทยาลัยนเรศวร • 4–8 พ.ย. 2569</div>
+        <div class="mobile-sub">แผนที่และกำหนดการงาน • มหาวิทยาลัยนเรศวร • 4–8 พ.ย. 2569</div>
       </div>
     </div>
 
@@ -1312,58 +1260,8 @@ function renderGuide(){
   const dest=document.getElementById("guideDest").value;
   const box=document.getElementById("guideBox");
   if(!dest){
-    box.innerHTML='<div class="guidemeta">เลือกประเภทผู้ใช้และจุดหมาย ระบบจะแนะนำวิธีเดินทางที่เหมาะสมจากข้อมูลที่ยืนยันแล้ว</div>';
-    return;
-  }
-  const g=(GUIDE[selectedUser]||{})[dest];
-  if(!g){
-    box.innerHTML='<div class="guidemeta">ยังไม่มีคำแนะนำสำหรับเส้นทางนี้ในฐานข้อมูลที่ยืนยันแล้ว</div>';
-    return;
-  }
-  let actions=`<button class="btn" id="guideFocusBtn">ดูจุดหมาย</button>`;
-  if(g.preset){
-    const href=document.getElementById(g.preset)?.href || "#";
-    actions += `<a class="btn blue" href="${href}" target="_blank" rel="noopener">เปิดเส้นทางงาน</a>`;
-  } else {
-    const x=markers.find(m=>m.id===dest);
-    if(x){
-      actions += `<a class="btn blue" href="https://www.google.com/maps/dir/?api=1&destination=${x.lat},${x.lon}" target="_blank" rel="noopener">Google Maps</a>`;
-    }
-  }
-  box.innerHTML=`
-    <div class="guidetitle">${g.title}</div>
-    <div class="guidemeta">${g.text}</div>
-    <div class="guide-actions">${actions}</div>`;
-  document.getElementById("guideFocusBtn")?.addEventListener("click",()=>guideFocus(g.focus));
-}
-document.querySelectorAll(".guidebtn").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll(".guidebtn").forEach(x=>x.classList.remove("active"));
-  b.classList.add("active");
-  selectedUser=b.dataset.user;
-  renderGuide();
-}));
-document.getElementById("guideDest").addEventListener("change",renderGuide);
-
-
-function renderMobileDay(day){
-  const box=document.getElementById("mobileDayEvents");
-  if(!box) return;
-  document.querySelectorAll(".mdaybtn").forEach(b=>b.classList.toggle("active",b.dataset.mday===day));
-  const evs=EVENTS[day]||[];
-
-  if(!evs.length){
-    box.innerHTML=`<div class="mobile-empty">ยังไม่ได้ผูกกำหนดการรายกิจกรรมของวันที่ ${day} พฤศจิกายน 2569 เข้ากับแผนที่</div>`;
-    return;
-  }
-
-  box.innerHTML=evs.map(e=>{
-    const point=markers.find(m=>m.id===e.point);
-    const lat=Number.isFinite(e.lat)?e.lat:(point?point.lat:null);
-    const lon=Number.isFinite(e.lon)?e.lon:(point?point.lon:null);
-    const hasCoord=Number.isFinite(lat)&&Number.isFinite(lon);
-    const nav=hasCoord?`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`:"";
-    return `<div class="mobile-event-card">
-      <div class="mobile-event-time">${e.time}</div>
+    box.innerHTML='
+    
       <div class="mobile-event-title">${e.title}</div>
       <div class="mobile-event-place">${e.place}</div>
       ${hasCoord?`<div class="mobile-event-actions">
@@ -1474,16 +1372,7 @@ document.querySelectorAll(".bottomnav button").forEach(b=>b.addEventListener("cl
         <option value="KW">อาคารขวัญเมือง / ที่พักหญิง</option>
         <option value="HOSP">โรงพยาบาล มน.</option>
       </select>
-      <div id="mGuideBox" class="guidebox"><div class="guidemeta">เลือกประเภทผู้ใช้และจุดหมาย</div></div>`);
-    let mu="student";
-    const md=document.getElementById("mGuideDest"), mb=document.getElementById("mGuideBox");
-    const draw=()=>{
-      const d=md.value; if(!d){mb.innerHTML='<div class="guidemeta">เลือกประเภทผู้ใช้และจุดหมาย</div>';return;}
-      const g=(GUIDE[mu]||{})[d]; if(!g){mb.innerHTML='<div class="guidemeta">ยังไม่มีคำแนะนำที่ยืนยันแล้ว</div>';return;}
-      const x=markers.find(m=>m.id===d);
-      let second=x?`<a class="btn blue" href="https://www.google.com/maps/dir/?api=1&destination=${x.lat},${x.lon}" target="_blank">Google Maps</a>`:"";
-      if(g.preset){const h=document.getElementById(g.preset)?.href;if(h)second=`<a class="btn blue" href="${h}" target="_blank">เส้นทางงาน</a>`;}
-      mb.innerHTML=`<div class="guidetitle">${g.title}</div><div class="guidemeta">${g.text}</div><div class="guide-actions"><button class="btn" id="mFocus">ดูบนแผนที่</button>${second}</div>`;
+      <div id="mGuideBox" class="guidebox"><div class="guidemeta">${g.text}</div><div class="guide-actions"><button class="btn" id="mFocus">ดูบนแผนที่</button>${second}</div>`;
       document.getElementById("mFocus")?.addEventListener("click",()=>mobileFocusPoint(g.focus));
     };
     document.querySelectorAll("[data-muser]").forEach(x=>x.addEventListener("click",()=>{
