@@ -136,6 +136,17 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   .map-label{font-size:10px;padding:2px 4px}
 }
 
+
+.day-events{display:grid;gap:8px}
+.day-event-card{border:1px solid var(--line);border-radius:11px;padding:10px;background:#fff}
+.day-event-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.day-event-time{font-weight:900;color:#1f7a45;white-space:nowrap}
+.day-event-name{font-weight:900}
+.day-event-place{font-size:12px;color:var(--muted);line-height:1.4;margin-top:3px}
+.day-event-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.day-event-actions .btn{padding:8px 9px}
+.schedule-missing{font-size:12px;line-height:1.45;color:#6a4a00;background:#fff8e8;border:1px solid #f0dfb9;border-radius:10px;padding:9px 10px}
+
 </style>
 </head>
 <body>
@@ -145,7 +156,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <img class="release-logo" src="logo-4job.png" alt="โลโก้งาน 4 จอบ">
     <div>
       <h1>4 จอบแห่งชาติ ครั้งที่ 41</h1>
-      <div class="sub">Public Release v17 — อาคาร 3D จากข้อมูลแผนที่จริง</div>
+      <div class="sub">Public Release v22 — อาคาร 3D จากข้อมูลแผนที่จริง</div>
     </div>
   </div>
   
@@ -199,6 +210,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   </div>
 
   <div class="title">กิจกรรมตามวัน</div>
+  <div class="meta" style="margin-bottom:7px">กำหนดการวันที่ 4–7 พฤศจิกายน 2569 ผูกพิกัดรายกิจกรรมแล้ว โดยใช้พิกัด master และพิกัดที่ผู้ใช้ยืนยันล่าสุด</div>
   <div class="daybar">
     <button class="daybtn active" data-day="4">4 พ.ย.</button>
     <button class="daybtn" data-day="5">5 พ.ย.</button>
@@ -300,7 +312,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <button id="top">มุมบน</button>
     <button id="tilt">3D</button>
   </div>
-  <div class="status">Public Release v17 • ตำแหน่ง marker และ label anchor ใช้พิกัด master ที่ยืนยันแล้ว • label สำคัญจะแสดงเมื่อซูมเข้าเพียงพอ • อาคาร 3D ใช้ footprint/height จากข้อมูลแผนที่จริง • การนำทางส่งต่อไปยัง Google Maps และ NU Transit</div>
+  <div class="status">Public Release v22 • ตำแหน่ง marker และ label anchor ใช้พิกัด master ที่ยืนยันแล้ว • label สำคัญจะแสดงเมื่อซูมเข้าเพียงพอ • อาคาร 3D ใช้ footprint/height จากข้อมูลแผนที่จริง • การนำทางส่งต่อไปยัง Google Maps และ NU Transit</div>
 
   <nav class="bottomnav" aria-label="เมนูหลัก">
     <button class="active" data-tab="home"><span>⌂</span>หน้าแรก</button>
@@ -477,15 +489,465 @@ document.getElementById("r5").href=routeUrl(C.GATE1,C.QS);
 document.getElementById("r6").href=routeUrl(C.GATE2,C.QS,[C.HOSP]);
 
 const EVENTS = {
-  "4":[
-    {id:"opening",title:"พิธีเปิด / งานเลี้ยงต้อนรับ",time:"17:00–22:00",point:"E",place:"Zone E — ลานกิจกรรมประตู 5",status:"confirmed"}
+  "4": [
+    {
+      "id": "arrival_registration",
+      "title": "สถาบันต่าง ๆ เดินทางถึงมหาวิทยาลัยนเรศวร ถวายบังคมพระบรมราชานุสาวรีย์สมเด็จพระนเรศวรมหาราช และลงทะเบียนนิสิต/นักศึกษา",
+      "time": "ตลอดทั้งวัน",
+      "point": "MON",
+      "place": "พระบรมราชานุสาวรีย์สมเด็จพระนเรศวรมหาราช / อาคารเรียนรวม (QS)",
+      "status": "confirmed",
+      "lat": 16.749497570363005,
+      "lon": 100.19145342111622,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master",
+      "secondary_location": {
+        "name": "อาคารเรียนรวม (QS)",
+        "lat": 16.746589967352374,
+        "lon": 100.19253034357695,
+        "status": "verified_master"
+      }
+    },
+    {
+      "id": "committee_4jop",
+      "title": "ประชุมคณะกรรมการภาคี 4 จอบ และสรุปผลค่ายผู้นำจิตอาสา 4 จอบ ครั้งที่ 21 (เจ้าภาพมหาวิทยาลัยขอนแก่น)",
+      "time": "13:00–16:00",
+      "point": "TH",
+      "place": "โรงละครเฉลิมพระเกียรติ",
+      "status": "confirmed",
+      "lat": 16.745830072474078,
+      "lon": 100.19289638893403,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "sports_committee",
+      "title": "ประชุมคณะกรรมการกีฬาทักษะเกษตรและกีฬาสากล",
+      "time": "14:40–16:30",
+      "point": "QS",
+      "place": "อาคารเรียนรวม (QS)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "opening",
+      "title": "พิธีเปิดงานประเพณี 4 จอบแห่งชาติ ครั้งที่ 41 งานเลี้ยงต้อนรับสมาชิก และแสดงจากเจ้าภาพและ 5 สถาบัน",
+      "time": "17:00–22:00",
+      "point": "E",
+      "place": "ลานกิจกรรมประตู 5",
+      "status": "confirmed",
+      "lat": 16.749624934781387,
+      "lon": 100.19563727412164,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    }
   ],
-  "5":[], // ยังไม่ได้ผูกกำหนดการรายกิจกรรม
-  "6":[], // ยังไม่ได้ผูกกำหนดการรายกิจกรรม
-  "7":[
-    {id:"closing",title:"พิธีปิด",time:"17:00–22:00",point:"E",place:"Zone E — ลานกิจกรรมประตู 5",status:"confirmed"}
+  "5": [
+    {
+      "id": "tray_garden",
+      "title": "การจัดสวนถาด",
+      "time": "08:00–13:00",
+      "point": "QS",
+      "place": "อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 17)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "insect_setting",
+      "title": "การเซทแมลง",
+      "time": "08:00–17:00",
+      "point": "AG",
+      "place": "อาคารเรียนรวมคณะเกษตรฯ (AG7403, AG7401 หมุดเลขที่ 2)",
+      "status": "confirmed",
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master — คณะเกษตรศาสตร์ฯ"
+    },
+    {
+      "id": "artificial_udder",
+      "title": "การรีดเต้านมเทียม",
+      "time": "08:00–12:00",
+      "point": "QS",
+      "place": "อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "plant_disease_diagnosis",
+      "title": "การวินิจฉัยโรคพืช",
+      "time": "08:00–12:00",
+      "point": "MED",
+      "place": "อาคารคณะวิทยาศาสตร์การแพทย์ (MD 346/1–346/3, MD 331–334 หมุดเลขที่ 3)",
+      "status": "confirmed",
+      "lat": 16.745569905477748,
+      "lon": 100.19158091155131,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "agri_pr_media",
+      "title": "การผลิตแผ่นประชาสัมพันธ์เพื่อส่งเสริมการเกษตร",
+      "time": "08:00–12:00",
+      "point": "AG",
+      "place": "อาคารปราบไตรจักร (ห้อง 44 และ 64)",
+      "status": "confirmed",
+      "lat": 16.74756958188839,
+      "lon": 100.19306012404827,
+      "coord_status": "verified_user",
+      "coord_source": "user-confirmed coordinate"
+    },
+    {
+      "id": "agri_business_plan",
+      "title": "แผนธุรกิจนวัตกรรมทางการเกษตร",
+      "time": "08:00–12:00",
+      "point": "QS",
+      "place": "อาคารเรียนรวม QS (QS2302, QS2208, QS2210 หมุดเลขที่ 1 จุดที่ 1)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "agri_answer",
+      "title": "การตอบปัญหา",
+      "time": "08:00–12:00",
+      "point": "QS",
+      "place": "อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 16)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "plant_disease_rapid",
+      "title": "การแข่งขันตอบวาจาเนื้อเยื่อโรคพืช",
+      "time": "15:00–16:00",
+      "point": "MED",
+      "place": "อาคารคณะวิทยาศาสตร์การแพทย์ (MD 346/1–346/3, MD 331–334 หมุดเลขที่ 3)",
+      "status": "confirmed",
+      "lat": 16.745569905477748,
+      "lon": 100.19158091155131,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "football_m_day5",
+      "title": "ฟุตบอล 7 คน (ชาย)",
+      "time": "13:00–16:00",
+      "point": "FB1",
+      "place": "สนามฟุตบอล 1 (หมุดเลขที่ 4)",
+      "status": "confirmed",
+      "lat": 16.751243364763496,
+      "lon": 100.19518017992819,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "volleyball_w_day5",
+      "title": "วอลเลย์บอล (หญิง)",
+      "time": "13:00–16:00",
+      "point": "GYM",
+      "place": "สนามกีฬาในร่ม/โดม (หมุดเลขที่ 4)",
+      "status": "confirmed",
+      "lat": 16.750885906084104,
+      "lon": 100.19312953583223,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "volleyball_m_day5",
+      "title": "วอลเลย์บอล (ชาย)",
+      "time": "13:00–16:00",
+      "point": "GYM",
+      "place": "สนามกีฬาในร่ม/โดม (หมุดเลขที่ 4)",
+      "status": "confirmed",
+      "lat": 16.750885906084104,
+      "lon": 100.19312953583223,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "staff_welcome_dinner",
+      "title": "งานเลี้ยงต้อนรับอาจารย์–เจ้าหน้าที่",
+      "time": "17:00–22:00",
+      "point": "",
+      "place": "ร้านบุญช่วยโต๊ะจีน",
+      "status": "confirmed",
+      "coord_status": "verified_user",
+      "coord_source": "user-confirmed coordinate",
+      "lat": 16.773391153688117,
+      "lon": 100.17855518635756
+    }
   ],
-  "8":[] // ยังไม่ได้ผูกกำหนดการรายกิจกรรม
+  "6": [
+    {
+      "id": "plant_propagation",
+      "title": "การขยายพันธุ์พืช (ติดตา-ต่อกิ่ง-ทาบกิ่ง)",
+      "time": "08:00–13:00",
+      "point": "QS",
+      "place": "อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8) (QS2110 จุดที่ 2)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "herbicide_calc",
+      "title": "การแข่งขันคำนวณอัตราการใช้และพ่นสารกำจัดวัชพืช",
+      "time": "08:00–13:00",
+      "point": "QS",
+      "place": "อาคารเรียนรวม QS (QS2207, QS2209 ลานจอดหลังโรงละคร หมุดเลขที่ 1 จุดที่ 1)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "precision_soil",
+      "title": "การตรวจวัดสมบัติกายภาพและการใช้ข้อมูลดินเพื่อการจัดการดินแบบแม่นยำ",
+      "time": "08:00–13:00",
+      "point": "MED",
+      "place": "อาคารคณะวิทยาศาสตร์การแพทย์ (MD 346/1–346/3, MD 331–334 หมุดเลขที่ 3)",
+      "status": "confirmed",
+      "lat": 16.745569905477748,
+      "lon": 100.19158091155131,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "extension_speech",
+      "title": "การพูดส่งเสริมการเกษตร",
+      "time": "08:00–13:00",
+      "point": "QS",
+      "place": "อาคารเรียนรวม QS (QS2302, QS2208, QS2210 หมุดเลขที่ 1 จุดที่ 1)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "poultry_carcass",
+      "title": "การตัดแต่งซากสัตว์ปีก",
+      "time": "08:00–13:00",
+      "point": "MED",
+      "place": "อาคารคณะวิทยาศาสตร์การแพทย์ (ห้องแข่งขัน MD 221, ห้องเก็บตัวนักกีฬา MD 332)",
+      "status": "confirmed",
+      "lat": 16.745569905477748,
+      "lon": 100.19158091155131,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "fish_seed_pack",
+      "title": "การแข่งขันบรรจุพันธุ์ลูกปลา",
+      "time": "08:00–13:00",
+      "point": "QS",
+      "place": "อาคารเรียนรวม QS (บริเวณโถง QS โซนหน้าโรงละคร, QS2108 หมุดเลขที่ 1 จุดที่ 1)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "im_injection",
+      "title": "การแข่งขันฉีดยาเข้ากล้ามเนื้อ (ทีมสาธิต)",
+      "time": "08:00–13:00",
+      "point": "QS",
+      "place": "อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "football_m_day6",
+      "title": "ฟุตบอล 7 คน (ชาย)",
+      "time": "13:00–16:00",
+      "point": "FB1",
+      "place": "สนามฟุตบอล 1 (หมุดเลขที่ 4)",
+      "status": "confirmed",
+      "lat": 16.751243364763496,
+      "lon": 100.19518017992819,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "volleyball_w_day6",
+      "title": "วอลเลย์บอล (หญิง)",
+      "time": "13:00–16:00",
+      "point": "GYM",
+      "place": "สนามกีฬาในร่ม/โดม (หมุดเลขที่ 4)",
+      "status": "confirmed",
+      "lat": 16.750885906084104,
+      "lon": 100.19312953583223,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "volleyball_m_day6",
+      "title": "วอลเลย์บอล (ชาย)",
+      "time": "13:00–16:00",
+      "point": "GYM",
+      "place": "สนามกีฬาในร่ม/โดม (หมุดเลขที่ 4)",
+      "status": "confirmed",
+      "lat": 16.750885906084104,
+      "lon": 100.19312953583223,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    }
+  ],
+  "7": [
+    {
+      "id": "agri_project",
+      "title": "โครงงานทางการเกษตร",
+      "time": "08:00–13:00",
+      "point": "QS",
+      "place": "อาคารเรียนรวม QS (QS2301, QS2201, QS2203 หมุดเลขที่ 1)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "hoe_handle",
+      "title": "การเข้าด้ามจอบเตรียมแปลง",
+      "time": "08:00–13:00",
+      "point": "PGPR",
+      "place": "ศูนย์ PGPR (สถานที่ปรับล่าสุดสำหรับการแข่งขันเข้าด้ามจอบเตรียมแปลง)",
+      "status": "confirmed",
+      "source_place": "ฟาร์มวิจัยและฝึกทักษะเกษตร (หมุดเลขที่ 9)",
+      "lat": 16.73537946761842,
+      "lon": 100.19413569696994,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "planting_media_fill",
+      "title": "การกรอกวัสดุปลูก",
+      "time": "08:00–13:00",
+      "point": "QS",
+      "place": "อาคารเรียนรวม QS (บริเวณโถง QS โซนหน้าโรงละคร, QS2108 หมุดเลขที่ 1 จุดที่ 1)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "feed_analysis",
+      "title": "การวิเคราะห์อาหารสัตว์",
+      "time": "08:00–13:00",
+      "point": "MED",
+      "place": "อาคารคณะวิทยาศาสตร์การแพทย์ (ห้องแข่งขัน MD 346/1–346/3, ห้องเก็บตัวนักกีฬา MD 334, ห้องเก็บตัวกรรมการ MD 333)",
+      "status": "confirmed",
+      "lat": 16.745569905477748,
+      "lon": 100.19158091155131,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "agri_problem",
+      "title": "การตอบปัญหาทางการเกษตร",
+      "time": "08:00–13:00",
+      "point": "QS",
+      "place": "อาคารเรียนรวม QS (QS2302, QS2208, QS2210 หมุดเลขที่ 1 จุดที่ 1)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "cattle_rope",
+      "title": "การคล้องโคและล้มโค",
+      "time": "08:00–13:00",
+      "point": "G",
+      "place": "สนามฟุตบอล 4 ข้างคณะวิทย์ฯ (หมุดเลขที่ 8)",
+      "status": "confirmed",
+      "lat": 16.740479934380073,
+      "lon": 100.19581938196396,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "fish_fillet",
+      "title": "การแล่เนื้อปลา (ทีมสาธิต)",
+      "time": "08:00–13:00",
+      "point": "MED",
+      "place": "อาคารคณะวิทยาศาสตร์การแพทย์ (ห้องแข่งขัน MD 221, ห้องเก็บตัวนักกีฬา MD 332 หมุดเลขที่ 3)",
+      "status": "confirmed",
+      "lat": 16.745569905477748,
+      "lon": 100.19158091155131,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "football_final",
+      "title": "ฟุตบอล 7 คน (ชาย) ชิงชนะเลิศ",
+      "time": "13:00–16:00",
+      "point": "FB1",
+      "place": "สนามฟุตบอล 1 (หมุดเลขที่ 4)",
+      "status": "confirmed",
+      "lat": 16.751243364763496,
+      "lon": 100.19518017992819,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "traditional_sports",
+      "title": "การแข่งขันกีฬาพื้นบ้าน",
+      "time": "13:00–16:00",
+      "point": "ACT",
+      "place": "อาคารกีฬาอเนกประสงค์ (โดม หมุดเลขที่ 5)",
+      "status": "confirmed",
+      "map_note": "ใช้จุดอาคารกิจกรรมข้างอาคารอเนกประสงค์เป็นจุดอ้างอิงจาก master ปัจจุบัน",
+      "lat": 16.75144833170893,
+      "lon": 100.1928839629854,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "summary_meeting",
+      "title": "การประชุมสรุปงานประเพณี 4 จอบแห่งชาติ ครั้งที่ 41",
+      "time": "13:00–16:00",
+      "point": "QS",
+      "place": "อาคารเรียนรวม QS (QS2302 หมุดเลขที่ 1)",
+      "status": "confirmed",
+      "lat": 16.746589967352374,
+      "lon": 100.19253034357695,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    },
+    {
+      "id": "closing",
+      "title": "พิธีปิดงานประเพณี 4 จอบแห่งชาติ ครั้งที่ 41",
+      "time": "17:00–22:00",
+      "point": "E",
+      "place": "ลานอเนกประสงค์ ประตู 5",
+      "status": "confirmed",
+      "lat": 16.749624934781387,
+      "lon": 100.19563727412164,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
+    }
+  ],
+  "8": []
 };
 
 let eventMarker = null;
@@ -494,25 +956,60 @@ function renderDay(day){
   const box=document.getElementById("dayEvents");
   const evs=EVENTS[day]||[];
   if(eventMarker){eventMarker.remove();eventMarker=null;}
+
   if(!evs.length){
-    box.innerHTML=`<div class="emptyday">ยังไม่ได้ผูกกำหนดการรายกิจกรรมของวันที่ ${day} พฤศจิกายน 2569 เข้ากับแผนที่ กรุณาตรวจสอบกำหนดการฉบับปัจจุบัน<br><a href="https://ww5.agi.nu.ac.th/4jobb41/schedule" target="_blank" rel="noopener">เปิดกำหนดการงาน</a></div>`;
+    const msg = `ยังไม่ได้ผูกกำหนดการรายกิจกรรมของวันที่ ${day} พฤศจิกายน 2569 เข้ากับแผนที่`;
+    box.innerHTML=`
+      <div class="schedule-missing">
+        ${msg}
+        <br><a href="https://ww5.agi.nu.ac.th/4jobb41/schedule" target="_blank" rel="noopener">เปิดกำหนดการงานฉบับปัจจุบัน</a>
+      </div>`;
     return;
   }
-  box.innerHTML=evs.map(e=>`
-    <div>
-      <div class="eventtime">${e.time}</div>
-      <div class="eventtitle">${e.title}</div>
-      <div class="eventmeta">${e.place}</div>
-      <button class="btn" data-event-point="${e.point}" style="width:100%;margin-top:8px">ดูตำแหน่งบนแผนที่</button>
-    </div>`).join("");
-  box.querySelectorAll("[data-event-point]").forEach(btn=>btn.addEventListener("click",()=>{
-    const x=markers.find(m=>m.id===btn.dataset.eventPoint);
-    if(!x)return;
-    map.flyTo({center:[x.lon,x.lat],zoom:18,pitch:60,bearing:-18,essential:true});
-    setTimeout(()=>x.marker.togglePopup(),600);
+
+  box.innerHTML=`<div class="day-events">` + evs.map(e=>{
+    const point=markers.find(m=>m.id===e.point);
+    const lat = Number.isFinite(e.lat) ? e.lat : (point ? point.lat : null);
+    const lon = Number.isFinite(e.lon) ? e.lon : (point ? point.lon : null);
+    const hasCoord = Number.isFinite(lat) && Number.isFinite(lon);
+    const nav = hasCoord
+      ? `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`
+      : "";
+    const mapNote = e.map_note ? `<div class="day-event-place" style="margin-top:6px;color:#8a5a00">${e.map_note}</div>` : "";
+    const sourcePlace = e.source_place ? `<div class="day-event-place" style="margin-top:4px">กำหนดการเดิม: ${e.source_place}</div>` : "";
+    const coordText = hasCoord
+      ? `<div class="day-event-place" style="margin-top:4px">พิกัด: ${lat.toFixed(6)}, ${lon.toFixed(6)}</div>`
+      : "";
+    const actions = hasCoord
+      ? `<div class="day-event-actions">
+           <button class="btn" data-event-lat="${lat}" data-event-lon="${lon}" data-event-title="${e.title}" type="button">ดูตำแหน่งบนแผนที่</button>
+           <a class="btn blue" href="${nav}" target="_blank" rel="noopener">นำทาง</a>
+         </div>`
+      : `<div class="schedule-missing" style="margin-top:8px">ยังไม่มีพิกัดยืนยันสำหรับสถานที่นี้ จึงยังไม่เปิดปุ่มนำทาง</div>`;
+    return `
+      <div class="day-event-card">
+        <div class="day-event-top">
+          <div>
+            <div class="day-event-name">${e.title}</div>
+            <div class="day-event-place">${e.place}</div>
+            ${sourcePlace}
+            ${mapNote}
+            ${coordText}
+          </div>
+          <div class="day-event-time">${e.time}</div>
+        </div>
+        ${actions}
+      </div>`;
+  }).join("") + `</div>`;
+
+  box.querySelectorAll("[data-event-lat][data-event-lon]").forEach(btn=>btn.addEventListener("click",()=>{
+    const lat=parseFloat(btn.dataset.eventLat), lon=parseFloat(btn.dataset.eventLon);
+    if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
+    map.flyTo({center:[lon,lat],zoom:18,pitch:60,bearing:-18,essential:true});
     const pulse=document.createElement("div");
     pulse.className="eventpulse";
-    eventMarker=new maplibregl.Marker({element:pulse,anchor:"center"}).setLngLat([x.lon,x.lat]).addTo(map);
+    if(eventMarker) eventMarker.remove();
+    eventMarker=new maplibregl.Marker({element:pulse,anchor:"center"}).setLngLat([lon,lat]).addTo(map);
   }));
 }
 
