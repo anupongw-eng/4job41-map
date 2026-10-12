@@ -163,7 +163,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <img class="release-logo" src="logo-4job.png" alt="โลโก้งาน 4 จอบ">
     <div>
       <h1>4 จอบแห่งชาติ ครั้งที่ 41</h1>
-      <div class="sub">Public Release v25 — อาคาร 3D จากข้อมูลแผนที่จริง</div>
+      <div class="sub">Public Release v26 — อาคาร 3D จากข้อมูลแผนที่จริง</div>
     </div>
   </div>
   
@@ -175,9 +175,9 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 
   <div class="sidebar-section"><details class="collapsible" open><summary>จุดสำคัญ</summary><div class="inside">
   <div class="quick">
-    <button class="q" data-id="E">พิธีเปิด–ปิด<small>Zone E</small></button>
-    <button class="q" data-id="QS">อาคาร QS<small>Zone A</small></button>
-    <button class="q" data-id="FB1">สนามฟุตบอล<small>Zone D</small></button>
+    <button class="q" data-id="E">พิธีเปิด–ปิด<small>ลานกิจกรรมประตู 5</small></button>
+    <button class="q" data-id="QS">อาคาร QS<small>อาคารเรียนรวม</small></button>
+    <button class="q" data-id="FB1">สนามฟุตบอล<small>สนามฟุตบอล 1</small></button>
     <button class="q" data-id="PGPR">เข้าด้ามจอบ<small>ศูนย์ PGPR</small></button>
     <button class="q" data-id="KW">ที่พักหญิง<small>อาคารขวัญเมือง</small></button>
     <button class="q" data-id="HOSP">โรงพยาบาล<small>24 ชั่วโมง</small></button>
@@ -192,12 +192,12 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   <div class="card">
     <select id="guideDest">
       <option value="">เลือกจุดหมาย…</option>
-      <option value="E">พิธีเปิด–ปิด / Zone E</option>
-      <option value="QS">อาคาร QS / Zone A</option>
-      <option value="AG">คณะเกษตรศาสตร์ฯ / Zone B</option>
-      <option value="MED">คณะวิทยาศาสตร์การแพทย์ / Zone C</option>
-      <option value="FB1">สนามฟุตบอล / Zone D</option>
-      <option value="G">สนามคล้องโค/ล้มโค / Zone G</option>
+      <option value="E">พิธีเปิด–ปิด / ลานกิจกรรมประตู 5</option>
+      <option value="QS">อาคาร QS</option>
+      <option value="AG">คณะเกษตรศาสตร์ฯ</option>
+      <option value="MED">คณะวิทยาศาสตร์การแพทย์</option>
+      <option value="FB1">สนามฟุตบอล 1</option>
+      <option value="G">สนามคล้องโค/ล้มโค</option>
       <option value="PGPR">เข้าด้ามจอบ / ศูนย์ PGPR</option>
       <option value="KW">อาคารขวัญเมือง / ที่พักหญิง</option>
       <option value="HOSP">โรงพยาบาล มน.</option>
@@ -255,7 +255,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 
   <div class="note">
     3D ในรุ่นนี้ใช้ footprint/ความสูงอาคารจากข้อมูล vector map จริงเมื่อมีข้อมูล ไม่ได้สร้างรูปอาคารด้วย AI
-    และยังไม่สร้าง Zone polygon จนกว่าจะยืนยันขอบเขตจริง
+    โดยยึดพิกัดสถานที่จริงที่ยืนยันแล้วเป็นหลัก
   </div>
 </aside>
 
@@ -291,9 +291,9 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     </div>
 
     <div class="home-actions">
-      <button class="home-action" data-mobile-action="opening"><strong>พิธีเปิด–ปิด</strong><small>Zone E • ลานกิจกรรมประตู 5</small></button>
-      <button class="home-action" data-mobile-action="qs"><strong>อาคาร QS</strong><small>ลงทะเบียน / กองอำนวยการ / Zone A</small></button>
-      <button class="home-action" data-mobile-action="sports"><strong>สนามกีฬา</strong><small>Zone D • สนามฟุตบอล / Gymnasium</small></button>
+      <button class="home-action" data-mobile-action="opening"><strong>พิธีเปิด–ปิด</strong><small>ลานกิจกรรมประตู 5</small></button>
+      <button class="home-action" data-mobile-action="qs"><strong>อาคาร QS</strong><small>ลงทะเบียน / กองอำนวยการ</small></button>
+      <button class="home-action" data-mobile-action="sports"><strong>สนามกีฬา</strong><small>สนามฟุตบอล / Gymnasium</small></button>
       <button class="home-action" data-mobile-action="pgpr"><strong>เข้าด้ามจอบ</strong><small>ศูนย์ PGPR</small></button>
       <button class="home-action" data-mobile-action="parking"><strong>ที่จอดรถ</strong><small>ดู P1–P11 บนแผนที่</small></button>
       <button class="home-action" data-mobile-action="hospital"><strong>โรงพยาบาล</strong><small>รพ.มหาวิทยาลัยนเรศวร • 24 ชม.</small></button>
@@ -319,7 +319,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <button id="top">มุมบน</button>
     <button id="tilt">3D</button>
   </div>
-  <div class="status">Public Release v25 • ตำแหน่ง marker และ label anchor ใช้พิกัด master ที่ยืนยันแล้ว • label จุดสำคัญจะแสดงตั้งแต่มุมมองเริ่มต้น และเมื่อเลือกกิจกรรม ระบบจะแสดงป้ายชื่อกิจกรรมตรงพิกัดนั้นโดยไม่ทำให้หน้าแรกแน่นเกินไป • อาคาร 3D ใช้ footprint/height จากข้อมูลแผนที่จริง • การนำทางส่งต่อไปยัง Google Maps และ NU Transit</div>
+  <div class="status">Public Release v26 • ตำแหน่ง marker และ label anchor ใช้พิกัด master ที่ยืนยันแล้ว • แสดงชื่อสถานที่จริงแทนชื่อโซน • กำหนดการรายวัน 4–7 พ.ย. แสดงครบและคลิกดูตำแหน่งกิจกรรมได้ • อาคาร 3D ใช้ footprint/height จากข้อมูลแผนที่จริง • การนำทางส่งต่อไปยัง Google Maps และ NU Transit</div>
 
   <nav class="bottomnav" aria-label="เมนูหลัก">
     <button class="active" data-tab="home"><span>⌂</span>หน้าแรก</button>
@@ -370,9 +370,9 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 const LABEL_IDS = ["QS","E","PGPR","G","FB1","HOSP","KW","AG"];
 const LABEL_TEXT = {
   QS:"อาคาร QS",
-  E:"Zone E",
+  E:"ลานกิจกรรมประตู 5",
   PGPR:"ศูนย์ PGPR",
-  G:"Zone G",
+  G:"สนามคล้องโค/ล้มโค",
   FB1:"สนามฟุตบอล",
   HOSP:"โรงพยาบาล",
   KW:"อาคารขวัญเมือง",
@@ -447,7 +447,7 @@ map.on("load",()=>{
       .setLngLat([lon,lat])
       .setPopup(new maplibregl.Popup({offset:16}).setHTML(
         `<div class="popup-title">${esc(p.name)}</div>
-         <div class="muted">${esc(p.category)}<br>${lat.toFixed(6)}, ${lon.toFixed(6)}</div>
+         <div class="muted">${esc((p.category||"").includes("Zone") ? "สถานที่จัดกิจกรรม" : p.category)}<br>${lat.toFixed(6)}, ${lon.toFixed(6)}</div>
          <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}" target="_blank" style="display:block;margin-top:8px;text-decoration:none;background:#1f7a45;color:white;padding:8px;border-radius:8px;text-align:center;font-weight:800">นำทางมาที่นี่</a>`
       )).addTo(map);
     markers.push({id:p.id,name:(p.name+" "+p.id+" "+p.category).toLowerCase(),lat,lon,marker,p});
@@ -958,6 +958,7 @@ const EVENTS = {
 };
 
 let eventMarker = null;
+let eventLabelMarker = null;
 function renderDay(day){
   document.querySelectorAll(".daybtn").forEach(b=>b.classList.toggle("active",b.dataset.day===day));
   const box=document.getElementById("dayEvents");
@@ -1038,7 +1039,7 @@ const ACTIVITIES = [
     title:"พิธีเปิด / งานเลี้ยงต้อนรับ",
     keywords:["พิธีเปิด","เปิดงาน","งานเลี้ยงต้อนรับ","welcome","opening"],
     point:"E",
-    place:"Zone E — ลานกิจกรรมประตู 5",
+    place:"ลานกิจกรรมประตู 5",
     time:"4 พฤศจิกายน 2569 เวลา 17:00–22:00",
     tag:"พิธีการ"
   },
@@ -1046,7 +1047,7 @@ const ACTIVITIES = [
     title:"พิธีปิด",
     keywords:["พิธีปิด","ปิดงาน","closing"],
     point:"E",
-    place:"Zone E — ลานกิจกรรมประตู 5",
+    place:"ลานกิจกรรมประตู 5",
     time:"7 พฤศจิกายน 2569 เวลา 17:00–22:00",
     tag:"พิธีการ"
   },
@@ -1054,7 +1055,7 @@ const ACTIVITIES = [
     title:"การแข่งขันกีฬาเซทแมลง",
     keywords:["เซทแมลง","set แมลง","แมลง","insect"],
     point:"AG",
-    place:"Zone B — คณะเกษตรศาสตร์ฯ (AG 2403 / AG 2412)",
+    place:"คณะเกษตรศาสตร์ฯ (AG 2403 / AG 2412)",
     time:"ตรวจสอบกำหนดการกลางของงาน",
     tag:"กีฬาทักษะ"
   },
@@ -1062,7 +1063,7 @@ const ACTIVITIES = [
     title:"การแข่งขันกีฬาสากล",
     keywords:["กีฬาสากล","ฟุตบอล","gymnasium","กีฬา","สนามฟุตบอล"],
     point:"FB1",
-    place:"Zone D — สนามฟุตบอล 1 / Gymnasium / สนามกีฬา",
+    place:"สนามฟุตบอล 1 / Gymnasium / สนามกีฬา",
     time:"ตรวจสอบกำหนดการกลางของงาน",
     tag:"กีฬา"
   },
@@ -1070,7 +1071,7 @@ const ACTIVITIES = [
     title:"การแข่งขันสนามคล้องโค / ล้มโค",
     keywords:["คล้องโค","ล้มโค","โค","cattle"],
     point:"G",
-    place:"Zone G — สนามคล้องโค/ล้มโค",
+    place:"สนามคล้องโค/ล้มโค",
     time:"ตรวจสอบกำหนดการกลางของงาน",
     tag:"กีฬาทักษะ"
   },
@@ -1086,7 +1087,7 @@ const ACTIVITIES = [
     title:"ลงทะเบียน / กองอำนวยการ / จุดประสานงาน",
     keywords:["ลงทะเบียน","registration","กองอำนวยการ","ประสานงาน","qs"],
     point:"QS",
-    place:"Zone A — อาคาร QS / อาคารโรงละคร",
+    place:"อาคาร QS / อาคารโรงละคร",
     time:"ตรวจสอบกำหนดการกลางของงาน",
     tag:"บริการ"
   }
@@ -1133,35 +1134,35 @@ renderActivities("__initial__");
 const GUIDE = {
   student: {
     E: {
-      title:"นิสิต → พิธีเปิด–ปิด (Zone E)",
-      text:"สำหรับนิสิตให้ใช้รถไฟฟ้าประจำทาง ม.นเรศวรเป็นหลัก ไม่แนะนำให้นำรถส่วนตัวเข้าพื้นที่งาน จากอาคารขวัญเมืองให้เดินไปสถานีขนส่งมวลชน แล้วใช้ NU Transit ไปยังจุดใกล้ Zone E ก่อนเดินเข้าสู่ลานกิจกรรมประตู 5",
+      title:"นิสิต → พิธีเปิด–ปิด",
+      text:"สำหรับนิสิตให้ใช้รถไฟฟ้าประจำทาง ม.นเรศวรเป็นหลัก ไม่แนะนำให้นำรถส่วนตัวเข้าพื้นที่งาน จากอาคารขวัญเมืองให้เดินไปสถานีขนส่งมวลชน แล้วใช้ NU Transit ไปยังจุดใกล้ลานกิจกรรมประตู 5 ก่อนเดินเข้าสู่พื้นที่พิธี",
       focus:"E",
       origin:"KW",
       transit:true
     },
     QS: {
       title:"นิสิต → อาคาร QS",
-      text:"ใช้ NU Transit ไปยังจุดจอดใกล้อาคาร QS แล้วเดินเข้าสู่ Zone A โดยตรวจสอบตำแหน่งรถแบบเรียลไทม์ก่อนเดินทาง",
+      text:"ใช้ NU Transit ไปยังจุดจอดใกล้อาคาร QS แล้วเดินเข้าสู่อาคาร โดยตรวจสอบตำแหน่งรถแบบเรียลไทม์ก่อนเดินทาง",
       focus:"QS",
       origin:"KW",
       transit:true
     },
     AG: {
       title:"นิสิต → คณะเกษตรศาสตร์ฯ",
-      text:"ใช้ NU Transit ไปยังจุดจอดใกล้คณะเกษตรศาสตร์ฯ แล้วเดินเข้าสู่ Zone B โดยตรวจสอบตำแหน่งรถแบบเรียลไทม์ก่อนเดินทาง",
+      text:"ใช้ NU Transit ไปยังจุดจอดใกล้คณะเกษตรศาสตร์ฯ แล้วเดินเข้าสู่สถานที่จัดกิจกรรม โดยตรวจสอบตำแหน่งรถแบบเรียลไทม์ก่อนเดินทาง",
       focus:"AG",
       origin:"KW",
       transit:true
     },
     MED: {
       title:"นิสิต → คณะวิทยาศาสตร์การแพทย์",
-      text:"ใช้ NU Transit ไปยังจุดจอดใกล้คณะวิทยาศาสตร์การแพทย์ แล้วเดินเข้าสู่ Zone C โดยตรวจสอบตำแหน่งรถแบบเรียลไทม์ก่อนเดินทาง",
+      text:"ใช้ NU Transit ไปยังจุดจอดใกล้คณะวิทยาศาสตร์การแพทย์ แล้วเดินเข้าสู่สถานที่จัดกิจกรรม โดยตรวจสอบตำแหน่งรถแบบเรียลไทม์ก่อนเดินทาง",
       focus:"MED",
       origin:"KW",
       transit:true
     },
     FB1: {
-      title:"นิสิต → สนามฟุตบอล / Zone D",
+      title:"นิสิต → สนามฟุตบอล 1",
       text:"ยังไม่มีจุด NU Transit ใกล้สนามที่ยืนยันไว้ในฐานข้อมูลสาธารณะของงาน รุ่นนี้จึงไม่ระบุจุดลงรถแบบเจาะจง ให้ตรวจสอบ NU Transit แบบเรียลไทม์และเดินต่อจากจุดจอดที่เหมาะสม",
       focus:"FB1",
       origin:"KW",
@@ -1169,7 +1170,7 @@ const GUIDE = {
     },
     G: {
       title:"นิสิต → สนามคล้องโค/ล้มโค",
-      text:"ยังไม่มีจุด NU Transit ใกล้ Zone G ที่ยืนยันไว้ในฐานข้อมูลสาธารณะของงาน จึงควรตรวจสอบ NU Transit แบบเรียลไทม์และใช้การเดินต่อ/รถงานตามประกาศหน้างาน",
+      text:"ยังไม่มีจุด NU Transit ใกล้สนามคล้องโค/ล้มโคที่ยืนยันไว้ในฐานข้อมูลสาธารณะของงาน จึงควรตรวจสอบ NU Transit แบบเรียลไทม์และใช้การเดินต่อ/รถงานตามประกาศหน้างาน",
       focus:"G",
       origin:"KW",
       transit:true
@@ -1197,24 +1198,24 @@ const GUIDE = {
     }
   },
   staff: {
-    E: {title:"อาจารย์/เจ้าหน้าที่ → Zone E",text:"แนะนำเข้าทางประตู 5 และใช้เส้นทาง R1 ไปยัง Zone E ตามแผนงาน ก่อนเคลื่อนต่อไปยังโรงพยาบาล มน. หากจำเป็น",focus:"E",preset:"r1"},
+    E: {title:"อาจารย์/เจ้าหน้าที่ → ลานกิจกรรมประตู 5",text:"แนะนำเข้าทางประตู 5 และใช้เส้นทาง R1 ไปยังลานกิจกรรมประตู 5 ตามแผนงาน ก่อนเคลื่อนต่อไปยังโรงพยาบาล มน. หากจำเป็น",focus:"E",preset:"r1"},
     QS: {title:"อาจารย์/เจ้าหน้าที่ → QS",text:"สามารถใช้ R5 จากประตู 1 → QS หรือ R6 จากประตู 2 → หน้ารพ.มน. → QS ตามจุดเข้าที่สะดวก",focus:"QS",preset:"r5"},
     AG: {title:"อาจารย์/เจ้าหน้าที่ → คณะเกษตรศาสตร์ฯ",text:"ใช้เส้นทางรถส่วนตัวตามถนนมหาวิทยาลัยและเลือกที่จอด P3–P6 ตามความเหมาะสม โดยตรวจสภาพพื้นที่จริงหน้างาน",focus:"AG"},
     MED: {title:"อาจารย์/เจ้าหน้าที่ → คณะวิทยาศาสตร์การแพทย์",text:"ใช้เส้นทางรถส่วนตัวภายในมหาวิทยาลัยและเลือกที่จอดใกล้เคียงตามพื้นที่ที่เปิดใช้งาน",focus:"MED"},
-    FB1: {title:"อาจารย์/เจ้าหน้าที่ → สนามฟุตบอล",text:"ใช้เส้นทางรถส่วนตัวไป Zone D และเลือกจุดจอดที่ได้รับอนุญาตใกล้พื้นที่กีฬา",focus:"FB1"},
-    G: {title:"อาจารย์/เจ้าหน้าที่ → Zone G",text:"ใช้ R4 จาก QS → สนามคล้องโค/ล้มโค → ศูนย์ PGPR หากต้องปฏิบัติงานต่อในพื้นที่ฟาร์ม",focus:"G",preset:"r4"},
-    PGPR: {title:"อาจารย์/เจ้าหน้าที่ → ศูนย์ PGPR",text:"ใช้ R4 จาก QS → Zone G → ศูนย์ PGPR ซึ่งเป็นสถานที่แข่งขันเข้าด้ามจอบล่าสุด",focus:"PGPR",preset:"r4"},
+    FB1: {title:"อาจารย์/เจ้าหน้าที่ → สนามฟุตบอล 1",text:"ใช้เส้นทางรถส่วนตัวไปสนามฟุตบอล 1 และเลือกจุดจอดที่ได้รับอนุญาตใกล้พื้นที่กีฬา",focus:"FB1"},
+    G: {title:"อาจารย์/เจ้าหน้าที่ → สนามคล้องโค/ล้มโค",text:"ใช้ R4 จาก QS → สนามคล้องโค/ล้มโค → ศูนย์ PGPR หากต้องปฏิบัติงานต่อในพื้นที่ฟาร์ม",focus:"G",preset:"r4"},
+    PGPR: {title:"อาจารย์/เจ้าหน้าที่ → ศูนย์ PGPR",text:"ใช้ R4 จาก QS → สนามคล้องโค/ล้มโค → ศูนย์ PGPR ซึ่งเป็นสถานที่แข่งขันเข้าด้ามจอบล่าสุด",focus:"PGPR",preset:"r4"},
     KW: {title:"อาจารย์/เจ้าหน้าที่ → อาคารขวัญเมือง",text:"ใช้เส้นทางรถส่วนตัวไปพื้นที่อาคารขวัญเมือง และใช้ P11 หากเปิดใช้งานตามแผนจอดรถ",focus:"KW"},
     HOSP: {title:"อาจารย์/เจ้าหน้าที่ → โรงพยาบาล มน.",text:"เดินทางไปโรงพยาบาลได้โดยตรง แต่ไม่ควรจอดรอหรือรับ–ส่งกีดขวางบริเวณหน้าโรงพยาบาล โดยเฉพาะแนว R6",focus:"HOSP"}
   },
   van: {
-    E: {title:"รถตู้ → Zone E",text:"แนะนำเข้าประตู 5 และใช้ R1 ไปยัง Zone E จากนั้นเคลื่อนรถออกตามแผน หลีกเลี่ยงการจอดกีดขวางพื้นที่พิธี",focus:"E",preset:"r1"},
+    E: {title:"รถตู้ → ลานกิจกรรมประตู 5",text:"แนะนำเข้าประตู 5 และใช้ R1 ไปยังลานกิจกรรมประตู 5 จากนั้นเคลื่อนรถออกตามแผน หลีกเลี่ยงการจอดกีดขวางพื้นที่พิธี",focus:"E",preset:"r1"},
     QS: {title:"รถตู้ → QS",text:"ใช้ R5 จากประตู 1 → QS หรือ R6 จากประตู 2 → หน้ารพ.มน. → QS ทั้งนี้ R6 ห้ามจอดรอหรือรับ–ส่งบริเวณหน้าโรงพยาบาล",focus:"QS",preset:"r6"},
     AG: {title:"รถตู้ → คณะเกษตรศาสตร์ฯ",text:"เข้าพื้นที่ตามถนนหลักและใช้จุดจอดที่เจ้าหน้าที่กำหนด หลีกเลี่ยงการจอดค้างในจุดรับ–ส่งกิจกรรม",focus:"AG"},
     MED: {title:"รถตู้ → คณะวิทยาศาสตร์การแพทย์",text:"ใช้ถนนหลักของมหาวิทยาลัยและปฏิบัติตามจุดรับ–ส่ง/จุดจอดที่เจ้าหน้าที่กำหนด",focus:"MED"},
-    FB1: {title:"รถตู้ → สนามฟุตบอล",text:"ไป Zone D ตามถนนหลัก และใช้พื้นที่รับ–ส่งหรือจอดรถตามแผนจราจรหน้างาน",focus:"FB1"},
-    G: {title:"รถตู้ → Zone G",text:"ใช้ R4 จาก QS → Zone G → ศูนย์ PGPR โดยตรวจสภาพถนนและพื้นที่ฟาร์มก่อนเข้า",focus:"G",preset:"r4"},
-    PGPR: {title:"รถตู้ → ศูนย์ PGPR",text:"ใช้ R4 จาก QS → Zone G → ศูนย์ PGPR หากสภาพทางเหมาะสม และปฏิบัติตามเจ้าหน้าที่ควบคุมพื้นที่",focus:"PGPR",preset:"r4"},
+    FB1: {title:"รถตู้ → สนามฟุตบอล 1",text:"ไปสนามฟุตบอล 1 ตามถนนหลัก และใช้พื้นที่รับ–ส่งหรือจอดรถตามแผนจราจรหน้างาน",focus:"FB1"},
+    G: {title:"รถตู้ → สนามคล้องโค/ล้มโค",text:"ใช้ R4 จาก QS → สนามคล้องโค/ล้มโค → ศูนย์ PGPR โดยตรวจสภาพถนนและพื้นที่ฟาร์มก่อนเข้า",focus:"G",preset:"r4"},
+    PGPR: {title:"รถตู้ → ศูนย์ PGPR",text:"ใช้ R4 จาก QS → สนามคล้องโค/ล้มโค → ศูนย์ PGPR หากสภาพทางเหมาะสม และปฏิบัติตามเจ้าหน้าที่ควบคุมพื้นที่",focus:"PGPR",preset:"r4"},
     KW: {title:"รถตู้ → อาคารขวัญเมือง",text:"รับ–ส่งตามจุดที่กำหนดบริเวณที่พักหญิง และหลีกเลี่ยงการจอดกีดขวางเส้นทางรถไฟฟ้าประจำทาง",focus:"KW"},
     HOSP: {title:"รถตู้ → โรงพยาบาล มน.",text:"ใช้เฉพาะกรณีจำเป็นหรือเหตุฉุกเฉิน ห้ามจอดรอ/รับ–ส่งกีดขวางหน้าโรงพยาบาล",focus:"HOSP"}
   }
@@ -1321,12 +1322,12 @@ document.querySelectorAll(".bottomnav button").forEach(b=>b.addEventListener("cl
       <div style="height:8px"></div>
       <select id="mGuideDest">
         <option value="">เลือกจุดหมาย…</option>
-        <option value="E">พิธีเปิด–ปิด / Zone E</option>
-        <option value="QS">อาคาร QS / Zone A</option>
-        <option value="AG">คณะเกษตรศาสตร์ฯ / Zone B</option>
-        <option value="MED">คณะวิทยาศาสตร์การแพทย์ / Zone C</option>
-        <option value="FB1">สนามฟุตบอล / Zone D</option>
-        <option value="G">สนามคล้องโค/ล้มโค / Zone G</option>
+        <option value="E">พิธีเปิด–ปิด / ลานกิจกรรมประตู 5</option>
+        <option value="QS">อาคาร QS</option>
+        <option value="AG">คณะเกษตรศาสตร์ฯ</option>
+        <option value="MED">คณะวิทยาศาสตร์การแพทย์</option>
+        <option value="FB1">สนามฟุตบอล 1</option>
+        <option value="G">สนามคล้องโค/ล้มโค</option>
         <option value="PGPR">เข้าด้ามจอบ / ศูนย์ PGPR</option>
         <option value="KW">อาคารขวัญเมือง / ที่พักหญิง</option>
         <option value="HOSP">โรงพยาบาล มน.</option>
