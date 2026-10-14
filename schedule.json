@@ -160,10 +160,10 @@
         "point": "FB1",
         "place": "สนามฟุตบอล 1 (หมุดเลขที่ 4)",
         "status": "confirmed",
-        "lat": 16.751243364763496,
-        "lon": 100.19518017992819,
-        "coord_status": "verified_master",
-        "coord_source": "4JOP41 master"
+        "lat": 16.751113952036707,
+        "lon": 100.19465433284728,
+        "coord_status": "verified_user",
+        "coord_source": "user-confirmed coordinates 2026-10-14"
       },
       {
         "id": "volleyball_w_day5",
@@ -294,10 +294,10 @@
         "point": "FB1",
         "place": "สนามฟุตบอล 1 (หมุดเลขที่ 4)",
         "status": "confirmed",
-        "lat": 16.751243364763496,
-        "lon": 100.19518017992819,
-        "coord_status": "verified_master",
-        "coord_source": "4JOP41 master"
+        "lat": 16.751113952036707,
+        "lon": 100.19465433284728,
+        "coord_status": "verified_user",
+        "coord_source": "user-confirmed coordinates 2026-10-14"
       },
       {
         "id": "volleyball_w_day6",
@@ -393,10 +393,10 @@
         "point": "G",
         "place": "สนามฟุตบอล 4 ข้างคณะวิทย์ฯ (หมุดเลขที่ 8)",
         "status": "confirmed",
-        "lat": 16.740479934380073,
-        "lon": 100.19581938196396,
-        "coord_status": "verified_master",
-        "coord_source": "4JOP41 master"
+        "lat": 16.74099402809978,
+        "lon": 100.19564622241427,
+        "coord_status": "verified_user",
+        "coord_source": "user-confirmed coordinates 2026-10-14"
       },
       {
         "id": "fish_fillet",
@@ -417,10 +417,10 @@
         "point": "FB1",
         "place": "สนามฟุตบอล 1 (หมุดเลขที่ 4)",
         "status": "confirmed",
-        "lat": 16.751243364763496,
-        "lon": 100.19518017992819,
-        "coord_status": "verified_master",
-        "coord_source": "4JOP41 master"
+        "lat": 16.751113952036707,
+        "lon": 100.19465433284728,
+        "coord_status": "verified_user",
+        "coord_source": "user-confirmed coordinates 2026-10-14"
       },
       {
         "id": "traditional_sports",
@@ -429,10 +429,10 @@
         "point": "FB1",
         "place": "สนามฟุตบอล 1 (สถานที่แข่งขันปรับล่าสุด)",
         "status": "confirmed",
-        "lat": 16.751243364763496,
-        "lon": 100.19518017992819,
+        "lat": 16.751113952036707,
+        "lon": 100.19465433284728,
         "coord_status": "verified_user",
-        "coord_source": "user-confirmed venue change to football field 1"
+        "coord_source": "user-confirmed coordinates 2026-10-14"
       },
       {
         "id": "summary_meeting",
