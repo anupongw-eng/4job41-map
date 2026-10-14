@@ -221,12 +221,12 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 
   <div class="sidebar-section"><details class="collapsible" open><summary>จุดสำคัญ</summary><div class="inside">
   <div class="quick">
-    <button class="q" data-id="E">พิธีเปิด–ปิด<small>ลานกิจกรรมประตู 5</small></button>
     <button class="q" data-id="QS">อาคาร QS<small>อาคารเรียนรวม</small></button>
-    <button class="q" data-id="FB1">สนามฟุตบอล<small>สนามฟุตบอล 1</small></button>
-    <button class="q" data-id="PGPR">เข้าด้ามจอบ<small>ศูนย์ PGPR</small></button>
+    <button class="q" data-id="E">พิธีเปิด–ปิด<small>ลานกิจกรรมประตู 5</small></button>
+    <button class="q" data-id="MALE">ที่พักชาย<small>ห้อง พรบ.</small></button>
     <button class="q" data-id="KW">ที่พักหญิง<small>อาคารขวัญเมือง</small></button>
-    <button class="q" data-id="HOSP">โรงพยาบาล<small>24 ชั่วโมง</small></button>
+    <button class="q" data-id="HOSP">รพ.มน.<small>โรงพยาบาลมหาวิทยาลัยนเรศวร</small></button>
+    <button class="q" data-id="FB1">สนามฟุตบอล<small>สนามฟุตบอล 1</small></button>
   </div></div></details></div>
 
   <div class="title"></div>
@@ -245,7 +245,8 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
       <option value="FB1">สนามฟุตบอล 1</option>
       <option value="G">สนามคล้องโค/ล้มโค</option>
       <option value="PGPR">เข้าด้ามจอบ / ศูนย์ PGPR</option>
-      <option value="KW">อาคารขวัญเมือง / ที่พักหญิง</option>
+      <option value="MALE">ที่พักชาย / ห้อง พรบ.</option>
+      <option value="KW">ที่พักหญิง / อาคารขวัญเมือง</option>
       <option value="HOSP">โรงพยาบาล มน.</option>
     </select>
     <div id="guideBox" class="guidebox">
@@ -351,12 +352,12 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     </div>
 
     <div class="home-actions">
-      <button class="home-action" data-mobile-action="opening"><strong>พิธีเปิด–ปิด</strong><small>ลานกิจกรรมประตู 5</small></button>
       <button class="home-action" data-mobile-action="qs"><strong>อาคาร QS</strong><small>ลงทะเบียน / กองอำนวยการ</small></button>
-      <button class="home-action" data-mobile-action="sports"><strong>สนามกีฬา</strong><small>สนามฟุตบอล / Gymnasium</small></button>
-      <button class="home-action" data-mobile-action="pgpr"><strong>เข้าด้ามจอบ</strong><small>ศูนย์ PGPR</small></button>
-      <button class="home-action" data-mobile-action="parking"><strong>ที่จอดรถ</strong><small>ดู P1–P11 บนแผนที่</small></button>
-      <button class="home-action" data-mobile-action="hospital"><strong>โรงพยาบาล</strong><small>รพ.มหาวิทยาลัยนเรศวร • 24 ชม.</small></button>
+      <button class="home-action" data-mobile-action="opening"><strong>พิธีเปิด–ปิด</strong><small>ลานกิจกรรมประตู 5</small></button>
+      <button class="home-action" data-mobile-action="male"><strong>ที่พักชาย</strong><small>ห้อง พรบ.</small></button>
+      <button class="home-action" data-mobile-action="female"><strong>ที่พักหญิง</strong><small>อาคารขวัญเมือง</small></button>
+      <button class="home-action" data-mobile-action="hospital"><strong>รพ.มน.</strong><small>โรงพยาบาลมหาวิทยาลัยนเรศวร</small></button>
+      <button class="home-action" data-mobile-action="sports"><strong>สนามฟุตบอล</strong><small>สนามฟุตบอล 1</small></button>
     </div>
   </section>
 
@@ -1470,7 +1471,8 @@ document.querySelectorAll(".bottomnav button").forEach(b=>b.addEventListener("cl
         <option value="FB1">สนามฟุตบอล 1</option>
         <option value="G">สนามคล้องโค/ล้มโค</option>
         <option value="PGPR">เข้าด้ามจอบ / ศูนย์ PGPR</option>
-        <option value="KW">อาคารขวัญเมือง / ที่พักหญิง</option>
+        <option value="MALE">ที่พักชาย / ห้อง พรบ.</option>
+        <option value="KW">ที่พักหญิง / อาคารขวัญเมือง</option>
         <option value="HOSP">โรงพยาบาล มน.</option>
       </select>
       <div id="mGuideBox" class="guidebox"><div class="guidemeta">เลือกประเภทผู้ใช้และจุดหมาย</div></div>`);
@@ -1497,7 +1499,8 @@ document.querySelectorAll("[data-mobile-action]").forEach(b=>b.addEventListener(
   if(a==="opening") mobileFocusPoint("E");
   if(a==="qs") mobileFocusPoint("QS");
   if(a==="sports") mobileFocusPoint("FB1");
-  if(a==="pgpr") mobileFocusPoint("PGPR");
+  if(a==="male") mobileFocusPoint("MALE");
+  if(a==="female") mobileFocusPoint("KW");
   if(a==="hospital") mobileFocusPoint("HOSP");
   if(a==="parking"){
     mobileShowMap();
