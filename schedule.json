@@ -426,13 +426,13 @@
         "id": "traditional_sports",
         "title": "การแข่งขันกีฬาพื้นบ้าน",
         "time": "13:00–16:00",
-        "point": "GYM",
-        "place": "อาคารกีฬาอเนกประสงค์ (โดม หมุดเลขที่ 5)",
+        "point": "FB1",
+        "place": "สนามฟุตบอล 1 (สถานที่แข่งขันปรับล่าสุด)",
         "status": "confirmed",
-        "lat": 16.750870335843896,
-        "lon": 100.19313140162897,
+        "lat": 16.751243364763496,
+        "lon": 100.19518017992819,
         "coord_status": "verified_user",
-        "coord_source": "user-confirmed coordinate"
+        "coord_source": "user-confirmed venue change to football field 1"
       },
       {
         "id": "summary_meeting",
