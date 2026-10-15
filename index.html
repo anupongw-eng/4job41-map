@@ -229,6 +229,23 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     <button class="q" data-id="FB1">สนามฟุตบอล<small>สนามฟุตบอล 1</small></button>
   </div></div></details></div>
 
+
+  <div class="sidebar-section"><details class="collapsible"><summary>ที่จอดรถ P1–P11 (11 จุด)</summary><div class="inside">
+    <div class="quick">
+    <button class="q" type="button" data-id="P1">P1 อาคารอเนกประสงค์</button>
+    <button class="q" type="button" data-id="P2">P2 ลานสมเด็จฯ</button>
+    <button class="q" type="button" data-id="P3">P3 ศึกษาศาสตร์–มนุษยศาสตร์</button>
+    <button class="q" type="button" data-id="P4">P4 CITCOM</button>
+    <button class="q" type="button" data-id="P5">P5 BEC</button>
+    <button class="q" type="button" data-id="P6">P6 สระว่ายน้ำ</button>
+    <button class="q" type="button" data-id="P7">P7 ร้านหนังสือจุฬาฯ</button>
+    <button class="q" type="button" data-id="P8">P8 อาคารจอดรถ</button>
+    <button class="q" type="button" data-id="P9">P9 วิทยาลัยนานาชาติ</button>
+    <button class="q" type="button" data-id="P10">P10 ที่จอดรถบัส</button>
+    <button class="q" type="button" data-id="P11">P11 อาคารขวัญเมือง</button>
+    </div><div class="meta" style="margin-top:8px">เลือกที่จอดรถเพื่อดูจุดบนแผนที่และเปิดนำทางจากหน้าต่างข้อมูลตำแหน่ง</div>
+  </div></details></div>
+
   <div class="title"></div>
   <div class="guidegrid">
     
@@ -350,6 +367,24 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
         <small>ตรวจสอบกำหนดการฉบับปัจจุบัน</small>
       </a>
     </div>
+
+
+    <details class="mobile-parking-list" style="margin:12px 0;padding:12px;border:1px solid #ccded1;border-radius:12px;background:#fff">
+      <summary style="cursor:pointer;font-weight:800;color:#145f3c">ที่จอดรถ P1–P11 (11 จุด) — แตะเพื่อเลือก</summary>
+      <div class="home-actions" style="margin-top:10px">
+        <button class="home-action mobile-parking-point" type="button" data-parking-id="P1"><strong>P1</strong><small>อาคารอเนกประสงค์</small></button>
+        <button class="home-action mobile-parking-point" type="button" data-parking-id="P2"><strong>P2</strong><small>ลานสมเด็จฯ</small></button>
+        <button class="home-action mobile-parking-point" type="button" data-parking-id="P3"><strong>P3</strong><small>ศึกษาศาสตร์–มนุษยศาสตร์</small></button>
+        <button class="home-action mobile-parking-point" type="button" data-parking-id="P4"><strong>P4</strong><small>CITCOM</small></button>
+        <button class="home-action mobile-parking-point" type="button" data-parking-id="P5"><strong>P5</strong><small>BEC</small></button>
+        <button class="home-action mobile-parking-point" type="button" data-parking-id="P6"><strong>P6</strong><small>สระว่ายน้ำ</small></button>
+        <button class="home-action mobile-parking-point" type="button" data-parking-id="P7"><strong>P7</strong><small>ร้านหนังสือจุฬาฯ</small></button>
+        <button class="home-action mobile-parking-point" type="button" data-parking-id="P8"><strong>P8</strong><small>อาคารจอดรถ</small></button>
+        <button class="home-action mobile-parking-point" type="button" data-parking-id="P9"><strong>P9</strong><small>วิทยาลัยนานาชาติ</small></button>
+        <button class="home-action mobile-parking-point" type="button" data-parking-id="P10"><strong>P10</strong><small>ที่จอดรถบัส</small></button>
+        <button class="home-action mobile-parking-point" type="button" data-parking-id="P11"><strong>P11</strong><small>อาคารขวัญเมือง</small></button>
+      </div>
+    </details>
 
     <div class="home-actions">
       <button class="home-action" data-mobile-action="qs"><strong>อาคาร QS</strong><small>ลงทะเบียน / กองอำนวยการ</small></button>
@@ -1429,6 +1464,11 @@ function mobileFocusPoint(id){
   map.flyTo({center:[x.lon,x.lat],zoom:18,pitch:60,bearing:-18,essential:true});
   setTimeout(()=>x.marker.togglePopup(),500);
 }
+
+
+document.querySelectorAll("[data-parking-id]").forEach(b=>b.addEventListener("click",()=>{
+  mobileFocusPoint(b.dataset.parkingId);
+}));
 
 document.getElementById("sheetClose")?.addEventListener("click",()=>document.getElementById("mobileSheet").style.display="none");
 
