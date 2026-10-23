@@ -1,4 +1,4 @@
-<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>4 จอบ 41 — QS & Theatre v13.0</title>
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>4 จอบ 41 — QS & Theatre v13.1</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Thai",sans-serif;background:#eef3ef;color:#183c2d}header{height:62px;background:#fffdf8;border-bottom:1px solid #d7dfd9;display:flex;align-items:center;justify-content:space-between;padding:8px 20px;position:sticky;top:0;z-index:20}.brand b{font-size:17px}.brand small{display:block;color:#6b7770}nav button,.btn{border:1px solid #cbd7d0;background:white;border-radius:14px;padding:9px 14px;margin-left:6px;font-size:15px;cursor:pointer}nav button.active,.btn.primary{background:#e7f3eb;border-color:#6ea77f;color:#0c5631}main{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:14px;padding:14px;max-width:1600px;margin:auto}.viewer,.panel{background:#fffdfa;border:1px solid #d5ded8;border-radius:20px;box-shadow:0 10px 30px #254d3520}.toolbar{display:flex;gap:8px;padding:10px;border-bottom:1px solid #dde5e0;align-items:center}.toolbar input{flex:1;border:1px solid #ccd7d0;border-radius:12px;padding:10px 12px;font-size:15px}#stage{position:relative;min-height:670px;overflow:hidden;background:#fff;display:grid;place-items:center}#scene{position:relative;flex:none}#stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;user-select:none;pointer-events:none}#scene svg{position:absolute;inset:0;width:100%;height:100%}polygon{fill:transparent;stroke:transparent;stroke-width:.25;cursor:pointer;transition:.15s}polygon:hover,polygon.sel{fill:rgba(26,126,80,.18);stroke:#187b4f;stroke-width:.28}polygon.dateactive{fill:rgba(26,126,80,.09);stroke:rgba(24,123,79,.55);stroke-width:.22}polygon.parking:hover,polygon.parking.sel{fill:rgba(49,93,157,.18);stroke:#315d9d}polygon.theatre:hover,polygon.theatre.sel{fill:rgba(163,58,66,.17);stroke:#a33a42}.panel{padding:16px;min-height:670px}.panel h2{margin:0 0 8px;font-size:21px}.muted{color:#66746d}.card{border:1px solid #d8e0db;border-radius:14px;padding:12px;margin:10px 0;cursor:pointer;background:#fff}.card:hover{background:#f5faf7}.tag{font-weight:700;color:#0e5c36}.notice{background:#fff7e7;border:1px solid #ecd39a;border-radius:12px;padding:11px;margin-top:12px;color:#745110}.back{display:none;margin-bottom:10px}.back.show{display:inline-block}
 .calbar{display:none;gap:8px;align-items:center;padding:8px 12px;background:#fff8e8;border-bottom:1px solid #ead5a2;flex-wrap:wrap}.calbar.show{display:flex}.calhint{font-size:13px;color:#76521b}.caldot{fill:#fff;stroke:#d97706;stroke-width:.45;vector-effect:non-scaling-stroke}.calpoly{fill:rgba(245,158,11,.18);stroke:#d97706;stroke-width:.45;vector-effect:non-scaling-stroke}.smallbtn{padding:7px 10px;border:1px solid #cbd8d0;background:#fff;border-radius:9px;cursor:pointer}.smallbtn.primary{background:#0f6b43;color:#fff;border-color:#0f6b43}.datebar{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 14px}.datebtn{border:1px solid #cbd7d0;background:#fff;border-radius:999px;padding:7px 11px;cursor:pointer;font-size:14px}.datebtn.active{background:#e7f3eb;border-color:#6ea77f;color:#0c5631;font-weight:700}.daysummary{margin:8px 0 14px;padding:11px;border:1px solid #d7e2dc;border-radius:14px;background:#f7faf8}.daysummary-title{font-weight:800;margin-bottom:7px}.quickchips{display:flex;gap:6px;flex-wrap:wrap}.quickchip{border:1px solid #cbd7d0;background:#fff;border-radius:999px;padding:7px 10px;cursor:pointer;font-size:13px}.quickchip:hover{background:#eef7f1;border-color:#7cab8b}.quickchip.activity{background:#fff8e9;border-color:#e4c77f}.quickchip.service{background:#f3f8ff;border-color:#b9cbe1}
@@ -189,7 +189,32 @@ polygon.sel{
   stroke-width:.65px !important;
 }
 
-</style></head><body><header><div class="brand"><b>4 จอบ 41 · QS & Theatre</b><small>Interactive Venue v13.0 · Route layer fix</small></div><nav><button id="tabOverview" class="active">ภาพรวม</button><button id="tabQS">QS ชั้น 1</button><button id="tabTheatre">โรงละคร</button><button id="tabParking">พื้นที่แข่งคำนวณฯ</button></nav></header><main><section class="viewer"><div class="toolbar"><input id="search" placeholder="ค้นหา เช่น พยาบาล, กองอำนวยการ, Starbucks..."><button class="btn" onclick="resetView()">รีเซ็ต</button></div><div id="calbar" class="calbar"><b id="calname">กำหนดตำแหน่ง</b><span class="calhint">คลิกตามขอบพื้นที่บนภาพ</span><button class="smallbtn" onclick="undoCalPoint()">ย้อนจุดล่าสุด</button><button class="smallbtn primary" onclick="closeCalPolygon()">ปิด Polygon</button><button class="smallbtn" onclick="clearCalPolygon()">ล้างพื้นที่</button><button class="smallbtn" onclick="cancelCalibration()">ออกจากโหมดกำหนด</button></div><div id="stage"><div id="scene"><img id="baseImg"><svg id="overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
+
+/* v13.1 locked main walkway */
+#routeLayer .locked-route-line{
+  fill:none;
+  stroke:#2563eb;
+  stroke-width:.55;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  vector-effect:non-scaling-stroke;
+}
+#routeLayer .locked-route-node{
+  fill:#ffffff;
+  stroke:#1d4ed8;
+  stroke-width:.35;
+  vector-effect:non-scaling-stroke;
+}
+#routeLayer .locked-route-node.start{
+  fill:#22c55e;
+  stroke:#14532d;
+}
+.locked-route-status{
+  margin:8px 0;padding:9px 10px;border-radius:10px;
+  border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;
+}
+
+</style></head><body><header><div class="brand"><b>4 จอบ 41 · QS & Theatre</b><small>Interactive Venue v13.1 · Locked main walkway route</small></div><nav><button id="tabOverview" class="active">ภาพรวม</button><button id="tabQS">QS ชั้น 1</button><button id="tabTheatre">โรงละคร</button><button id="tabParking">พื้นที่แข่งคำนวณฯ</button></nav></header><main><section class="viewer"><div class="toolbar"><input id="search" placeholder="ค้นหา เช่น พยาบาล, กองอำนวยการ, Starbucks..."><button class="btn" onclick="resetView()">รีเซ็ต</button></div><div id="calbar" class="calbar"><b id="calname">กำหนดตำแหน่ง</b><span class="calhint">คลิกตามขอบพื้นที่บนภาพ</span><button class="smallbtn" onclick="undoCalPoint()">ย้อนจุดล่าสุด</button><button class="smallbtn primary" onclick="closeCalPolygon()">ปิด Polygon</button><button class="smallbtn" onclick="clearCalPolygon()">ล้างพื้นที่</button><button class="smallbtn" onclick="cancelCalibration()">ออกจากโหมดกำหนด</button></div><div id="stage"><div id="scene"><img id="baseImg"><svg id="overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
 <g id="routeLayer"></g>
 </svg></div></div></section><aside class="panel"><button id="backBtn" class="btn back">← กลับภาพรวม</button><div id="panelContent"></div></aside></main>
 <script>
@@ -241,6 +266,7 @@ function showQSBase(){
     if(serviceClosed[k]&&serviceAreas[k].length>=3) poly(k,serviceAreas[k]);
   }
   getRouteLayer();
+  if(typeof drawLockedRoutes==='function') drawLockedRoutes();
   if(typeof drawCalRoute==='function' && routeCalPoints.length) drawCalRoute();
 }
 
@@ -336,6 +362,16 @@ let navTarget=null;
 let routeCalMode=false;
 let routeCalPoints=[];
 let routeStartKey=null;
+const LOCKED_ROUTES={
+  main1:{
+    version:12.9,
+    base:"QS crop from locked overview",
+    type:"walkway_route",
+    start_key:"a11",
+    points:[{"x": 68.188604, "y": 74.03993}, {"x": 67.658635, "y": 52.38806}, {"x": 48.000106, "y": 52.089552}, {"x": 27.916068, "y": 52.089552}, {"x": 27.490559, "y": 74.925373}, {"x": 21.788735, "y": 74.328358}]
+  }
+};
+let lockedRouteVisible=true;
 
 function polyCentroid(key){
   const p=(QS[key]||[]);
@@ -358,32 +394,75 @@ function getRouteLayer(){
 }
 function clearRouteDrawing(){
   const g=getRouteLayer();
-  if(g) g.innerHTML='';
+  if(g){
+    g.querySelectorAll('[data-cal-route]').forEach(n=>n.remove());
+    drawLockedRoutes();
+  }
 }
+
+function drawLockedRoutes(){
+  const g=getRouteLayer();
+  if(!g) return;
+  // remove old locked route groups only
+  g.querySelectorAll('[data-locked-route]').forEach(n=>n.remove());
+  if(!lockedRouteVisible) return;
+
+  Object.entries(LOCKED_ROUTES).forEach(([rid,r])=>{
+    if(!r.points || r.points.length<2) return;
+    const grp=document.createElementNS('http://www.w3.org/2000/svg','g');
+    grp.setAttribute('data-locked-route',rid);
+
+    const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+    pl.setAttribute('points',r.points.map(p=>`${p.x},${p.y}`).join(' '));
+    pl.setAttribute('class','locked-route-line');
+    grp.appendChild(pl);
+
+    r.points.forEach((p,i)=>{
+      const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx',p.x);
+      c.setAttribute('cy',p.y);
+      c.setAttribute('r', i===0 ? '0.9' : '0.55');
+      c.setAttribute('class','locked-route-node'+(i===0?' start':''));
+      grp.appendChild(c);
+    });
+    g.prepend(grp);
+  });
+}
+function toggleLockedRoute(){
+  lockedRouteVisible=!lockedRouteVisible;
+  drawLockedRoutes();
+  drawCalRoute();
+  renderPanel();
+}
+
 function drawCalRoute(){
   const g=getRouteLayer();
   if(!g) return;
-  g.innerHTML='';
+  g.querySelectorAll('[data-cal-route]').forEach(n=>n.remove());
+  drawLockedRoutes();
   if(!routeCalPoints.length) return;
+  const calGrp=document.createElementNS('http://www.w3.org/2000/svg','g');
+  calGrp.setAttribute('data-cal-route','1');
+  g.appendChild(calGrp);
 
   if(routeCalPoints.length>1){
     const pts=routeCalPoints.map(p=>`${p.x},${p.y}`).join(' ');
     const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
     pl.setAttribute('points',pts);
     pl.setAttribute('class','route-line');
-    g.appendChild(pl);
+    calGrp.appendChild(pl);
   }
   routeCalPoints.forEach((p,i)=>{
     const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
     c.setAttribute('cx',p.x); c.setAttribute('cy',p.y); c.setAttribute('r','1.15');
     c.setAttribute('class','route-node'+(i===0?' start':''));
-    g.appendChild(c);
+    calGrp.appendChild(c);
 
     const t=document.createElementNS('http://www.w3.org/2000/svg','text');
     t.setAttribute('x',p.x+1.2); t.setAttribute('y',p.y-1.2);
     t.setAttribute('class','route-node-label');
     t.textContent=String(i+1);
-    g.appendChild(t);
+    calGrp.appendChild(t);
   });
 }
 function setRouteStart(key){
@@ -487,15 +566,21 @@ function routeVisualTest(){
 function routeCalHTML(){
   const startName = routeStartKey && META[routeStartKey] ? META[routeStartKey][1] : "ยังไม่ได้เลือก";
   return `<div class="routecal">
-    <b>กำหนดแนวทางเดินจริง</b>
+    <b>เส้นทางหลัก + กำหนดเส้นทางเพิ่มเติม</b>
     <div class="step"><b>1.</b> เลือกพื้นที่หนึ่งจุด แล้วกด <b>“ใช้จุดนี้เป็นจุดเริ่มต้น”</b></div>
     <div class="step"><b>2.</b> กด <b>“เริ่มกำหนดเส้นทาง”</b></div>
-    <div class="step"><b>3.</b> คลิกตาม <b>กึ่งกลางทางเดินจริง</b> ไปทีละจุดบนแผน จุดที่คลิกจะขึ้นเป็นวงกลมหมายเลข 1, 2, 3… และมีเส้นเชื่อมทันที</div>
+    <div class="step"><b>3.</b> สำหรับเส้นทางเพิ่มเติม ให้คลิกตาม <b>กึ่งกลางทางเดินจริง</b> ไปทีละจุดบนแผน จุดที่คลิกจะขึ้นเป็นวงกลมหมายเลข 1, 2, 3… และมีเส้นเชื่อมทันที</div>
     <div class="step"><b>4.</b> เมื่อถึงปลายทาง กด <b>“หยุดกำหนดเส้นทาง”</b> แล้วคัดลอก Route JSON</div>
 
+    <div class="locked-route-status">
+      <b>เส้นทางหลักที่ล็อกแล้ว:</b> Route 1 จากพื้นที่ 1.1 · 6 จุด
+      <div style="margin-top:7px">
+        <button class="navbtn secondary" onclick="toggleLockedRoute()">${lockedRouteVisible?'ซ่อนเส้นทางหลัก':'แสดงเส้นทางหลัก'}</button>
+      </div>
+    </div>
     <div class="route-status">
-      จุดเริ่มต้น: ${startName}<br>
-      จำนวนจุดในเส้นทาง: ${routeCalPoints.length}
+      จุดเริ่มต้นสำหรับเส้นทางใหม่: ${startName}<br>
+      จำนวนจุดในเส้นทางใหม่: ${routeCalPoints.length}
       ${routeCalMode?' · กำลังกำหนดเส้นทาง':''}
     </div>
 
