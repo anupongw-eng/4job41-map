@@ -1,4 +1,4 @@
-<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>4 จอบ 41 — QS & Theatre v12.9</title>
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>4 จอบ 41 — QS & Theatre v13.0</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Thai",sans-serif;background:#eef3ef;color:#183c2d}header{height:62px;background:#fffdf8;border-bottom:1px solid #d7dfd9;display:flex;align-items:center;justify-content:space-between;padding:8px 20px;position:sticky;top:0;z-index:20}.brand b{font-size:17px}.brand small{display:block;color:#6b7770}nav button,.btn{border:1px solid #cbd7d0;background:white;border-radius:14px;padding:9px 14px;margin-left:6px;font-size:15px;cursor:pointer}nav button.active,.btn.primary{background:#e7f3eb;border-color:#6ea77f;color:#0c5631}main{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:14px;padding:14px;max-width:1600px;margin:auto}.viewer,.panel{background:#fffdfa;border:1px solid #d5ded8;border-radius:20px;box-shadow:0 10px 30px #254d3520}.toolbar{display:flex;gap:8px;padding:10px;border-bottom:1px solid #dde5e0;align-items:center}.toolbar input{flex:1;border:1px solid #ccd7d0;border-radius:12px;padding:10px 12px;font-size:15px}#stage{position:relative;min-height:670px;overflow:hidden;background:#fff;display:grid;place-items:center}#scene{position:relative;flex:none}#stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;user-select:none;pointer-events:none}#scene svg{position:absolute;inset:0;width:100%;height:100%}polygon{fill:transparent;stroke:transparent;stroke-width:.25;cursor:pointer;transition:.15s}polygon:hover,polygon.sel{fill:rgba(26,126,80,.18);stroke:#187b4f;stroke-width:.28}polygon.dateactive{fill:rgba(26,126,80,.09);stroke:rgba(24,123,79,.55);stroke-width:.22}polygon.parking:hover,polygon.parking.sel{fill:rgba(49,93,157,.18);stroke:#315d9d}polygon.theatre:hover,polygon.theatre.sel{fill:rgba(163,58,66,.17);stroke:#a33a42}.panel{padding:16px;min-height:670px}.panel h2{margin:0 0 8px;font-size:21px}.muted{color:#66746d}.card{border:1px solid #d8e0db;border-radius:14px;padding:12px;margin:10px 0;cursor:pointer;background:#fff}.card:hover{background:#f5faf7}.tag{font-weight:700;color:#0e5c36}.notice{background:#fff7e7;border:1px solid #ecd39a;border-radius:12px;padding:11px;margin-top:12px;color:#745110}.back{display:none;margin-bottom:10px}.back.show{display:inline-block}
 .calbar{display:none;gap:8px;align-items:center;padding:8px 12px;background:#fff8e8;border-bottom:1px solid #ead5a2;flex-wrap:wrap}.calbar.show{display:flex}.calhint{font-size:13px;color:#76521b}.caldot{fill:#fff;stroke:#d97706;stroke-width:.45;vector-effect:non-scaling-stroke}.calpoly{fill:rgba(245,158,11,.18);stroke:#d97706;stroke-width:.45;vector-effect:non-scaling-stroke}.smallbtn{padding:7px 10px;border:1px solid #cbd8d0;background:#fff;border-radius:9px;cursor:pointer}.smallbtn.primary{background:#0f6b43;color:#fff;border-color:#0f6b43}.datebar{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 14px}.datebtn{border:1px solid #cbd7d0;background:#fff;border-radius:999px;padding:7px 11px;cursor:pointer;font-size:14px}.datebtn.active{background:#e7f3eb;border-color:#6ea77f;color:#0c5631;font-weight:700}.daysummary{margin:8px 0 14px;padding:11px;border:1px solid #d7e2dc;border-radius:14px;background:#f7faf8}.daysummary-title{font-weight:800;margin-bottom:7px}.quickchips{display:flex;gap:6px;flex-wrap:wrap}.quickchip{border:1px solid #cbd7d0;background:#fff;border-radius:999px;padding:7px 10px;cursor:pointer;font-size:13px}.quickchip:hover{background:#eef7f1;border-color:#7cab8b}.quickchip.activity{background:#fff8e9;border-color:#e4c77f}.quickchip.service{background:#f3f8ff;border-color:#b9cbe1}
@@ -163,7 +163,33 @@ polygon.sel{
   pointer-events:none;
 }
 
-</style></head><body><header><div class="brand"><b>4 จอบ 41 · QS & Theatre</b><small>Interactive Venue v12.9 · Guided route calibration</small></div><nav><button id="tabOverview" class="active">ภาพรวม</button><button id="tabQS">QS ชั้น 1</button><button id="tabTheatre">โรงละคร</button><button id="tabParking">พื้นที่แข่งคำนวณฯ</button></nav></header><main><section class="viewer"><div class="toolbar"><input id="search" placeholder="ค้นหา เช่น พยาบาล, กองอำนวยการ, Starbucks..."><button class="btn" onclick="resetView()">รีเซ็ต</button></div><div id="calbar" class="calbar"><b id="calname">กำหนดตำแหน่ง</b><span class="calhint">คลิกตามขอบพื้นที่บนภาพ</span><button class="smallbtn" onclick="undoCalPoint()">ย้อนจุดล่าสุด</button><button class="smallbtn primary" onclick="closeCalPolygon()">ปิด Polygon</button><button class="smallbtn" onclick="clearCalPolygon()">ล้างพื้นที่</button><button class="smallbtn" onclick="cancelCalibration()">ออกจากโหมดกำหนด</button></div><div id="stage"><div id="scene"><img id="baseImg"><svg id="overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
+
+/* v13.0 route layer must stay visible above polygons */
+#routeLayer{pointer-events:none}
+#routeLayer .route-line{
+  stroke:#dc2626 !important;
+  stroke-width:.9 !important;
+  vector-effect:non-scaling-stroke;
+}
+#routeLayer .route-node{
+  fill:#ffffff !important;
+  stroke:#dc2626 !important;
+  stroke-width:.55 !important;
+  vector-effect:non-scaling-stroke;
+}
+#routeLayer .route-node.start{
+  fill:#22c55e !important;
+  stroke:#14532d !important;
+}
+#routeLayer .route-node-label{
+  font-size:3px !important;
+  font-weight:800 !important;
+  fill:#991b1b !important;
+  stroke:#fff !important;
+  stroke-width:.65px !important;
+}
+
+</style></head><body><header><div class="brand"><b>4 จอบ 41 · QS & Theatre</b><small>Interactive Venue v13.0 · Route layer fix</small></div><nav><button id="tabOverview" class="active">ภาพรวม</button><button id="tabQS">QS ชั้น 1</button><button id="tabTheatre">โรงละคร</button><button id="tabParking">พื้นที่แข่งคำนวณฯ</button></nav></header><main><section class="viewer"><div class="toolbar"><input id="search" placeholder="ค้นหา เช่น พยาบาล, กองอำนวยการ, Starbucks..."><button class="btn" onclick="resetView()">รีเซ็ต</button></div><div id="calbar" class="calbar"><b id="calname">กำหนดตำแหน่ง</b><span class="calhint">คลิกตามขอบพื้นที่บนภาพ</span><button class="smallbtn" onclick="undoCalPoint()">ย้อนจุดล่าสุด</button><button class="smallbtn primary" onclick="closeCalPolygon()">ปิด Polygon</button><button class="smallbtn" onclick="clearCalPolygon()">ล้างพื้นที่</button><button class="smallbtn" onclick="cancelCalibration()">ออกจากโหมดกำหนด</button></div><div id="stage"><div id="scene"><img id="baseImg"><svg id="overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
 <g id="routeLayer"></g>
 </svg></div></div></section><aside class="panel"><button id="backBtn" class="btn back">← กลับภาพรวม</button><div id="panelContent"></div></aside></main>
 <script>
@@ -208,7 +234,15 @@ function clearCalPolygon(){if(!calibratingKey)return;serviceAreas[calibratingKey
 function closeCalPolygon(){if(!calibratingKey)return;if(serviceAreas[calibratingKey].length<3){alert('ต้องมีอย่างน้อย 3 จุด');return;}serviceClosed[calibratingKey]=true;saveService();renderCalDraft();renderPanel(calibratingKey)}
 function copyServiceJSON(k){const out={version:12.5,base:'QS crop from locked overview',key:k,area:serviceAreas[k],closed:serviceClosed[k]};navigator.clipboard.writeText(JSON.stringify(out,null,2));alert('คัดลอก JSON แล้ว')}
 function renderCalDraft(){if(mode!=='qs')return;showQSBase(); if(calibratingKey){const arr=serviceAreas[calibratingKey];if(arr.length){const p=document.createElementNS('http://www.w3.org/2000/svg','polyline');p.setAttribute('points',pts(arr));p.setAttribute('class','calpoly');p.setAttribute('fill',serviceClosed[calibratingKey]?'rgba(245,158,11,.18)':'none');overlay.appendChild(p);arr.forEach(pt=>{const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',pt.x);c.setAttribute('cy',pt.y);c.setAttribute('r','0.7');c.setAttribute('class','caldot');overlay.appendChild(c)})}}highlightSelected()}
-function showQSBase(){overlay.innerHTML='';for(const k of Object.keys(QS)) poly(k,QS[k]);for(const k of SERVICE_KEYS){if(serviceClosed[k]&&serviceAreas[k].length>=3)poly(k,serviceAreas[k])}}
+function showQSBase(){
+  overlay.innerHTML='';
+  for(const k of Object.keys(QS)) poly(k,QS[k]);
+  for(const k of SERVICE_KEYS){
+    if(serviceClosed[k]&&serviceAreas[k].length>=3) poly(k,serviceAreas[k]);
+  }
+  getRouteLayer();
+  if(typeof drawCalRoute==='function' && routeCalPoints.length) drawCalRoute();
+}
 
 const DAY_KEYS={
   all:['a11','a131','a132','a14','a12','a110','a111','starbucks','a18','a17'],
@@ -310,7 +344,18 @@ function polyCentroid(key){
   p.forEach(q=>{sx+=q.x;sy+=q.y});
   return {x:sx/p.length,y:sy/p.length};
 }
-function getRouteLayer(){ return document.getElementById('routeLayer'); }
+function getRouteLayer(){
+  let g=document.getElementById('routeLayer');
+  if(!g){
+    g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('id','routeLayer');
+    overlay.appendChild(g);
+  }else if(g.parentNode===overlay){
+    // keep route graphics above all area polygons
+    overlay.appendChild(g);
+  }
+  return g;
+}
 function clearRouteDrawing(){
   const g=getRouteLayer();
   if(g) g.innerHTML='';
@@ -424,6 +469,21 @@ async function copyRouteJSON(){
     prompt("คัดลอก Route JSON",txt);
   }
 }
+
+function routeVisualTest(){
+  if(mode!=='qs') showQS();
+  routeStartKey='a11';
+  routeCalPoints=[
+    {x:48,y:48},
+    {x:52,y:48},
+    {x:56,y:50}
+  ];
+  drawCalRoute();
+  renderPanel();
+  const b=document.getElementById('calibrationBanner');
+  if(b) b.textContent='ทดสอบการแสดงผล: ต้องเห็นจุด 1–3 และเส้นสีแดง';
+}
+
 function routeCalHTML(){
   const startName = routeStartKey && META[routeStartKey] ? META[routeStartKey][1] : "ยังไม่ได้เลือก";
   return `<div class="routecal">
@@ -443,6 +503,7 @@ function routeCalHTML(){
       <button class="navbtn secondary" onclick="toggleRouteCal()">${routeCalMode?'หยุดกำหนดเส้นทาง':'เริ่มกำหนดเส้นทาง'}</button>
       <button class="navbtn secondary" onclick="undoRoutePoint()">ย้อนจุดล่าสุด</button>
       <button class="navbtn secondary" onclick="clearRouteCal()">ล้างทั้งหมด</button>
+      <button class="navbtn secondary" onclick="routeVisualTest()">ทดสอบจุด/เส้น</button>
       <button class="navbtn warn" onclick="copyRouteJSON()">คัดลอก Route JSON</button>
     </div>
   </div>`;
@@ -461,6 +522,12 @@ stage.addEventListener('click',function(e){
   routeCalPoints.push({x,y});
   drawCalRoute();
   renderPanel();
+
+  // confirm visually and in the status panel that the click was captured
+  const banner=document.getElementById('calibrationBanner');
+  if(banner){
+    banner.textContent=`บันทึกจุดที่ ${routeCalPoints.length} แล้ว — คลิกจุดถัดไปตามทางเดิน`;
+  }
 }, true);
 
 const _renderPanel_v129 = renderPanel;
