@@ -24,7 +24,7 @@ main{height:calc(100% - 62px);display:grid;grid-template-columns:minmax(0,1fr) 3
 </head>
 <body>
 <header>
-<div class="brand"><b>QS 3D v12 · Vector-Locked Major Walls</b><small>ผนังหลักสร้างจากเส้น QA ที่ทับกับแปลนแล้ว</small></div>
+<div class="brand"><b>QS 3D v13 · Exact Top QA</b><small>Orthographic Top QA · ตรวจพิกัด 2D→3D แบบไม่มี perspective distortion</small></div>
 <a class="btn" href="https://anupongw-eng.github.io/4job41-map/?focus=qs">← แผนที่งานใหญ่</a>
 </header>
 <main>
@@ -33,16 +33,16 @@ main{height:calc(100% - 62px);display:grid;grid-template-columns:minmax(0,1fr) 3
 <div class="topbar">
 <button class="btn" id="iso">มุม 3D</button>
 <button class="btn" id="top">มุมบนตรวจแบบ</button>
-<button class="btn" id="transparent">ผนังโปร่ง</button>
+<button class="btn" id="transparent">ผนังโปร่ง</button><button class="btn" id="centerlineBtn">Centerline: เปิด</button>
 <button class="btn" id="plan">ซ่อนภาพ QA</button>
 </div>
 </section>
 <aside class="panel">
-<h2>Geometry QA · Major Walls</h2>
+<h2>Geometry QA · Exact Top View</h2>
 <p>รอบนี้สร้างเฉพาะผนังหลักจากเส้นแดง/น้ำเงินที่ตรวจทับกับแปลนแล้ว เพื่อยืนยัน coordinate ก่อนเพิ่มรายละเอียดอื่น</p>
 <div class="stat"><b>ภาพฐาน QA</b><br>2978 × 2105 px</div>
 <div class="stat"><b>เส้นผนังหลัก</b><br>37 แนว</div>
-<div class="note">กด <b>มุมบนตรวจแบบ</b> แล้วผนัง 3D ควรทับเส้นแดง/น้ำเงินด้านล่างโดยตรง ถ้าตรง ขั้นต่อไปจึงค่อยเพิ่มผนังกั้นย่อย ประตู เสา บันได ลิฟต์ และ hotspot</div>
+<div class="note">กด <b>มุมบนตรวจแบบ</b> เพื่อใช้ Orthographic camera แล้วดู <b>เส้น Centerline สีชมพู</b> ซึ่งใช้ endpoint ชุดเดียวกับผนัง 3D ว่าทับเส้น QA ด้านล่างหรือไม่ ถ้าตรง ขั้นต่อไปจึงค่อยเพิ่มผนังกั้นย่อย ประตู เสา บันได ลิฟต์ และ hotspot</div>
 </aside>
 </main>
 <script type="module">
@@ -52,22 +52,108 @@ const SEGS=[[1091.0, 267.0, 1961.0, 267.0], [367.0, 345.0, 1088.0, 345.0], [1955
 const IMG_W=2978, IMG_H=2105, WORLD_W=99.03087885985748, WORLD_H=70;
 const sceneEl=document.getElementById('scene'),boot=document.getElementById('boot');
 const scene=new THREE.Scene();scene.background=new THREE.Color(0xe6eee8);
-const camera=new THREE.PerspectiveCamera(45,1,.1,500);camera.position.set(0,46,68);
+const perspCamera=new THREE.PerspectiveCamera(45,1,.1,500);
+perspCamera.position.set(0,46,68);
+const orthoCamera=new THREE.OrthographicCamera(-WORLD_W/2,WORLD_W/2,WORLD_H/2,-WORLD_H/2,.1,500);
+orthoCamera.position.set(0,120,0);
+orthoCamera.up.set(0,0,-1);
+orthoCamera.lookAt(0,0,0);
+let activeCamera=perspCamera;
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;sceneEl.appendChild(renderer.domElement);
-const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.target.set(0,.6,0);controls.maxPolarAngle=Math.PI/2.02;controls.minDistance=18;controls.maxDistance=180;
+let controls=new OrbitControls(perspCamera,renderer.domElement);
+controls.enableDamping=true;
+controls.target.set(0,.6,0);
+controls.maxPolarAngle=Math.PI/2.02;
+controls.minDistance=18;
+controls.maxDistance=180;
 scene.add(new THREE.HemisphereLight(0xffffff,0x78877f,1.8));
 const sun=new THREE.DirectionalLight(0xffffff,1.5);sun.position.set(-30,55,35);scene.add(sun);
-const root=new THREE.Group();scene.add(root);const walls=[];
+const root=new THREE.Group();scene.add(root);const walls=[];const centerlineGroup=new THREE.Group();root.add(centerlineGroup);
 function tex(url){const t=new THREE.TextureLoader().load(url);t.colorSpace=THREE.SRGBColorSpace;return t}
 function px(x,y){return new THREE.Vector2((x/IMG_W-.5)*WORLD_W,-((y/IMG_H-.5)*WORLD_H))}
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(WORLD_W,WORLD_H),new THREE.MeshBasicMaterial({map:tex(PLAN),transparent:true,opacity:.92,side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.position.y=-.01;root.add(floor);
-function addWall(s){const [x1,y1,x2,y2]=s,a=px(x1,y1),b=px(x2,y2),dx=b.x-a.x,dz=b.y-a.y,len=Math.hypot(dx,dz),ang=Math.atan2(dz,dx),H=2.7,T=.12;const g=new THREE.BoxGeometry(len,H,T),m=new THREE.MeshStandardMaterial({color:0xece9e1,roughness:.9,transparent:true,opacity:.96}),o=new THREE.Mesh(g,m);o.position.set((a.x+b.x)/2,H/2,(a.y+b.y)/2);o.rotation.y=-ang;o.castShadow=true;o.receiveShadow=true;root.add(o);walls.push(o)}SEGS.forEach(addWall);
-let tween=null;function go(pos,target){tween={t:performance.now(),from:camera.position.clone(),to:pos,ft:controls.target.clone(),tt:target}}
-document.getElementById('iso').onclick=()=>go(new THREE.Vector3(0,46,68),new THREE.Vector3(0,.6,0));
-document.getElementById('top').onclick=()=>go(new THREE.Vector3(0,104,.001),new THREE.Vector3(0,0,0));
+function addWall(s){
+  const [x1,y1,x2,y2]=s;
+  const a=px(x1,y1), b=px(x2,y2);
+  const dx=b.x-a.x, dz=b.y-a.y;
+  const len=Math.hypot(dx,dz);
+  const ang=Math.atan2(dz,dx);
+  const H=2.7,T=.12;
+
+  const g=new THREE.BoxGeometry(len,H,T);
+  const m=new THREE.MeshStandardMaterial({color:0xece9e1,roughness:.9,transparent:true,opacity:.82});
+  const o=new THREE.Mesh(g,m);
+  o.position.set((a.x+b.x)/2,H/2,(a.y+b.y)/2);
+  o.rotation.y=-ang;
+  o.castShadow=true;o.receiveShadow=true;
+  root.add(o);walls.push(o);
+
+  // Exact 2D centerline using the same endpoints as the 3D wall.
+  const cg=new THREE.BoxGeometry(len,.025,.055);
+  const cm=new THREE.MeshBasicMaterial({color:0xff00cc,depthTest:false});
+  const c=new THREE.Mesh(cg,cm);
+  c.position.set((a.x+b.x)/2,.035,(a.y+b.y)/2);
+  c.rotation.y=-ang;
+  c.renderOrder=50;
+  centerlineGroup.add(c);
+}
+SEGS.forEach(addWall);
+let tween=null;
+function usePerspective(){
+  activeCamera=perspCamera;
+  controls.dispose();
+  controls=new OrbitControls(perspCamera,renderer.domElement);
+  controls.enableDamping=true;
+  controls.target.set(0,.6,0);
+  controls.maxPolarAngle=Math.PI/2.02;
+  controls.minDistance=18;controls.maxDistance=180;
+}
+function useOrtho(){
+  activeCamera=orthoCamera;
+  controls.dispose();
+  controls=new OrbitControls(orthoCamera,renderer.domElement);
+  controls.enableRotate=false;
+  controls.enableDamping=true;
+  controls.target.set(0,0,0);
+  orthoCamera.position.set(0,120,0);
+  orthoCamera.up.set(0,0,-1);
+  orthoCamera.lookAt(0,0,0);
+  orthoCamera.zoom=1;
+  orthoCamera.updateProjectionMatrix();
+}
+document.getElementById('iso').onclick=()=>{
+  usePerspective();
+  perspCamera.position.set(0,46,68);
+  controls.target.set(0,.6,0);
+};
+document.getElementById('top').onclick=()=>{
+  useOrtho();
+};
+let centerlineVisible=true;
+document.getElementById('centerlineBtn').onclick=()=>{
+  centerlineVisible=!centerlineVisible;
+  centerlineGroup.visible=centerlineVisible;
+  document.getElementById('centerlineBtn').textContent=`Centerline: ${centerlineVisible?'เปิด':'ปิด'}`;
+};
 let tr=false;document.getElementById('transparent').onclick=()=>{tr=!tr;walls.forEach(w=>{w.material.opacity=tr?.28:.96;w.material.depthWrite=!tr;w.material.needsUpdate=true});document.getElementById('transparent').textContent=tr?'ผนังทึบ':'ผนังโปร่ง'};
 let pv=true;document.getElementById('plan').onclick=()=>{pv=!pv;floor.visible=pv;document.getElementById('plan').textContent=pv?'ซ่อนภาพ QA':'แสดงภาพ QA'};
-function resize(){const r=sceneEl.getBoundingClientRect();renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix()}new ResizeObserver(resize).observe(sceneEl);resize();
-let first=true;(function loop(now){requestAnimationFrame(loop);if(tween){let t=Math.min(1,(now-tween.t)/650);t=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;camera.position.lerpVectors(tween.from,tween.to,t);controls.target.lerpVectors(tween.ft,tween.tt,t);if(t>=1)tween=null}controls.update();renderer.render(scene,camera);if(first){first=false;boot.style.display='none'}})();
+function resize(){
+  const r=sceneEl.getBoundingClientRect();
+  renderer.setSize(r.width,r.height,false);
+
+  perspCamera.aspect=r.width/r.height;
+  perspCamera.updateProjectionMatrix();
+
+  const viewAspect=r.width/r.height;
+  const worldAspect=WORLD_W/WORLD_H;
+  let viewW=WORLD_W*1.04, viewH=WORLD_H*1.04;
+  if(viewAspect>worldAspect) viewW=viewH*viewAspect;
+  else viewH=viewW/viewAspect;
+  orthoCamera.left=-viewW/2;orthoCamera.right=viewW/2;
+  orthoCamera.top=viewH/2;orthoCamera.bottom=-viewH/2;
+  orthoCamera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(sceneEl);resize();
+let first=true;(function loop(now){requestAnimationFrame(loop);controls.update();renderer.render(scene,activeCamera);if(first){first=false;boot.style.display='none'}})();
 </script>
 </body></html>
