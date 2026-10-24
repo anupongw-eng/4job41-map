@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>4 จอบ 41 · QS Construction Plan 3D v7</title>
+<title>4 จอบ 41 · QS Construction Plan 3D v8</title>
 <style>
 :root{--bg:#eaf1ec;--panel:#fffdf9;--ink:#123e2d;--muted:#69766f;--line:#d4dfd8}
 *{box-sizing:border-box}html,body{margin:0;height:100%;font-family:system-ui,-apple-system,"Noto Sans Thai",Tahoma,sans-serif;background:var(--bg);color:var(--ink)}
@@ -25,19 +25,33 @@ main{height:calc(100% - 62px);display:grid;grid-template-columns:minmax(0,1fr) 3
 #boot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:30;background:#fff;border:1px solid #cbd8d1;border-radius:14px;padding:14px 18px;text-align:center}
 .legend{position:absolute;left:10px;bottom:10px;background:#ffffffef;border:1px solid #cbd8d1;border-radius:12px;padding:8px 10px;font-size:12px;z-index:10}
 @media(max-width:900px){body{overflow:auto}header{height:auto;align-items:flex-start;flex-direction:column}main{height:auto;grid-template-columns:1fr;padding:7px}.viewer{height:65vh;min-height:430px}.panel{overflow:visible}.hint{display:none}}
+
+.modebar{display:flex;gap:6px;flex-wrap:wrap}
+.modebar .btn.active{background:#e7f4eb;border-color:#72ac88;color:#145f3f}
+.roof-key{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:#596860}
+.roof-key span{display:inline-flex;align-items:center;gap:5px}
+.sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+.sw.roof{background:#b95f3f}.sw.spine{background:#ddd8ca}.sw.shell{background:#f0eee7}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 </head>
 <body>
 <header>
-<div class="brand"><b>4 จอบ 41 · QS Construction Plan 3D</b><small>v7 · Master geometry จากแบบก่อสร้างชั้น 1</small></div>
+<div class="brand"><b>4 จอบ 41 · QS Construction Plan 3D</b><small>v8 · Construction Plan + Exterior/Roof Shell</small></div>
 <a class="btn" href="https://anupongw-eng.github.io/4job41-map/?focus=qs">← แผนที่งานใหญ่</a>
 </header>
 <main>
 <section class="viewer">
 <div id="scene"></div><div id="boot"><b>กำลังสร้าง QS จากแบบก่อสร้าง…</b><br><small>รอบนี้ยังไม่ใส่ hotspot</small></div>
 <div class="topbar">
-<div><button class="btn" id="iso">มุม 3D</button><button class="btn" id="top">มุมบนตรวจแบบ</button><button class="btn" id="walls">ผนังโปร่ง</button><button class="btn" id="plan">ซ่อนแบบก่อสร้าง</button></div>
+<div class="modebar">
+<button class="btn active" id="iso">มุม 3D</button>
+<button class="btn" id="top">มุมบนตรวจแบบ</button>
+<button class="btn" id="roofToggle">ซ่อนหลังคา</button>
+<button class="btn" id="walls">ผนังโปร่ง</button>
+<button class="btn" id="plan">ซ่อนแบบก่อสร้าง</button>
+</div>
 <div class="hint">ลากหมุน · เลื่อนซูม · ใช้มุมบนตรวจ geometry</div>
 </div>
 <div class="legend">Master: แบบก่อสร้างชั้น 1 · ไม่มี hotspot ใน v7</div>
@@ -45,13 +59,15 @@ main{height:calc(100% - 62px);display:grid;grid-template-columns:minmax(0,1fr) 3
 <aside class="panel">
 <h2>QS ชั้น 1 · Construction Plan Based</h2>
 <p>รอบนี้สร้างเฉพาะ geometry ที่ยืนยันได้จากแบบก่อสร้างหน้า 1 เพื่อให้ตรวจรูปอาคารก่อนนำกิจกรรมกลับเข้ามา</p>
+<div class="card"><b>Exterior / Roof shell</b><small>หลังคาแบ่งเป็นหลายมวลตามภาพดาวเทียมจริง และมีแนว spine/ทางเชื่อมสีอ่อนตามแกนกลาง</small>
+<div class="roof-key"><span><i class="sw roof"></i>หลังคาหลัก</span><span><i class="sw spine"></i>แนวเชื่อม/สันกลาง</span><span><i class="sw shell"></i>ผนังชั้น 1</span></div></div>
 <div class="card"><b>KIOS</b><small>พื้นที่ฝั่งซ้ายบนตามแบบก่อสร้าง</small></div>
 <div class="card"><b>ช่องเปิด / Void</b><small>ช่องเปิดขนาดใหญ่บริเวณกลางบน</small></div>
 <div class="card"><b>OFFICE</b><small>พื้นที่สำนักงานขนาดใหญ่ด้านขวาบน</small></div>
 <div class="card"><b>Co‑Working Space</b><small>พื้นที่ด้านซ้ายล่าง พร้อมผนังกั้นย่อยที่เห็นในแบบ</small></div>
 <div class="card"><b>Starbucks</b><small>พื้นที่กลางล่างตามชื่อในแบบ</small></div>
 <div class="card"><b>ห้องด้านขวา / OFFICE</b><small>กลุ่มห้องด้านล่างขวาตามแนวผนังในแบบ</small></div>
-<div class="note">v7 ยังไม่ใช่โมเดลสถาปัตยกรรมสมบูรณ์: ไม่ได้เดาความสูงจริง ประตูทุกบาน หรือรายละเอียดเฟอร์นิเจอร์ เป้าหมายคือให้รูปห้องและแนวผนังหลักตรงแบบก่อน</div>
+<div class="note">v8 ยังเป็น schematic shell: ภายในยึดแบบก่อสร้าง ส่วนหลังคา/มวลภายนอกอ้างอิงภาพดาวเทียมที่ผู้ใช้ให้: ไม่ได้เดาความสูงจริง ประตูทุกบาน หรือรายละเอียดเฟอร์นิเจอร์ เป้าหมายคือให้ shell ภายในตรงแบบ และให้มวลหลังคาภายนอกสัมพันธ์กับภาพดาวเทียมก่อน</div>
 </aside>
 </main>
 <script type="module">
@@ -63,23 +79,86 @@ const CORES=[{"name": "บันไดซ้ายล่าง", "x": 8.5, "y": 
 const WALLS=[[35.0, 14.0, 49.0, 14.0], [49.0, 14.0, 49.0, 45.0], [49.0, 45.0, 35.0, 45.0], [35.0, 45.0, 35.0, 14.0], [17.5, 56.5, 36.5, 56.5], [36.5, 56.5, 36.5, 90.5], [36.5, 90.5, 17.5, 90.5], [17.5, 90.5, 17.5, 56.5], [47.0, 56.5, 58.5, 56.5], [58.5, 56.5, 58.5, 90.5], [58.5, 90.5, 47.0, 90.5], [47.0, 90.5, 47.0, 56.5], [58.5, 56.5, 84.0, 56.5], [84.0, 56.5, 84.0, 90.5], [84.0, 90.5, 58.5, 90.5], [58.5, 90.5, 58.5, 56.5], [84.0, 56.5, 93.0, 56.5], [93.0, 56.5, 93.0, 90.5], [93.0, 90.5, 84.0, 90.5], [84.0, 90.5, 84.0, 56.5], [50.5, 47.0, 94.0, 47.0], [84.0, 56.5, 84.0, 90.5], [17.5, 72.0, 36.5, 72.0], [17.5, 80.5, 36.5, 80.5]];
 const OUTER=[[2.0, 12.0, 2.0, 56.5], [2.0, 12.0, 50.5, 12.0], [50.5, 3.0, 94.0, 3.0], [94.0, 3.0, 94.0, 90.5], [17.5, 90.5, 94.0, 90.5], [17.5, 90.5, 17.5, 56.5], [2.0, 56.5, 17.5, 56.5]];
 const sceneEl=document.getElementById('scene'),boot=document.getElementById('boot');
+
+// Roof modules are schematic masses interpreted from the user-supplied satellite view.
+// Interior/floor geometry remains based on the construction plan.
+const ROOF_MODULES=[
+  {name:'R1',x:20,y:17,w:22,d:18,h:5.5},
+  {name:'R2',x:46,y:16,w:19,d:18,h:5.5},
+  {name:'R3',x:67,y:18,w:22,d:18,h:5.5},
+  {name:'R4',x:24,y:47,w:22,d:19,h:5.5},
+  {name:'R5',x:49,y:47,w:20,d:19,h:5.5},
+  {name:'R6',x:70,y:48,w:19,d:18,h:5.5},
+  {name:'R7',x:35,y:73,w:20,d:17,h:5.5},
+  {name:'R8',x:60,y:73,w:21,d:17,h:5.5}
+];
+const SPINE_MODULES=[
+  {x:47.5,y:11,w:5,d:70,h:6.0},
+  {x:28,y:40,w:48,d:4,h:6.0},
+  {x:35,y:68,w:40,d:4,h:6.0}
+];
+
 const scene=new THREE.Scene();scene.background=new THREE.Color(0xe5eee8);
-const camera=new THREE.PerspectiveCamera(48,1,.1,500);camera.position.set(0,34,46);
+const camera=new THREE.PerspectiveCamera(48,1,.1,500);camera.position.set(0,38,52);
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;sceneEl.appendChild(renderer.domElement);
 const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.target.set(0,.8,0);controls.maxPolarAngle=Math.PI/2.02;controls.minDistance=16;controls.maxDistance=130;
 scene.add(new THREE.HemisphereLight(0xffffff,0x72857a,1.8));const sun=new THREE.DirectionalLight(0xffffff,1.6);sun.position.set(-25,50,30);scene.add(sun);
+
 const root=new THREE.Group();scene.add(root);
+const roofGroup=new THREE.Group();root.add(roofGroup);
+const shellGroup=new THREE.Group();root.add(shellGroup);
+
 const wallMeshes=[];
 function tex(url){const t=new THREE.TextureLoader().load(url);t.colorSpace=THREE.SRGBColorSpace;return t}
 function toWorld(x,y){return new THREE.Vector2((x-50),-(y-50)*.72)}
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(100,72),new THREE.MeshBasicMaterial({map:tex(PLAN),transparent:true,opacity:.84,side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.position.y=-.01;root.add(floor);
-function addWall(seg){const [x1,y1,x2,y2]=seg,a=toWorld(x1,y1),b=toWorld(x2,y2),dx=b.x-a.x,dz=b.y-a.y,len=Math.hypot(dx,dz),ang=Math.atan2(dz,dx),H=2.8,T=.18;const g=new THREE.BoxGeometry(len,H,T),m=new THREE.MeshStandardMaterial({color:0xf1efe8,roughness:.9,transparent:true,opacity:.96}),o=new THREE.Mesh(g,m);o.position.set((a.x+b.x)/2,H/2,(a.y+b.y)/2);o.rotation.y=-ang;o.castShadow=true;o.receiveShadow=true;root.add(o);wallMeshes.push(o)}
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(100,72),new THREE.MeshBasicMaterial({map:tex(PLAN),transparent:true,opacity:.84,side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.position.y=-.01;shellGroup.add(floor);
+function addWall(seg){const [x1,y1,x2,y2]=seg,a=toWorld(x1,y1),b=toWorld(x2,y2),dx=b.x-a.x,dz=b.y-a.y,len=Math.hypot(dx,dz),ang=Math.atan2(dz,dx),H=2.8,T=.18;const g=new THREE.BoxGeometry(len,H,T),m=new THREE.MeshStandardMaterial({color:0xf1efe8,roughness:.9,transparent:true,opacity:.96}),o=new THREE.Mesh(g,m);o.position.set((a.x+b.x)/2,H/2,(a.y+b.y)/2);o.rotation.y=-ang;o.castShadow=true;o.receiveShadow=true;shellGroup.add(o);wallMeshes.push(o)}
 [...OUTER,...WALLS].forEach(addWall);
-function zoneBox(z,color){const c=toWorld(z.x+z.w/2,z.y+z.h/2);const g=new THREE.BoxGeometry(z.w,.06,z.h*.72),m=new THREE.MeshStandardMaterial({color,transparent:true,opacity:.18,side:THREE.DoubleSide,depthWrite:false}),o=new THREE.Mesh(g,m);o.position.set(c.x,.04,c.y);root.add(o)}
+function zoneBox(z,color){const c=toWorld(z.x+z.w/2,z.y+z.h/2);const g=new THREE.BoxGeometry(z.w,.06,z.h*.72),m=new THREE.MeshStandardMaterial({color,transparent:true,opacity:.18,side:THREE.DoubleSide,depthWrite:false}),o=new THREE.Mesh(g,m);o.position.set(c.x,.04,c.y);shellGroup.add(o)}
 zoneBox(ZONES.kios,0x8ab59a);zoneBox(ZONES.office_top,0x8ba6c5);zoneBox(ZONES.cowork,0x9dc9ad);zoneBox(ZONES.starbucks,0xcbb790);zoneBox(ZONES.room_mid,0xaac5ad);zoneBox(ZONES.office_r,0xa6b4cb);
 function coreBox(c){const p=toWorld(c.x+c.w/2,c.y+c.h/2),g=new THREE.BoxGeometry(c.w,.18,c.h*.72),m=new THREE.MeshStandardMaterial({color:0x8b8f92,transparent:true,opacity:.5}),o=new THREE.Mesh(g,m);o.position.set(p.x,.1,p.y);root.add(o)}CORES.forEach(coreBox);
+
+function addHipRoof(m,color=0xb75e43){
+  const c=toWorld(m.x,m.y);
+  const w=m.w, d=m.d*.72, eave=3.3, ridge=5.6;
+  // Simple hipped roof as 4 triangular faces around a short ridge.
+  const hw=w/2, hd=d/2, rr=Math.max(1.5,w*.18);
+  const verts=new Float32Array([
+    -hw,eave,-hd,  hw,eave,-hd,  rr,ridge,0,
+    -hw,eave,-hd,  rr,ridge,0, -rr,ridge,0,
+     hw,eave,-hd,  hw,eave, hd,  rr,ridge,0,
+     hw,eave, hd, -rr,ridge,0,  rr,ridge,0,
+     hw,eave, hd, -hw,eave, hd, -rr,ridge,0,
+    -hw,eave, hd, -hw,eave,-hd, -rr,ridge,0
+  ]);
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.BufferAttribute(verts,3));
+  g.computeVertexNormals();
+  const mat=new THREE.MeshStandardMaterial({color,roughness:.9,side:THREE.DoubleSide});
+  const roof=new THREE.Mesh(g,mat);
+  roof.position.set(c.x,0,c.y);
+  roofGroup.add(roof);
+}
+function addSpine(m){
+  const c=toWorld(m.x,m.y);
+  const g=new THREE.BoxGeometry(m.w,.28,m.d*.72);
+  const mat=new THREE.MeshStandardMaterial({color:0xd8d4c8,roughness:.85});
+  const o=new THREE.Mesh(g,mat);
+  o.position.set(c.x,m.h,c.y);
+  roofGroup.add(o);
+}
+ROOF_MODULES.forEach(m=>addHipRoof(m));
+SPINE_MODULES.forEach(addSpine);
+
 let tween=null;function go(pos,target){tween={t:performance.now(),from:camera.position.clone(),to:pos,ft:controls.target.clone(),tt:target}}
-document.getElementById('iso').onclick=()=>go(new THREE.Vector3(0,34,46),new THREE.Vector3(0,.8,0));
+let roofVisible=true;
+document.getElementById('roofToggle').onclick=()=>{
+  roofVisible=!roofVisible;
+  roofGroup.visible=roofVisible;
+  document.getElementById('roofToggle').textContent=roofVisible?'ซ่อนหลังคา':'แสดงหลังคา';
+};
+
+document.getElementById('iso').onclick=()=>go(new THREE.Vector3(0,38,52),new THREE.Vector3(0,.8,0));
 document.getElementById('top').onclick=()=>go(new THREE.Vector3(0,67,.01),new THREE.Vector3(0,0,0));
 let transp=false;document.getElementById('walls').onclick=()=>{transp=!transp;wallMeshes.forEach(w=>{w.material.opacity=transp?.35:.96;w.material.depthWrite=!transp});document.getElementById('walls').textContent=transp?'ผนังทึบ':'ผนังโปร่ง'};
 let plan=true;document.getElementById('plan').onclick=()=>{plan=!plan;floor.visible=plan;document.getElementById('plan').textContent=plan?'ซ่อนแบบก่อสร้าง':'แสดงแบบก่อสร้าง'};
