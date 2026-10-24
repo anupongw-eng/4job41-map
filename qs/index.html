@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>4 จอบ 41 · Interactive Venue 3D v4</title>
+<title>4 จอบ 41 · Interactive Venue 3D v5</title>
 <style>
 :root{--bg:#eaf1ec;--panel:#fffdf9;--ink:#123e2d;--muted:#68766f;--line:#d4dfd8;--accent:#176b47}
 *{box-sizing:border-box} html,body{margin:0;height:100%;font-family:system-ui,-apple-system,"Noto Sans Thai",Tahoma,sans-serif;background:var(--bg);color:var(--ink)}
@@ -29,7 +29,7 @@ main{height:calc(100% - 62px);display:grid;grid-template-columns:minmax(0,1fr) 3
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 </head>
 <body>
-<header><div class="brand"><b>4 จอบ 41 · Interactive Venue 3D</b><small>v4 · QS ชั้น 1 แบบเห็นห้อง ผนัง และทางเดิน</small></div>
+<header><div class="brand"><b>4 จอบ 41 · Interactive Venue 3D</b><small>v5 · QS ชั้น 1 · ผนังตั้งจริงจากพื้น</small></div>
 <div class="tabs"><button data-mode="overview">ภาพรวม</button><button data-mode="qs" class="active">QS ชั้น 1</button><button data-mode="theatre">โรงละคร</button><button data-mode="parking">คำนวณสารฯ</button></div></header>
 <main>
 <section class="viewer">
@@ -38,8 +38,8 @@ main{height:calc(100% - 62px);display:grid;grid-template-columns:minmax(0,1fr) 3
 <div class="legend" id="legend">QS ชั้น 1: ผนังจริงจากแปลน · hotspot ใช้พิกัด Calibration เดิม</div>
 </section>
 <aside class="panel"><div id="detail"><span class="badge">QS floor 1 · 3D interior</span><h2>QS ชั้น 1</h2><p>ผนัง ห้อง และทางเดินสร้างจากแปลนชั้น 1 เดียวกับที่ใช้ Calibration จุดกิจกรรม จึงไม่ต้องแปลงพิกัดผ่านภาพรวมอีก</p></div>
-<div class="btnrow"><button class="btn" id="reset">มุมมอง QS</button><button class="btn" id="walls">ซ่อนผนัง</button><button class="btn" id="plan">ซ่อนแปลนพื้น</button><a class="btn" href="https://anupongw-eng.github.io/4job41-map/?focus=qs" style="text-decoration:none">← แผนที่งานใหญ่</a></div>
-<div id="cards"></div><div class="note">v4 แยก “ภาพรวมภายนอก” ออกจาก “ภายใน QS” แล้ว ดังนั้น hotspot 1.1–1.10 จะอยู่ใน coordinate system ของ QS ชั้น 1 โดยตรง</div></aside>
+<div class="btnrow"><button class="btn" id="reset">มุมมอง QS</button><button class="btn" id="walls">ซ่อนผนัง</button><button class="btn" id="wallOpacity">ผนังโปร่ง</button><button class="btn" id="plan">ซ่อนแปลนพื้น</button><a class="btn" href="https://anupongw-eng.github.io/4job41-map/?focus=qs" style="text-decoration:none">← แผนที่งานใหญ่</a></div>
+<div id="cards"></div><div class="note">v5: ผนังทุกเส้นตั้งขึ้นจากพื้นชั้น 1 ตามแปลนเดียวกัน ไม่ได้สร้างชั้น 2 หากต้องการตรวจตำแหน่งห้อง ให้กด “ผนังโปร่ง” หรือ “ซ่อนผนัง”</div></aside>
 </main>
 <script type="module">
 import * as THREE from "three"; import {OrbitControls} from "three/addons/controls/OrbitControls.js";
@@ -48,12 +48,12 @@ const OVERVIEW={"qs": [{"x": 1.7417, "y": 29.6096}, {"x": 25.5792, "y": 29.3441}
 const WALLS_H=[[29, 109, 1058, 109], [31, 183, 1056, 183], [31, 278, 1058, 278], [52, 374, 945, 374], [137, 382, 706, 382], [136, 447, 706, 447], [137, 527, 706, 527], [137, 598, 945, 598], [243, 618, 820, 618], [352, 368, 438, 368], [353, 596, 438, 596], [449, 382, 634, 382], [449, 587, 634, 587], [645, 371, 706, 371], [646, 596, 706, 596], [713, 114, 846, 114], [713, 314, 846, 314], [859, 267, 1059, 267], [944, 383, 1032, 383], [868, 559, 943, 559]], WALLS_V=[[29, 108, 29, 373], [40, 114, 40, 276], [99, 88, 99, 187], [137, 382, 137, 600], [153, 382, 153, 594], [200, 444, 200, 593], [264, 114, 264, 313], [352, 368, 352, 596], [438, 368, 438, 596], [449, 381, 449, 587], [634, 382, 634, 587], [645, 371, 645, 596], [706, 371, 706, 596], [713, 114, 713, 314], [815, 114, 815, 314], [846, 114, 846, 314], [944, 382, 944, 560], [1032, 382, 1032, 561], [1058, 109, 1058, 375], [1080, 269, 1080, 326]];
 const sceneEl=document.getElementById('scene'), labelsEl=document.getElementById('labels'), cards=document.getElementById('cards'), detail=document.getElementById('detail'), boot=document.getElementById('boot');
 const scene=new THREE.Scene(); scene.background=new THREE.Color(0xe5eee8);
-const camera=new THREE.PerspectiveCamera(48,1,.1,500); camera.position.set(0,52,58);
+const camera=new THREE.PerspectiveCamera(48,1,.1,500); camera.position.set(0,34,46);
 const renderer=new THREE.WebGLRenderer({antialias:true}); renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.shadowMap.enabled=true; sceneEl.appendChild(renderer.domElement);
 const controls=new OrbitControls(camera,renderer.domElement); controls.enableDamping=true; controls.target.set(0,0,0); controls.maxPolarAngle=Math.PI/2.02; controls.minDistance=18; controls.maxDistance=150;
 scene.add(new THREE.HemisphereLight(0xffffff,0x74867c,1.9)); const sun=new THREE.DirectionalLight(0xffffff,1.7); sun.position.set(-25,55,35); scene.add(sun);
 const overviewGroup=new THREE.Group(), qsGroup=new THREE.Group(); scene.add(overviewGroup,qsGroup);
-let mode='qs', day='all', selected=null, labelsVisible=true, planVisible=true, wallsVisible=true, cameraTween=null;
+let mode='qs', day='all', selected=null, labelsVisible=true, planVisible=true, wallsVisible=true, wallsTransparent=false, cameraTween=null;
 const clickable=[], labels=[];
 const ray=new THREE.Raycaster(), mouse=new THREE.Vector2();
 function tex(url){const t=new THREE.TextureLoader().load(url);t.colorSpace=THREE.SRGBColorSpace;return t}
@@ -62,23 +62,70 @@ function qPix(x,y){return new THREE.Vector2((x/1140*100)-50, (y/650*57)-28.5)}
 function oWorld(p){return new THREE.Vector2(p.x-50,(p.y-50)*.75)}
 function shape(points,map){const s=new THREE.Shape();points.forEach((p,i)=>{const v=map(p);if(!i)s.moveTo(v.x,-v.y);else s.lineTo(v.x,-v.y)});s.closePath();return s}
 function centroid(points,map){let x=0,z=0;points.forEach(p=>{const v=map(p);x+=v.x;z+=-v.y});return{x:x/points.length,z:z/points.length}}
-function boxWall(x1,y1,x2,y2){const a=qPix(x1,y1),b=qPix(x2,y2),dx=b.x-a.x,dz=-(b.y-a.y),len=Math.hypot(dx,dz),ang=Math.atan2(dz,dx);const g=new THREE.BoxGeometry(len,.22,2.5),m=new THREE.MeshStandardMaterial({color:0xf0eee7,roughness:.9}),o=new THREE.Mesh(g,m);o.position.set((a.x+b.x)/2,1.25,(-a.y-b.y)/2);o.rotation.y=-ang;o.castShadow=true;o.receiveShadow=true;o.userData.wall=true;qsGroup.add(o)}
-function flatArea(k,pts){const g=new THREE.ShapeGeometry(shape(pts,qWorld));g.rotateX(-Math.PI/2);const m=new THREE.MeshStandardMaterial({color:0x2f8b58,transparent:true,opacity:.28,side:THREE.DoubleSide,depthWrite:false}),o=new THREE.Mesh(g,m);o.position.y=.07;o.userData={kind:'area',key:k};qsGroup.add(o);clickable.push(o);const c=centroid(pts,qWorld);addLabel(k,c.x,1.0,c.z,k==='a17'||k==='a18'?'activity':'service')}
+function boxWall(x1,y1,x2,y2){
+  const a=qPix(x1,y1), b=qPix(x2,y2);
+  const dx=b.x-a.x, dz=-(b.y-a.y);
+  const len=Math.hypot(dx,dz);
+  const ang=Math.atan2(dz,dx);
+
+  const WALL_HEIGHT=2.8;
+  const WALL_THICKNESS=.18;
+
+  // X = wall length, Y = wall height, Z = wall thickness.
+  const g=new THREE.BoxGeometry(len,WALL_HEIGHT,WALL_THICKNESS);
+  const m=new THREE.MeshStandardMaterial({
+    color:0xf1efe8,
+    roughness:.92,
+    metalness:0,
+    transparent:true,
+    opacity:.96
+  });
+  const o=new THREE.Mesh(g,m);
+  o.position.set((a.x+b.x)/2,WALL_HEIGHT/2,(-a.y-b.y)/2);
+  o.rotation.y=-ang;
+  o.castShadow=true;
+  o.receiveShadow=true;
+  o.userData.wall=true;
+  qsGroup.add(o);
+}
+function flatArea(k,pts){const g=new THREE.ShapeGeometry(shape(pts,qWorld));g.rotateX(-Math.PI/2);const m=new THREE.MeshStandardMaterial({color:0x2f8b58,transparent:true,opacity:.28,side:THREE.DoubleSide,depthWrite:false}),o=new THREE.Mesh(g,m);o.position.y=.035;o.userData={kind:'area',key:k};qsGroup.add(o);clickable.push(o);const c=centroid(pts,qWorld);addLabel(k,c.x,.55,c.z,k==='a17'||k==='a18'?'activity':'service')}
 function addLabel(k,x,y,z,kind){const b=document.createElement('button');b.className='label '+kind;b.textContent=INFO[k].label;b.onclick=e=>{e.stopPropagation();select(k)};labelsEl.appendChild(b);labels.push({key:k,el:b,pos:new THREE.Vector3(x,y,z)})}
 function extrudeOverview(k,pts,h,color){const g=new THREE.ExtrudeGeometry(shape(pts,oWorld),{depth:h,bevelEnabled:false});g.rotateX(-Math.PI/2);const m=new THREE.MeshStandardMaterial({color,transparent:true,opacity:.8,roughness:.85}),o=new THREE.Mesh(g,m);o.position.y=.1;o.userData={kind:'zone',key:k};overviewGroup.add(o);clickable.push(o);return o}
-const qplan=new THREE.Mesh(new THREE.PlaneGeometry(100,57),new THREE.MeshBasicMaterial({map:tex(IMG_QS),transparent:true,opacity:.78,side:THREE.DoubleSide}));qplan.rotation.x=-Math.PI/2;qplan.position.y=0;qsGroup.add(qplan);
+const qplan=new THREE.Mesh(new THREE.PlaneGeometry(100,57),new THREE.MeshBasicMaterial({map:tex(IMG_QS),transparent:true,opacity:.78,side:THREE.DoubleSide}));qplan.rotation.x=-Math.PI/2;qplan.position.y=-.01;qsGroup.add(qplan);
 WALLS_H.forEach(v=>boxWall(...v));WALLS_V.forEach(v=>boxWall(...v));
 Object.entries(AREAS).forEach(([k,v])=>flatArea(k,v));
 const oplane=new THREE.Mesh(new THREE.PlaneGeometry(100,75),new THREE.MeshBasicMaterial({map:tex(IMG_OV),transparent:true,opacity:.42}));oplane.rotation.x=-Math.PI/2;overviewGroup.add(oplane);
 extrudeOverview('qs',OVERVIEW.qs,1.2,0xb8d7c1);extrudeOverview('theatre',OVERVIEW.theatre,5,0xbfc9da);extrudeOverview('parking',OVERVIEW.parking,.25,0xe1bbbb);extrudeOverview('corridor',OVERVIEW.corridor,.7,0xd9d5c8);
 function active(k){if(day==='all')return true;const d=INFO[k]?.days;return d?!!d[day]:true}
-function select(k){selected=k;clickable.forEach(o=>{if(o.userData.kind==='area'){o.material.opacity=o.userData.key===k?.78:(active(o.userData.key)?.28:.05);o.material.color.setHex(o.userData.key===k?0xf59e0b:0x2f8b58)}});labels.forEach(l=>l.el.classList.toggle('selected',l.key===k));if(INFO[k]){const d=INFO[k].days?.[day];detail.innerHTML=`<span class="badge">QS ชั้น 1</span><h2>${INFO[k].label} · ${d||INFO[k].title}</h2><p>${d?`กิจกรรมวันที่ ${day} พ.ย.`:INFO[k].title}</p>`;const c=centroid(AREAS[k],qWorld);tween(new THREE.Vector3(c.x+12,18,c.z+20),new THREE.Vector3(c.x,.6,c.z))}else{detail.innerHTML=`<span class="badge">พื้นที่</span><h2>${k==='theatre'?'โรงละคร':k==='parking'?'พื้นที่แข่งขันคำนวณสารฯ':'อาคาร QS'}</h2>`}}
+function select(k){selected=k;clickable.forEach(o=>{if(o.userData.kind==='area'){o.material.opacity=o.userData.key===k?.78:(active(o.userData.key)?.28:.05);o.material.color.setHex(o.userData.key===k?0xf59e0b:0x2f8b58)}});labels.forEach(l=>l.el.classList.toggle('selected',l.key===k));if(INFO[k]){const d=INFO[k].days?.[day];detail.innerHTML=`<span class="badge">QS ชั้น 1</span><h2>${INFO[k].label} · ${d||INFO[k].title}</h2><p>${d?`กิจกรรมวันที่ ${day} พ.ย.`:INFO[k].title}</p>`;const c=centroid(AREAS[k],qWorld);tween(new THREE.Vector3(c.x+10,13,c.z+16),new THREE.Vector3(c.x,.8,c.z))}else{detail.innerHTML=`<span class="badge">พื้นที่</span><h2>${k==='theatre'?'โรงละคร':k==='parking'?'พื้นที่แข่งขันคำนวณสารฯ':'อาคาร QS'}</h2>`}}
 function renderCards(){if(mode!=='qs'){cards.innerHTML='';return}const ks=Object.keys(INFO).filter(active);cards.innerHTML=ks.map(k=>{const d=INFO[k].days?.[day];return `<div class="card" data-k="${k}"><b>${INFO[k].label} · ${d||INFO[k].title}</b><small>${d?`วันที่ ${day} พ.ย.`:INFO[k].title}</small></div>`}).join('');cards.querySelectorAll('.card').forEach(c=>c.onclick=()=>select(c.dataset.k))}
 function tween(pos,target){cameraTween={t:performance.now(),from:camera.position.clone(),to:pos.clone(),ft:controls.target.clone(),tt:target.clone()}}
-function setMode(m){mode=m;selected=null;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));qsGroup.visible=m==='qs';overviewGroup.visible=m!=='qs';labelsEl.style.display=m==='qs'?'block':'none';if(m==='qs'){tween(new THREE.Vector3(0,52,58),new THREE.Vector3(0,0,0));detail.innerHTML='<span class="badge">QS floor 1 · 3D interior</span><h2>QS ชั้น 1</h2><p>เห็นผนัง ห้อง ทางเดิน และ hotspot ในพิกัดเดียวกับแปลนชั้น 1</p>'}else if(m==='overview'){tween(new THREE.Vector3(5,58,77),new THREE.Vector3(10,0,4));detail.innerHTML='<span class="badge">ภาพรวม</span><h2>QS + โรงละคร + คำนวณสารฯ</h2><p>เลือกพื้นที่เพื่อเจาะเข้าไปดูรายละเอียด</p>'}else if(m==='theatre'){tween(new THREE.Vector3(43,38,48),new THREE.Vector3(39,1,1));detail.innerHTML='<span class="badge">โรงละคร</span><h2>โรงละคร</h2><p>รายละเอียดภายในจะเพิ่มเมื่อกำหนดจุดใช้งานจริง</p>'}else{tween(new THREE.Vector3(38,34,34),new THREE.Vector3(34,0,-25));detail.innerHTML='<span class="badge">พื้นที่ภายนอก</span><h2>พื้นที่แข่งขันคำนวณสารฯ</h2><p>พื้นที่ภายนอก QS</p>'}renderCards()}
+function setMode(m){mode=m;selected=null;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));qsGroup.visible=m==='qs';overviewGroup.visible=m!=='qs';labelsEl.style.display=m==='qs'?'block':'none';if(m==='qs'){tween(new THREE.Vector3(0,34,46),new THREE.Vector3(0,.8,0));detail.innerHTML='<span class="badge">QS floor 1 · 3D interior</span><h2>QS ชั้น 1</h2><p>เห็นผนัง ห้อง ทางเดิน และ hotspot ในพิกัดเดียวกับแปลนชั้น 1</p>'}else if(m==='overview'){tween(new THREE.Vector3(5,58,77),new THREE.Vector3(10,0,4));detail.innerHTML='<span class="badge">ภาพรวม</span><h2>QS + โรงละคร + คำนวณสารฯ</h2><p>เลือกพื้นที่เพื่อเจาะเข้าไปดูรายละเอียด</p>'}else if(m==='theatre'){tween(new THREE.Vector3(43,38,48),new THREE.Vector3(39,1,1));detail.innerHTML='<span class="badge">โรงละคร</span><h2>โรงละคร</h2><p>รายละเอียดภายในจะเพิ่มเมื่อกำหนดจุดใช้งานจริง</p>'}else{tween(new THREE.Vector3(38,34,34),new THREE.Vector3(34,0,-25));detail.innerHTML='<span class="badge">พื้นที่ภายนอก</span><h2>พื้นที่แข่งขันคำนวณสารฯ</h2><p>พื้นที่ภายนอก QS</p>'}renderCards()}
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 document.querySelectorAll('.daybar button').forEach(b=>b.onclick=()=>{day=b.dataset.day;document.querySelectorAll('.daybar button').forEach(x=>x.classList.toggle('active',x===b));selected=null;clickable.forEach(o=>{if(o.userData.kind==='area')o.visible=active(o.userData.key)});labels.forEach(l=>l.el.style.display=active(l.key)?'block':'none');renderCards()});
-document.getElementById('reset').onclick=()=>setMode('qs');document.getElementById('walls').onclick=()=>{wallsVisible=!wallsVisible;qsGroup.children.forEach(o=>{if(o.userData.wall)o.visible=wallsVisible});document.getElementById('walls').textContent=wallsVisible?'ซ่อนผนัง':'แสดงผนัง'};document.getElementById('plan').onclick=()=>{planVisible=!planVisible;qplan.visible=planVisible;document.getElementById('plan').textContent=planVisible?'ซ่อนแปลนพื้น':'แสดงแปลนพื้น'};
+document.getElementById('reset').onclick=()=>setMode('qs');
+document.getElementById('walls').onclick=()=>{
+  wallsVisible=!wallsVisible;
+  qsGroup.children.forEach(o=>{if(o.userData.wall)o.visible=wallsVisible});
+  document.getElementById('walls').textContent=wallsVisible?'ซ่อนผนัง':'แสดงผนัง';
+};
+document.getElementById('wallOpacity').onclick=()=>{
+  wallsTransparent=!wallsTransparent;
+  qsGroup.children.forEach(o=>{
+    if(o.userData.wall && o.material){
+      o.material.transparent=true;
+      o.material.opacity=wallsTransparent?.38:.96;
+      o.material.depthWrite=!wallsTransparent;
+      o.material.needsUpdate=true;
+    }
+  });
+  document.getElementById('wallOpacity').textContent=wallsTransparent?'ผนังทึบ':'ผนังโปร่ง';
+};
+document.getElementById('plan').onclick=()=>{
+  planVisible=!planVisible;
+  qplan.visible=planVisible;
+  document.getElementById('plan').textContent=planVisible?'ซ่อนแปลนพื้น':'แสดงแปลนพื้น';
+};
 renderer.domElement.addEventListener('pointerdown',e=>{const r=renderer.domElement.getBoundingClientRect();mouse.x=((e.clientX-r.left)/r.width)*2-1;mouse.y=-((e.clientY-r.top)/r.height)*2+1;ray.setFromCamera(mouse,camera);const h=ray.intersectObjects(clickable.filter(o=>o.visible),false)[0];if(h){const k=h.object.userData.key;if(k==='qs')setMode('qs');else select(k)}});
 function updLabels(){const r=renderer.domElement.getBoundingClientRect();labels.forEach(l=>{if(l.el.style.display==='none'||mode!=='qs')return;const p=l.pos.clone().project(camera);l.el.style.left=((p.x*.5+.5)*r.width)+'px';l.el.style.top=((-p.y*.5+.5)*r.height)+'px';l.el.style.opacity=p.z<1?'1':'0'})}
 function resize(){const r=sceneEl.getBoundingClientRect();renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix()}new ResizeObserver(resize).observe(sceneEl);
