@@ -24,7 +24,7 @@ main{height:calc(100% - 62px);display:grid;grid-template-columns:minmax(0,1fr) 3
 </head>
 <body>
 <header>
-<div class="brand"><b>QS 3D v13 · Exact Top QA</b><small>Orthographic Top QA · ตรวจพิกัด 2D→3D แบบไม่มี perspective distortion</small></div>
+<div class="brand"><b>QS 3D v14 · Footprint QA</b><small>Footprint QA · ตรวจฐานผนัง 1:1 ก่อนดูผนังสูง</small></div>
 <a class="btn" href="https://anupongw-eng.github.io/4job41-map/?focus=qs">← แผนที่งานใหญ่</a>
 </header>
 <main>
@@ -33,16 +33,16 @@ main{height:calc(100% - 62px);display:grid;grid-template-columns:minmax(0,1fr) 3
 <div class="topbar">
 <button class="btn" id="iso">มุม 3D</button>
 <button class="btn" id="top">มุมบนตรวจแบบ</button>
-<button class="btn" id="transparent">ผนังโปร่ง</button><button class="btn" id="centerlineBtn">Centerline: เปิด</button>
+<button class="btn" id="transparent">ผนังโปร่ง</button><button class="btn" id="centerlineBtn">Centerline: เปิด</button><button class="btn" id="footprintBtn">ฐานผนัง: เปิด</button>
 <button class="btn" id="plan">ซ่อนภาพ QA</button>
 </div>
 </section>
 <aside class="panel">
 <h2>Geometry QA · Exact Top View</h2>
-<p>รอบนี้สร้างเฉพาะผนังหลักจากเส้นแดง/น้ำเงินที่ตรวจทับกับแปลนแล้ว เพื่อยืนยัน coordinate ก่อนเพิ่มรายละเอียดอื่น</p>
+<p>รอบนี้แยก “ฐานผนังบนพื้น” ออกจาก “ผนังสูง” เพื่อพิสูจน์พิกัดให้ชัดเจนก่อน: ฐานสีชมพูและ Centerline ใช้ endpoint ชุดเดียวกับผนัง 3D ทุกเส้น</p>
 <div class="stat"><b>ภาพฐาน QA</b><br>2978 × 2105 px</div>
-<div class="stat"><b>เส้นผนังหลัก</b><br>37 แนว</div>
-<div class="note">กด <b>มุมบนตรวจแบบ</b> เพื่อใช้ Orthographic camera แล้วดู <b>เส้น Centerline สีชมพู</b> ซึ่งใช้ endpoint ชุดเดียวกับผนัง 3D ว่าทับเส้น QA ด้านล่างหรือไม่ ถ้าตรง ขั้นต่อไปจึงค่อยเพิ่มผนังกั้นย่อย ประตู เสา บันได ลิฟต์ และ hotspot</div>
+<div class="stat"><b>เส้นผนังหลัก</b><br>37 แนว</div><div class="stat"><b>สีตรวจ QA</b><br><span style="color:#ff1493;font-weight:800">ชมพู = ฐานผนัง</span> · <span style="color:#00a8c9;font-weight:800">ฟ้า = Centerline</span></div>
+<div class="note">กด <b>มุมบนตรวจแบบ</b> ระบบจะใช้ Orthographic camera และทำผนังสูงให้โปร่งมาก จากนั้นตรวจ <b>ฐานผนังสีชมพู</b> และ <b>Centerline สีฟ้า</b> ว่าทับเส้น QA แดง/น้ำเงินด้านล่างหรือไม่ ถ้าตรง ขั้นต่อไปจึงค่อยเพิ่มผนังกั้นย่อย ประตู เสา บันได ลิฟต์ และ hotspot</div>
 </aside>
 </main>
 <script type="module">
@@ -68,7 +68,7 @@ controls.minDistance=18;
 controls.maxDistance=180;
 scene.add(new THREE.HemisphereLight(0xffffff,0x78877f,1.8));
 const sun=new THREE.DirectionalLight(0xffffff,1.5);sun.position.set(-30,55,35);scene.add(sun);
-const root=new THREE.Group();scene.add(root);const walls=[];const centerlineGroup=new THREE.Group();root.add(centerlineGroup);
+const root=new THREE.Group();scene.add(root);const walls=[];const centerlineGroup=new THREE.Group();root.add(centerlineGroup);const footprintGroup=new THREE.Group();root.add(footprintGroup);
 function tex(url){const t=new THREE.TextureLoader().load(url);t.colorSpace=THREE.SRGBColorSpace;return t}
 function px(x,y){return new THREE.Vector2((x/IMG_W-.5)*WORLD_W,-((y/IMG_H-.5)*WORLD_H))}
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(WORLD_W,WORLD_H),new THREE.MeshBasicMaterial({map:tex(PLAN),transparent:true,opacity:.92,side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.position.y=-.01;root.add(floor);
@@ -78,23 +78,40 @@ function addWall(s){
   const dx=b.x-a.x, dz=b.y-a.y;
   const len=Math.hypot(dx,dz);
   const ang=Math.atan2(dz,dx);
-  const H=2.7,T=.12;
+  const H=2.7, T=.12;
+  const mx=(a.x+b.x)/2, mz=(a.y+b.y)/2;
 
+  // 3D wall extrusion.
   const g=new THREE.BoxGeometry(len,H,T);
-  const m=new THREE.MeshStandardMaterial({color:0xece9e1,roughness:.9,transparent:true,opacity:.82});
+  const m=new THREE.MeshStandardMaterial({
+    color:0xece9e1,roughness:.9,transparent:true,opacity:.72
+  });
   const o=new THREE.Mesh(g,m);
-  o.position.set((a.x+b.x)/2,H/2,(a.y+b.y)/2);
+  o.position.set(mx,H/2,mz);
   o.rotation.y=-ang;
   o.castShadow=true;o.receiveShadow=true;
   root.add(o);walls.push(o);
 
-  // Exact 2D centerline using the same endpoints as the 3D wall.
-  const cg=new THREE.BoxGeometry(len,.025,.055);
-  const cm=new THREE.MeshBasicMaterial({color:0xff00cc,depthTest:false});
+  // Exact floor footprint: same midpoint, angle, length and thickness as wall mesh.
+  const fg=new THREE.BoxGeometry(len,.018,T);
+  const fm=new THREE.MeshBasicMaterial({
+    color:0xff1493,transparent:true,opacity:.95,depthTest:false,depthWrite:false
+  });
+  const f=new THREE.Mesh(fg,fm);
+  f.position.set(mx,.025,mz);
+  f.rotation.y=-ang;
+  f.renderOrder=90;
+  footprintGroup.add(f);
+
+  // Exact centerline using same endpoints.
+  const cg=new THREE.BoxGeometry(len,.022,.032);
+  const cm=new THREE.MeshBasicMaterial({
+    color:0x00d9ff,depthTest:false,depthWrite:false
+  });
   const c=new THREE.Mesh(cg,cm);
-  c.position.set((a.x+b.x)/2,.035,(a.y+b.y)/2);
+  c.position.set(mx,.045,mz);
   c.rotation.y=-ang;
-  c.renderOrder=50;
+  c.renderOrder=100;
   centerlineGroup.add(c);
 }
 SEGS.forEach(addWall);
@@ -125,9 +142,30 @@ document.getElementById('iso').onclick=()=>{
   usePerspective();
   perspCamera.position.set(0,46,68);
   controls.target.set(0,.6,0);
+  walls.forEach(w=>{
+    w.material.opacity=.72;
+    w.material.depthWrite=true;
+    w.material.needsUpdate=true;
+  });
 };
 document.getElementById('top').onclick=()=>{
   useOrtho();
+  // In QA mode, high walls are only a ghost; floor footprint is the reference.
+  walls.forEach(w=>{
+    w.material.opacity=.10;
+    w.material.depthWrite=false;
+    w.material.needsUpdate=true;
+  });
+  footprintGroup.visible=true;
+  centerlineGroup.visible=true;
+  document.getElementById('footprintBtn').textContent='ฐานผนัง: เปิด';
+  document.getElementById('centerlineBtn').textContent='Centerline: เปิด';
+};
+let footprintVisible=true;
+document.getElementById('footprintBtn').onclick=()=>{
+  footprintVisible=!footprintVisible;
+  footprintGroup.visible=footprintVisible;
+  document.getElementById('footprintBtn').textContent=`ฐานผนัง: ${footprintVisible?'เปิด':'ปิด'}`;
 };
 let centerlineVisible=true;
 document.getElementById('centerlineBtn').onclick=()=>{
@@ -135,7 +173,15 @@ document.getElementById('centerlineBtn').onclick=()=>{
   centerlineGroup.visible=centerlineVisible;
   document.getElementById('centerlineBtn').textContent=`Centerline: ${centerlineVisible?'เปิด':'ปิด'}`;
 };
-let tr=false;document.getElementById('transparent').onclick=()=>{tr=!tr;walls.forEach(w=>{w.material.opacity=tr?.28:.96;w.material.depthWrite=!tr;w.material.needsUpdate=true});document.getElementById('transparent').textContent=tr?'ผนังทึบ':'ผนังโปร่ง'};
+let tr=false;document.getElementById('transparent').onclick=()=>{
+  tr=!tr;
+  walls.forEach(w=>{
+    w.material.opacity=tr?.20:.72;
+    w.material.depthWrite=!tr;
+    w.material.needsUpdate=true;
+  });
+  document.getElementById('transparent').textContent=tr?'ผนังทึบ':'ผนังโปร่ง';
+};
 let pv=true;document.getElementById('plan').onclick=()=>{pv=!pv;floor.visible=pv;document.getElementById('plan').textContent=pv?'ซ่อนภาพ QA':'แสดงภาพ QA'};
 function resize(){
   const r=sceneEl.getBoundingClientRect();
@@ -154,6 +200,8 @@ function resize(){
   orthoCamera.updateProjectionMatrix();
 }
 new ResizeObserver(resize).observe(sceneEl);resize();
+useOrtho();
+walls.forEach(w=>{w.material.opacity=.10;w.material.depthWrite=false;w.material.needsUpdate=true;});
 let first=true;(function loop(now){requestAnimationFrame(loop);controls.update();renderer.render(scene,activeCamera);if(first){first=false;boot.style.display='none'}})();
 </script>
 </body></html>
