@@ -222,11 +222,6 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 </head>
 <body>
 
-<div id="qsOverlayQA" aria-label="QS overlay QA controls">
-  <button id="qsOverlayToggle" class="active">แปลน QS: เปิด</button>
-  <button id="qsOverlayFocus">ดู QS</button>
-</div>
-
 <div class="app">
 <aside class="side">
   <div class="desktop-brand">
@@ -328,6 +323,10 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 </aside>
 
 <main class="mapwrap">
+<div id="qsOverlayQA" aria-label="QS overlay QA controls">
+  <button id="qsOverlayToggle" class="active" type="button">แปลน QS: เปิด</button>
+  <button id="qsOverlayFocus" type="button">ดู QS</button>
+</div>
   <section id="mobileHome" class="mobile-home">
     <div class="mobile-brand">
       <img class="mobile-logo-img" src="logo-4job.png" alt="โลโก้งาน 4 จอบ">
@@ -446,6 +445,42 @@ const map = new maplibregl.Map({
  antialias:true
 });
 map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"bottom-right");
+
+// v37 FIX: QS controls share the same module scope as the MapLibre map.
+// The aligned image source, geographic coordinates and visual overlay remain unchanged.
+const qsToggle = document.getElementById("qsOverlayToggle");
+const qsFocus = document.getElementById("qsOverlayFocus");
+let qsOverlayVisible = true;
+
+function updateQsButton(){
+  qsToggle.textContent = `แปลน QS: ${qsOverlayVisible ? "เปิด" : "ปิด"}`;
+  qsToggle.classList.toggle("active", qsOverlayVisible);
+  qsToggle.setAttribute("aria-pressed", String(qsOverlayVisible));
+}
+
+qsToggle.addEventListener("click", () => {
+  const layerId = "qs-floor-overlay-layer";
+  if (!map.getLayer(layerId)) {
+    // Avoid showing a changed state if the style/overlay has not loaded.
+    qsToggle.title = "กำลังโหลดแปลน QS กรุณาลองอีกครั้ง";
+    return;
+  }
+  qsOverlayVisible = !qsOverlayVisible;
+  map.setLayoutProperty(layerId, "visibility", qsOverlayVisible ? "visible" : "none");
+  updateQsButton();
+});
+
+qsFocus.addEventListener("click", () => {
+  map.easeTo({
+    center:[100.1924536588474,16.746687398820605],
+    zoom:18.35,
+    pitch:0,
+    bearing:28.55375671386719,
+    duration:900
+  });
+});
+updateQsButton();
+
 
 const markers = [];
 const pts = [];
@@ -1575,33 +1610,6 @@ setTimeout(()=>{
   }
 },12000);
 
-</script>
-
-<script id="qs-overlay-qa-handler">
-document.addEventListener("DOMContentLoaded",()=>{
-  const toggle=document.getElementById("qsOverlayToggle");
-  const focus=document.getElementById("qsOverlayFocus");
-  let on=true;
-  toggle?.addEventListener("click",()=>{
-    on=!on;
-    if(typeof map!=="undefined" && map.getLayer("qs-floor-overlay-layer")){
-      map.setLayoutProperty("qs-floor-overlay-layer","visibility",on?"visible":"none");
-    }
-    toggle.textContent=`แปลน QS: ${on?"เปิด":"ปิด"}`;
-    toggle.classList.toggle("active",on);
-  });
-  focus?.addEventListener("click",()=>{
-    if(typeof map!=="undefined"){
-      map.easeTo({
-        center:[100.1924536588474,16.746687398820605],
-        zoom:18.35,
-        pitch:0,
-        bearing:28.55375671386719,
-        duration:900
-      });
-    }
-  });
-});
 </script>
 
 </body>
