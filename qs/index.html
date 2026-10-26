@@ -235,6 +235,19 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 .qs-zone-point.pending{background:#936a22}#map.qs-placing{cursor:crosshair!important}
 @media(max-width:760px){#qsMarkerPanel{top:124px;right:8px;max-height:calc(100% - 150px);width:min(300px,calc(100vw - 20px))}}
 </style>
+<style id="qs-v40-activity-css">
+#qsActivityPanel{position:absolute;z-index:32;right:14px;top:184px;width:min(365px,calc(100vw - 25px));max-height:calc(100% - 202px);overflow:auto;background:#fff;border:1px solid #b6d5c0;border-radius:15px;box-shadow:0 5px 22px #112b1e33;padding:12px;color:#173c2b;font:14px system-ui,sans-serif}
+#qsActivityPanel[hidden]{display:none!important}
+.qsact-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.qsact-head strong{font-size:16px}.qsact-head button{border:0;background:#eee;border-radius:8px;padding:4px 10px;font-size:22px;cursor:pointer}
+#qsActDay{width:100%;padding:9px;margin:6px 0 8px;border:1px solid #b6d5c0;border-radius:9px;background:#fff}
+.qsact-note{font-size:12px;color:#657166;line-height:1.4;margin-bottom:8px}
+.qsact-item{display:block;width:100%;text-align:left;padding:9px;margin:5px 0;background:#f2f8f4;border:1px solid #d2e2d7;border-radius:9px;font:inherit;color:#173c2b;cursor:pointer}
+.qsact-item b{font-weight:800;margin-right:5px}.qsact-item:focus-visible,.qsact-item:hover{outline:2px solid #2f8c57}
+#qsActDetail{background:#fbf9ee;border-top:1px solid #d7dfd7;padding:10px;margin-top:10px;line-height:1.6;border-radius:6px}
+#qsActDetail h3{font-size:15px;margin:0 0 6px}#qsActDetail p{margin:4px 0}#qsActDetail small{color:#667}
+#qsOverlayQA{max-width:420px}
+@media(max-width:760px){#qsActivityPanel{top:172px;right:8px;max-height:calc(100% - 185px);width:min(325px,calc(100vw - 16px))}#qsOverlayQA{max-width:320px}}
+</style>
 </head>
 <body>
 
@@ -343,6 +356,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   <button id="qsOverlayToggle" class="active" type="button">แปลน QS: เปิด</button>
   <button id="qsOverlayFocus" type="button">ดู QS</button>
   <button id="qsMarkerPanelToggle" type="button">จุด QS (QA)</button>
+  <button id="qsActivityToggle" type="button" aria-expanded="false">กิจกรรม QS</button>
 </div>
 
 <div id="qsMarkerPanel" role="region" aria-label="กำหนดจุดพื้นที่ QS">
@@ -358,6 +372,13 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   </div>
   <div id="qsMarkerStatus" role="status" aria-live="polite"></div>
   <div class="qa-info">ตำแหน่งเก็บเฉพาะเบราว์เซอร์เครื่องนี้จนกว่าจะส่งออกไฟล์ JSON การคลิกจุดที่วางไว้จะแสดงรายละเอียดพื้นฐาน</div>
+</div>
+<div id="qsActivityPanel" role="region" aria-label="กิจกรรมอาคาร QS" hidden>
+  <div class="qsact-head"><strong>กิจกรรมและจุดบริการ QS</strong><button type="button" id="qsActClose" aria-label="ปิดรายการ">×</button></div>
+  <label for="qsActDay">เลือกวันที่</label>
+  <select id="qsActDay"><option value="all">ทั้งหมด 4–7 พ.ย.</option><option value="4">4 พ.ย.</option><option value="5">5 พ.ย.</option><option value="6">6 พ.ย.</option><option value="7">7 พ.ย.</option></select>
+  <div class="qsact-note">รายการบริการที่ไม่ระบุวันที่แสดงไว้ทุกวันเพื่อการค้นหา ไม่ยืนยันชั่วโมงเปิดบริการ</div>
+  <div id="qsActList"></div><div id="qsActDetail" aria-live="polite">แตะหมายเลขบนแผนที่หรือเลือกรายการเพื่อดูรายละเอียด</div>
 </div>
   <section id="mobileHome" class="mobile-home">
     <div class="mobile-brand">
@@ -556,10 +577,11 @@ function qaRenderMarker(id){
   const p=qaPositions[id];if(!p)return;
   const info=QS_ZONE_ITEMS.find(z=>z[0]===id);if(!info)return;
   const el=document.createElement('div');el.className='qs-zone-point pending';el.textContent=qaLabel(id);el.title=`${info[1]} (รอตรวจตำแหน่ง)`;
-  const popup=new maplibregl.Popup({offset:21}).setHTML(`<b>${qaLabel(id)} — ${esc(info[1])}</b><div style="font-size:12px;margin-top:6px">ตำแหน่งทดสอบ ยังไม่ยืนยัน<br>คลิกเลือกพื้นที่ในแผง QA เพื่อแก้ไข</div>`);
+  const popup=new maplibregl.Popup({offset:21}).setHTML(`<b>${qaLabel(id)} — ${esc(info[1])}</b><div style="font-size:12px;margin-top:6px">แตะ “กิจกรรม QS” เพื่อดูรายละเอียดและกรองวัน</div>`);
   qaMarkers[id]=new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(p).setPopup(popup).addTo(map);
+  el.addEventListener('click',()=>{if(typeof actPanel!=='undefined'&&!actPanel.hidden)qsActOpenPoint(id,false);});
 }
-function qaRedraw(){QS_ZONE_ITEMS.forEach(([id])=>qaRenderMarker(id));qaMessage(`มีจุดที่ผู้ใช้วาง ${Object.keys(qaPositions).length}/${QS_ZONE_ITEMS.length} จุด • รอตรวจยืนยัน`);}
+function qaRedraw(){QS_ZONE_ITEMS.forEach(([id])=>qaRenderMarker(id));if(typeof qsActRender==='function'&&!actPanel.hidden)qsActRender();qaMessage(`มีจุดที่ผู้ใช้วาง ${Object.keys(qaPositions).length}/${QS_ZONE_ITEMS.length} จุด • รอตรวจยืนยัน`);}
 function qaMode(on){qaPlacing=on;document.getElementById('map').classList.toggle('qs-placing',on);qaStart.textContent=on?'คลิกบนแปลนเพื่อวาง…':'เริ่มวางจุด';qaStart.disabled=on;qaCancel.disabled=!on;}
 qaPanelBtn.addEventListener('click',()=>{const on=!qaPanel.classList.contains('open');qaPanel.classList.toggle('open',on);qaPanelBtn.classList.toggle('active',on);if(!on)qaMode(false);if(on)qaRedraw();});
 qaStart.addEventListener('click',()=>{if(!map.getLayer(qsLayerId)){qaMessage('แปลนยังโหลดไม่ครบ');return;}map.setLayoutProperty(qsLayerId,'visibility','visible');syncQsButton();qaMode(true);qaMessage('คลิกตำแหน่งจริงบนแปลนเพื่อวาง '+qaLabel(qaSelect.value));});
@@ -588,6 +610,70 @@ qaExport.addEventListener('click',()=>{
 map.on('load',qaRedraw);
 // Existing browser edits take precedence over the bundled defaults;
 // clear site localStorage for key 4job41:qs:zone-qa:v38 to restore the bundled QA coordinates.
+
+
+// QS v40: activity browsing, preserving all user-confirmed v39 marker coordinates.
+// Blank/unknown times are explicitly not invented.
+const QS_ACTIVITIES = {
+  '1.1': {events:[{day:4,text:'ลงทะเบียนนิสิต–นักศึกษา'},{day:5,text:'รับใบประกาศนียบัตรและถ่ายภาพ'},{day:6,text:'รับใบประกาศนียบัตรและถ่ายภาพ'},{day:7,text:'รับใบประกาศนียบัตรและถ่ายภาพ'}]},
+  '1.2': {service:'กองอำนวยการและประสานงานหลัก'},
+  '1.3': {service:'ประสานงานนิสิต–นักศึกษา'},
+  '1.4': {service:'ห้องพยาบาล / ปฐมพยาบาล'},
+  '1.5a': {service:'ห้องพักและทำงานอาจารย์–เจ้าหน้าที่ (พื้นที่ 1)'},
+  '1.5b': {service:'ห้องพักและทำงานอาจารย์–เจ้าหน้าที่ (พื้นที่ 2)'},
+  '1.6': {service:'พื้นที่รับประทานอาหารอาจารย์–เจ้าหน้าที่'},
+  '1.7': {service:'จุดประชาสัมพันธ์กลาง'},
+  '1.8': {service:'Starbucks'},
+  '1.9': {events:[{day:5,text:'การแข่งขันรีดเต้านมเทียม'},{day:6,text:'การแข่งขันฉีดยาเข้ากล้ามเนื้อ (กีฬาสาธิต)'}]},
+  '1.10': {events:[{day:5,text:'การแข่งขันจัดสวนถาด'},{day:6,text:'การแข่งขันขยายพันธุ์พืช (ติดตา–ต่อกิ่ง–ทาบกิ่ง)'},{day:7,text:'การแข่งขันกรอกวัสดุปลูกใส่ถุง'}]}
+};
+const actToggle=document.getElementById('qsActivityToggle');
+const actPanel=document.getElementById('qsActivityPanel');
+const actDay=document.getElementById('qsActDay');
+const actList=document.getElementById('qsActList');
+const actDetail=document.getElementById('qsActDetail');
+let qsActSelected=null;
+function qsActName(id){return QS_ZONE_ITEMS.find(x=>x[0]===id)?.[1]||id;}
+function qsActEntries(id){
+  const o=QS_ACTIVITIES[id]||{};
+  return (o.events||[]).filter(e=>actDay.value==='all'||String(e.day)===actDay.value);
+}
+function qsActVisible(id){const o=QS_ACTIVITIES[id]||{};return !!o.service||qsActEntries(id).length>0;}
+function qsActOpenPoint(id, fly=true){
+  qsActSelected=id;
+  const details=QS_ACTIVITIES[id]||{};
+  const events=qsActEntries(id);
+  const service=details.service?`<p>${esc(details.service)}</p><small>จุดบริการ: ไม่ระบุวัน/เวลาเปิดให้บริการ</small>`:'';
+  const schedule=events.map(x=>`<p><b>${x.day} พ.ย.</b> — ${esc(x.text)}</p>`).join('');
+  actDetail.innerHTML=`<h3>${esc(qaLabel(id))} — ${esc(qsActName(id))}</h3>${service}${schedule||(!details.service?'<p>ไม่มีรายการในวันที่เลือก</p>':'')}<p><small>เวลา: ยังไม่ได้ยืนยันในฐานข้อมูล</small></p>`;
+  if(fly&&qaPositions[id])map.easeTo({center:qaPositions[id],zoom:Math.max(18.2,map.getZoom()),pitch:0,duration:650});
+  const marker=qaMarkers[id];if(marker&&fly)marker.togglePopup();
+}
+function qsActRender(){
+  actList.replaceChildren();
+  for(const [id,name] of QS_ZONE_ITEMS){
+    const visible=qsActVisible(id);
+    if(qaMarkers[id])qaMarkers[id].getElement().style.display=visible?'':'none';
+    if(!visible)continue;
+    const b=document.createElement('button');b.type='button';b.className='qsact-item';
+    const o=QS_ACTIVITIES[id]||{};
+    const summary=o.service?'จุดบริการ':qsActEntries(id).map(e=>e.text).join(' / ');
+    b.innerHTML=`<b>${esc(qaLabel(id))}</b>${esc(name)}<div style="font-size:12px;color:#52655a">${esc(summary)}</div>`;
+    b.onclick=()=>qsActOpenPoint(id);
+    actList.appendChild(b);
+  }
+  if(qsActSelected&&qsActVisible(qsActSelected))qsActOpenPoint(qsActSelected,false);
+  else actDetail.textContent='แตะหมายเลขบนแผนที่หรือเลือกรายการเพื่อดูรายละเอียด';
+}
+function qsActSetOpen(on){
+  actPanel.hidden=!on;actToggle.classList.toggle('active',on);
+  actToggle.setAttribute('aria-expanded',String(on));
+  if(on){qaPanel.classList.remove('open');qaPanelBtn.classList.remove('active');qaMode(false);qsActRender();}
+  else {for(const x of Object.values(qaMarkers))x.getElement().style.display='';}
+}
+actToggle.addEventListener('click',()=>qsActSetOpen(actPanel.hidden));
+document.getElementById('qsActClose').addEventListener('click',()=>qsActSetOpen(false));
+actDay.addEventListener('change',qsActRender);
 
 const markers = [];
 const pts = [];
