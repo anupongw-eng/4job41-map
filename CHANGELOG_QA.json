@@ -1,0 +1,16 @@
+{
+  "base": "v47.3",
+  "changes": [
+    "Safety Center sidebar link ./safety/",
+    "H2 route origin/destination options and coordinates"
+  ],
+  "coordinates_H2_lat_lon": [
+    16.74624939945406,
+    100.19319825828275
+  ],
+  "asset_sha256": {
+    "index.html": "6b53ee5fa29fe2f006c4aba0f2b52d07a2a2f62f55f583ef43505875d98561c9",
+    "QS_Floor1_GroundOverlay.png": "65981a178989fc02009e392b4371f31577b5e2fdd5c8d5f729857a55b99c4e15"
+  },
+  "safety_link_status": "relative path; deployed existence unverified"
+}

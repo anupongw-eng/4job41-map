@@ -298,6 +298,12 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
       <small>ฉบับปัจจุบันของงาน</small>
     </a>
   </div>
+  <div class="service-row" aria-label="ศูนย์ความปลอดภัย">
+    <a class="service-link" href="./safety/" target="_blank" rel="noopener" aria-label="เปิด Safety Center ในแท็บใหม่">
+      🛡️ Safety Center
+      <small>แจ้งเหตุฉุกเฉิน / ติดต่อผู้ประสานงาน / ขั้นตอนความปลอดภัย</small>
+    </a>
+  </div>
   <div class="release-note">
     เลือกกิจกรรมหรือสถานที่ แล้วเปิดนำทางด้วย Google Maps
   </div>
@@ -583,11 +589,18 @@ function populateNavigationOptions(){
     from.add(new Option(p.name,p.id));
     to.add(new Option(p.name,p.id));
   });
+  // v48.1: confirmed second venue of the herbicide competition (not in DATA).
+  const h2Name="H2 — คำนวณอัตราการใช้และพ่นสารกำจัดวัชพืช (จุดที่ 2)";
+  if (!Array.from(from.options).some(o=>o.value==="H2")) from.add(new Option(h2Name,"H2"));
+  if (!Array.from(to.options).some(o=>o.value==="H2")) to.add(new Option(h2Name,"H2"));
   if(previousFrom==="__CURRENT_LOCATION__" || pts.some(p=>p.id===previousFrom)) from.value=previousFrom;
-  if(pts.some(p=>p.id===previousTo)) to.value=previousTo;
+  if(previousFrom==="H2") from.value="H2";
+  if(pts.some(p=>p.id===previousTo) || previousTo==="H2") to.value=previousTo;
 }
 map.on("load", populateNavigationOptions);
-const get=id=>pts.find(p=>p.id===id);
+const get=id=>id==="H2"
+  ? {id:"H2",name:"H2 — จุดแข่งขันพ่นสารกำจัดวัชพืช จุดที่ 2",lat:16.74624939945406,lon:100.19319825828275}
+  : pts.find(p=>p.id===id);
 document.getElementById("go").onclick=()=>{
  const b=get(to.value);
  if(!b){alert("กรุณาเลือกปลายทาง");return;}
