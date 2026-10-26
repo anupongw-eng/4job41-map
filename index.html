@@ -200,6 +200,17 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 .mobile-event-actions a{background:#1677e8;color:#fff}
 .mobile-empty{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px;font-size:12px;color:var(--muted)}
 
+
+/* v45 unified QS controls */
+#unifiedDock{position:fixed;right:12px;top:88px;z-index:850;max-width:min(350px,calc(100vw - 24px));font:14px system-ui,sans-serif}
+#unifiedDock button{cursor:pointer}#unifiedLaunch{padding:11px 15px;background:#145c3a;color:white;border:0;border-radius:12px;font-weight:800;box-shadow:0 5px 18px #0003}
+#unifiedPanel{margin-top:8px;background:#fff;border:1px solid #cbd5d1;border-radius:12px;box-shadow:0 8px 30px #0004;max-height:65vh;overflow:auto;padding:12px;color:#18352b}
+#unifiedPanel[hidden]{display:none}#unifiedPanel .u-actions{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0}#unifiedPanel .u-actions button,#unifiedPanel select{background:#f3f8f5;border:1px solid #b8cac1;padding:7px;border-radius:7px;color:#173b2a}
+#unifiedPanel select{width:100%}#unifiedRows{display:grid;gap:5px;max-height:35vh;overflow:auto}#unifiedRows button{text-align:left;background:#f7faf7;border:1px solid #dce6df;padding:8px;border-radius:8px;color:#20362b}
+#unifiedRows button strong{display:block}#unifiedRows button small{color:#61756a}#unifiedPanel .u-close{float:right;background:white;border:0;font-size:20px}
+.qs-unified-pin{width:34px;height:34px;border:2px solid white;border-radius:50%;background:#176b49;color:white;display:grid;place-items:center;font-size:11px;font-weight:bold;box-shadow:0 1px 8px #0008;cursor:pointer}
+.qs-unified-pin.th{background:#7b3b9b;width:39px;height:39px}
+@media(max-width:700px){#unifiedDock{top:auto;bottom:76px;right:8px;max-width:calc(100vw - 16px)}#unifiedPanel{max-height:53vh}}
 </style>
 </head>
 <body>
@@ -221,30 +232,13 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 
   <div class="sidebar-section"><details class="collapsible" open><summary>จุดสำคัญ</summary><div class="inside">
   <div class="quick">
-    <button class="q" data-id="QS">อาคาร QS<small>อาคารเรียนรวม</small></button>
     <button class="q" data-id="E">พิธีเปิด–ปิด<small>ลานกิจกรรมประตู 5</small></button>
-    <button class="q" data-id="MALE">ที่พักชาย<small>ห้อง พรบ.</small></button>
-    <button class="q" data-id="KW">ที่พักหญิง<small>อาคารขวัญเมือง</small></button>
-    <button class="q" data-id="HOSP">รพ.มน.<small>โรงพยาบาลมหาวิทยาลัยนเรศวร</small></button>
+    <button class="q" data-id="QS">อาคาร QS<small>อาคารเรียนรวม</small></button>
     <button class="q" data-id="FB1">สนามฟุตบอล<small>สนามฟุตบอล 1</small></button>
+    <button class="q" data-id="PGPR">เข้าด้ามจอบ<small>ศูนย์ PGPR</small></button>
+    <button class="q" data-id="KW">ที่พักหญิง<small>อาคารขวัญเมือง</small></button>
+    <button class="q" data-id="HOSP">โรงพยาบาล<small>24 ชั่วโมง</small></button>
   </div></div></details></div>
-
-
-  <div class="sidebar-section"><details class="collapsible"><summary>ที่จอดรถ P1–P11 (11 จุด)</summary><div class="inside">
-    <div class="quick">
-    <button class="q" type="button" data-id="P1">P1 อาคารอเนกประสงค์</button>
-    <button class="q" type="button" data-id="P2">P2 ลานสมเด็จฯ</button>
-    <button class="q" type="button" data-id="P3">P3 ศึกษาศาสตร์–มนุษยศาสตร์</button>
-    <button class="q" type="button" data-id="P4">P4 CITCOM</button>
-    <button class="q" type="button" data-id="P5">P5 BEC</button>
-    <button class="q" type="button" data-id="P6">P6 สระว่ายน้ำ</button>
-    <button class="q" type="button" data-id="P7">P7 ร้านหนังสือจุฬาฯ</button>
-    <button class="q" type="button" data-id="P8">P8 อาคารจอดรถ</button>
-    <button class="q" type="button" data-id="P9">P9 วิทยาลัยนานาชาติ</button>
-    <button class="q" type="button" data-id="P10">P10 ที่จอดรถบัส</button>
-    <button class="q" type="button" data-id="P11">P11 อาคารขวัญเมือง</button>
-    </div><div class="meta" style="margin-top:8px">เลือกที่จอดรถเพื่อดูจุดบนแผนที่และเปิดนำทางจากหน้าต่างข้อมูลตำแหน่ง</div>
-  </div></details></div>
 
   <div class="title"></div>
   <div class="guidegrid">
@@ -262,8 +256,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
       <option value="FB1">สนามฟุตบอล 1</option>
       <option value="G">สนามคล้องโค/ล้มโค</option>
       <option value="PGPR">เข้าด้ามจอบ / ศูนย์ PGPR</option>
-      <option value="MALE">ที่พักชาย / ห้อง พรบ.</option>
-      <option value="KW">ที่พักหญิง / อาคารขวัญเมือง</option>
+      <option value="KW">อาคารขวัญเมือง / ที่พักหญิง</option>
       <option value="HOSP">โรงพยาบาล มน.</option>
     </select>
     <div id="guideBox" class="guidebox">
@@ -368,31 +361,13 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
       </a>
     </div>
 
-
-    <details class="mobile-parking-list" style="margin:12px 0;padding:12px;border:1px solid #ccded1;border-radius:12px;background:#fff">
-      <summary style="cursor:pointer;font-weight:800;color:#145f3c">ที่จอดรถ P1–P11 (11 จุด) — แตะเพื่อเลือก</summary>
-      <div class="home-actions" style="margin-top:10px">
-        <button class="home-action mobile-parking-point" type="button" data-parking-id="P1"><strong>P1</strong><small>อาคารอเนกประสงค์</small></button>
-        <button class="home-action mobile-parking-point" type="button" data-parking-id="P2"><strong>P2</strong><small>ลานสมเด็จฯ</small></button>
-        <button class="home-action mobile-parking-point" type="button" data-parking-id="P3"><strong>P3</strong><small>ศึกษาศาสตร์–มนุษยศาสตร์</small></button>
-        <button class="home-action mobile-parking-point" type="button" data-parking-id="P4"><strong>P4</strong><small>CITCOM</small></button>
-        <button class="home-action mobile-parking-point" type="button" data-parking-id="P5"><strong>P5</strong><small>BEC</small></button>
-        <button class="home-action mobile-parking-point" type="button" data-parking-id="P6"><strong>P6</strong><small>สระว่ายน้ำ</small></button>
-        <button class="home-action mobile-parking-point" type="button" data-parking-id="P7"><strong>P7</strong><small>ร้านหนังสือจุฬาฯ</small></button>
-        <button class="home-action mobile-parking-point" type="button" data-parking-id="P8"><strong>P8</strong><small>อาคารจอดรถ</small></button>
-        <button class="home-action mobile-parking-point" type="button" data-parking-id="P9"><strong>P9</strong><small>วิทยาลัยนานาชาติ</small></button>
-        <button class="home-action mobile-parking-point" type="button" data-parking-id="P10"><strong>P10</strong><small>ที่จอดรถบัส</small></button>
-        <button class="home-action mobile-parking-point" type="button" data-parking-id="P11"><strong>P11</strong><small>อาคารขวัญเมือง</small></button>
-      </div>
-    </details>
-
     <div class="home-actions">
-      <button class="home-action" data-mobile-action="qs"><strong>อาคาร QS</strong><small>ลงทะเบียน / กองอำนวยการ</small></button>
       <button class="home-action" data-mobile-action="opening"><strong>พิธีเปิด–ปิด</strong><small>ลานกิจกรรมประตู 5</small></button>
-      <button class="home-action" data-mobile-action="male"><strong>ที่พักชาย</strong><small>ห้อง พรบ.</small></button>
-      <button class="home-action" data-mobile-action="female"><strong>ที่พักหญิง</strong><small>อาคารขวัญเมือง</small></button>
-      <button class="home-action" data-mobile-action="hospital"><strong>รพ.มน.</strong><small>โรงพยาบาลมหาวิทยาลัยนเรศวร</small></button>
-      <button class="home-action" data-mobile-action="sports"><strong>สนามฟุตบอล</strong><small>สนามฟุตบอล 1</small></button>
+      <button class="home-action" data-mobile-action="qs"><strong>อาคาร QS</strong><small>ลงทะเบียน / กองอำนวยการ</small></button>
+      <button class="home-action" data-mobile-action="sports"><strong>สนามกีฬา</strong><small>สนามฟุตบอล / Gymnasium</small></button>
+      <button class="home-action" data-mobile-action="pgpr"><strong>เข้าด้ามจอบ</strong><small>ศูนย์ PGPR</small></button>
+      <button class="home-action" data-mobile-action="parking"><strong>ที่จอดรถ</strong><small>ดู P1–P11 บนแผนที่</small></button>
+      <button class="home-action" data-mobile-action="hospital"><strong>โรงพยาบาล</strong><small>รพ.มหาวิทยาลัยนเรศวร • 24 ชม.</small></button>
     </div>
   </section>
 
@@ -402,6 +377,12 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   </div>
 
   <div id="map"></div>
+<div id="unifiedDock"><button id="unifiedLaunch" type="button" aria-expanded="false">📍 QS / โรงละคร</button>
+<div id="unifiedPanel" hidden><button class="u-close" id="unifiedClose" aria-label="ปิด">×</button><b>แผนที่เดียว • QS ชั้น 1 และโรงละคร</b>
+<div class="u-actions"><button id="uFocusQS">ดู QS</button><button id="uFocusTH">ดูโรงละคร</button><button id="uToggleOverlay">ซ่อนแปลน QS</button><button id="uOverview">ภาพรวม</button></div>
+<select id="uDay"><option value="4">4 พฤศจิกายน</option><option value="5" selected>5 พฤศจิกายน</option><option value="6">6 พฤศจิกายน</option><option value="7">7 พฤศจิกายน</option></select>
+<div id="unifiedRows"></div></div></div>
+
 
   <div id="mapFallback" class="map-fallback">
     <div class="fallback-card">
@@ -430,8 +411,8 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 <script type="module">
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.mjs";
 
-const DATA = {"type": "FeatureCollection", "name": "4JOP41_verified_points_v1", "features": [{"type": "Feature", "properties": {"id": "MON", "name": "พระบรมราชานุสาวรีย์สมเด็จพระนเรศวรมหาราช", "category": "Landmark", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19145342111622, 16.749497570363005]}}, {"type": "Feature", "properties": {"id": "TH", "name": "อาคารโรงละคร", "category": "Zone A / Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19289638893403, 16.745830072474078]}}, {"type": "Feature", "properties": {"id": "QS", "name": "อาคาร QS", "category": "Zone A / Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19253034357695, 16.746589967352374]}}, {"type": "Feature", "properties": {"id": "AG", "name": "คณะเกษตรศาสตร์ฯ", "category": "Zone B / Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19547523058051, 16.746025394810328]}}, {"type": "Feature", "properties": {"id": "MED", "name": "คณะวิทยาศาสตร์การแพทย์", "category": "Zone C / Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19158091155131, 16.745569905477748]}}, {"type": "Feature", "properties": {"id": "GYM", "name": "Gymnasium", "category": "Zone D / Sports", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19312953583223, 16.750885906084104]}}, {"type": "Feature", "properties": {"id": "ACT", "name": "อาคารกิจกรรมข้างอาคารอเนกประสงค์", "category": "Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.1928839629854, 16.75144833170893]}}, {"type": "Feature", "properties": {"id": "FB1", "name": "สนามฟุตบอล 1", "category": "Zone D / Sports", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19465433284728, 16.751113952036707]}}, {"type": "Feature", "properties": {"id": "KW", "name": "อาคารขวัญเมือง", "category": "Zone H / ที่พักหญิง", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19955664209454, 16.737132966046715]}}, {"type": "Feature", "properties": {"id": "E", "name": "ลานกิจกรรมประตู 5", "category": "Zone E", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19563727412164, 16.749624934781387]}}, {"type": "Feature", "properties": {"id": "G", "name": "สนามคล้องโค/ล้มโค", "category": "Zone G", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19564622241427, 16.74099402809978]}}, {"type": "Feature", "properties": {"id": "F_OLD", "name": "พื้นที่แปลงเดิม F (ไม่ใช้เป็นจุดแข่งขันเข้าด้ามจอบแล้ว)", "category": "Former Zone F", "status": "obsolete_for_competition"}, "geometry": {"type": "Point", "coordinates": [100.19347143096533, 16.735786255672327]}}, {"type": "Feature", "properties": {"id": "GATE1", "name": "ประตู 1", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.18718641367883, 16.75218338644108]}}, {"type": "Feature", "properties": {"id": "GATE2", "name": "ประตู 2", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.18671707708481, 16.75133742099446]}}, {"type": "Feature", "properties": {"id": "GATE3", "name": "ประตู 3", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19157096071133, 16.740644319662213]}}, {"type": "Feature", "properties": {"id": "GATE4", "name": "ประตู 4", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.1994049974154, 16.74425113280003]}}, {"type": "Feature", "properties": {"id": "GATE5", "name": "ประตู 5", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19661032470695, 16.750562347917707]}}, {"type": "Feature", "properties": {"id": "HOSP", "name": "โรงพยาบาลมหาวิทยาลัยนเรศวร", "category": "Medical", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.18938970316694, 16.749103587615192]}}, {"type": "Feature", "properties": {"id": "MALE", "name": "ที่พักชาย (ห้อง พรบ.)", "category": "Accommodation", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19358314387354, 16.750922767755604]}}, {"type": "Feature", "properties": {"id": "TRANSIT", "name": "สถานีขนส่งมวลชน / รถไฟฟ้าประจำทาง", "category": "NU Transit", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19987085890455, 16.73811115678402]}}, {"type": "Feature", "properties": {"id": "P1", "name": "P1 อาคารอเนกประสงค์", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19365902518804, 16.750414604047712]}}, {"type": "Feature", "properties": {"id": "P2", "name": "P2 ลานสมเด็จฯ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19103032653561, 16.750443662184498]}}, {"type": "Feature", "properties": {"id": "P3", "name": "P3 ศึกษาศาสตร์–มนุษยศาสตร์", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19458457032891, 16.747490606308315]}}, {"type": "Feature", "properties": {"id": "P4", "name": "P4 CITCOM", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19569598260188, 16.74709105034127]}}, {"type": "Feature", "properties": {"id": "P5", "name": "P5 BEC", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19680360165889, 16.747744868759884]}}, {"type": "Feature", "properties": {"id": "P6", "name": "P6 สระว่ายน้ำ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19726637401006, 16.74641906793188]}}, {"type": "Feature", "properties": {"id": "P7", "name": "P7 ร้านหนังสือจุฬาฯ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19299521259316, 16.745075096023943]}}, {"type": "Feature", "properties": {"id": "P8", "name": "P8 อาคารจอดรถ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19268796210132, 16.744621049327723]}}, {"type": "Feature", "properties": {"id": "P9", "name": "P9 วิทยาลัยนานาชาติ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19355281533763, 16.745049669437567]}}, {"type": "Feature", "properties": {"id": "P10", "name": "P10 ที่จอดรถบัส", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.1997485811917, 16.740387706599527]}}, {"type": "Feature", "properties": {"id": "P11", "name": "P11 อาคารขวัญเมือง", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19873123592288, 16.73661372461545]}}, {"type": "Feature", "properties": {"id": "PGPR", "name": "ศูนย์ PGPR", "category": "Zone F / Competition", "status": "verified", "group": "zone"}, "geometry": {"type": "Point", "coordinates": [100.19413569696994, 16.73537946761842]}}]};
-const C = {"GATE5": [100.19661032470695, 16.750562347917707], "E": [100.19563727412164, 16.749624934781387], "HOSP": [100.18938970316694, 16.749103587615192], "GATE1": [100.18718641367883, 16.75218338644108], "QS": [100.19253034357695, 16.746589967352374], "GATE2": [100.18671707708481, 16.75133742099446], "G": [100.19564622241427, 16.74099402809978], "PGPR": [100.19413569696994, 16.73537946761842]};
+const DATA = {"type": "FeatureCollection", "name": "4JOP41_verified_points_v1", "features": [{"type": "Feature", "properties": {"id": "MON", "name": "พระบรมราชานุสาวรีย์สมเด็จพระนเรศวรมหาราช", "category": "Landmark", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19145342111622, 16.749497570363005]}}, {"type": "Feature", "properties": {"id": "TH", "name": "อาคารโรงละคร", "category": "Zone A / Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19289638893403, 16.745830072474078]}}, {"type": "Feature", "properties": {"id": "QS", "name": "อาคาร QS", "category": "Zone A / Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19253034357695, 16.746589967352374]}}, {"type": "Feature", "properties": {"id": "AG", "name": "คณะเกษตรศาสตร์ฯ", "category": "Zone B / Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19547523058051, 16.746025394810328]}}, {"type": "Feature", "properties": {"id": "MED", "name": "คณะวิทยาศาสตร์การแพทย์", "category": "Zone C / Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19158091155131, 16.745569905477748]}}, {"type": "Feature", "properties": {"id": "GYM", "name": "Gymnasium", "category": "Zone D / Sports", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19312953583223, 16.750885906084104]}}, {"type": "Feature", "properties": {"id": "ACT", "name": "อาคารกิจกรรมข้างอาคารอเนกประสงค์", "category": "Building", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.1928839629854, 16.75144833170893]}}, {"type": "Feature", "properties": {"id": "FB1", "name": "สนามฟุตบอล 1", "category": "Zone D / Sports", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19518017992819, 16.751243364763496]}}, {"type": "Feature", "properties": {"id": "KW", "name": "อาคารขวัญเมือง", "category": "Zone H / ที่พักหญิง", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19955664209454, 16.737132966046715]}}, {"type": "Feature", "properties": {"id": "E", "name": "ลานกิจกรรมประตู 5", "category": "Zone E", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19563727412164, 16.749624934781387]}}, {"type": "Feature", "properties": {"id": "G", "name": "สนามคล้องโค/ล้มโค", "category": "Zone G", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19581938196396, 16.740479934380073]}}, {"type": "Feature", "properties": {"id": "F_OLD", "name": "พื้นที่แปลงเดิม F (ไม่ใช้เป็นจุดแข่งขันเข้าด้ามจอบแล้ว)", "category": "Former Zone F", "status": "obsolete_for_competition"}, "geometry": {"type": "Point", "coordinates": [100.19347143096533, 16.735786255672327]}}, {"type": "Feature", "properties": {"id": "GATE1", "name": "ประตู 1", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.18718641367883, 16.75218338644108]}}, {"type": "Feature", "properties": {"id": "GATE2", "name": "ประตู 2", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.18671707708481, 16.75133742099446]}}, {"type": "Feature", "properties": {"id": "GATE3", "name": "ประตู 3", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19157096071133, 16.740644319662213]}}, {"type": "Feature", "properties": {"id": "GATE4", "name": "ประตู 4", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.1994049974154, 16.74425113280003]}}, {"type": "Feature", "properties": {"id": "GATE5", "name": "ประตู 5", "category": "Gate", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19661032470695, 16.750562347917707]}}, {"type": "Feature", "properties": {"id": "HOSP", "name": "โรงพยาบาลมหาวิทยาลัยนเรศวร", "category": "Medical", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.18938970316694, 16.749103587615192]}}, {"type": "Feature", "properties": {"id": "MALE", "name": "ที่พักชาย (ห้อง พรบ.)", "category": "Accommodation", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19358314387354, 16.750922767755604]}}, {"type": "Feature", "properties": {"id": "TRANSIT", "name": "สถานีขนส่งมวลชน / รถไฟฟ้าประจำทาง", "category": "NU Transit", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19987085890455, 16.73811115678402]}}, {"type": "Feature", "properties": {"id": "P1", "name": "P1 อาคารอเนกประสงค์", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19365902518804, 16.750414604047712]}}, {"type": "Feature", "properties": {"id": "P2", "name": "P2 ลานสมเด็จฯ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19103032653561, 16.750443662184498]}}, {"type": "Feature", "properties": {"id": "P3", "name": "P3 ศึกษาศาสตร์–มนุษยศาสตร์", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19458457032891, 16.747490606308315]}}, {"type": "Feature", "properties": {"id": "P4", "name": "P4 CITCOM", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19569598260188, 16.74709105034127]}}, {"type": "Feature", "properties": {"id": "P5", "name": "P5 BEC", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19680360165889, 16.747744868759884]}}, {"type": "Feature", "properties": {"id": "P6", "name": "P6 สระว่ายน้ำ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19726637401006, 16.74641906793188]}}, {"type": "Feature", "properties": {"id": "P7", "name": "P7 ร้านหนังสือจุฬาฯ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19299521259316, 16.745075096023943]}}, {"type": "Feature", "properties": {"id": "P8", "name": "P8 อาคารจอดรถ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19268796210132, 16.744621049327723]}}, {"type": "Feature", "properties": {"id": "P9", "name": "P9 วิทยาลัยนานาชาติ", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19355281533763, 16.745049669437567]}}, {"type": "Feature", "properties": {"id": "P10", "name": "P10 ที่จอดรถบัส", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.1997485811917, 16.740387706599527]}}, {"type": "Feature", "properties": {"id": "P11", "name": "P11 อาคารขวัญเมือง", "category": "Parking", "status": "verified"}, "geometry": {"type": "Point", "coordinates": [100.19873123592288, 16.73661372461545]}}, {"type": "Feature", "properties": {"id": "PGPR", "name": "ศูนย์ PGPR", "category": "Zone F / Competition", "status": "verified", "group": "zone"}, "geometry": {"type": "Point", "coordinates": [100.19413569696994, 16.73537946761842]}}]};
+const C = {"GATE5": [100.19661032470695, 16.750562347917707], "E": [100.19563727412164, 16.749624934781387], "HOSP": [100.18938970316694, 16.749103587615192], "GATE1": [100.18718641367883, 16.75218338644108], "QS": [100.19253034357695, 16.746589967352374], "GATE2": [100.18671707708481, 16.75133742099446], "G": [100.19581938196396, 16.740479934380073], "PGPR": [100.19413569696994, 16.73537946761842]};
 
 const colors = {
  zone:"#1f7a45", landmark:"#2457a6", parking:"#8055b8", gate:"#e98b1c",
@@ -676,10 +657,11 @@ const EVENTS = {
       "point": "QS",
       "place": "อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 17)",
       "status": "confirmed",
-      "lat": 16.746589967352374,
-      "lon": 100.19253034357695,
-      "coord_status": "verified_master",
-      "coord_source": "4JOP41 master"
+      "lat": 16.7462620143,
+      "lon": 100.1927989018,
+      "coord_status": "confirmed_user_QS_v39",
+      "coord_source": "4JOP41 master",
+      "qs_zone": "1.10"
     },
     {
       "id": "insect_setting",
@@ -698,10 +680,11 @@ const EVENTS = {
       "point": "QS",
       "place": "อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8)",
       "status": "confirmed",
-      "lat": 16.746589967352374,
-      "lon": 100.19253034357695,
-      "coord_status": "verified_master",
-      "coord_source": "4JOP41 master"
+      "lat": 16.7462005126,
+      "lon": 100.192560307,
+      "coord_status": "confirmed_user_QS_v39",
+      "coord_source": "4JOP41 master",
+      "qs_zone": "1.9"
     },
     {
       "id": "plant_disease_diagnosis",
@@ -752,8 +735,21 @@ const EVENTS = {
       "coord_source": "4JOP41 master"
     },
     {
+      "id": "cast_net_skill_day5",
+      "title": "กีฬาทักษะการทอดแห",
+      "time": "08:00–12:00",
+      "point": "TH",
+      "place": "โรงละคร",
+      "status": "confirmed",
+      "coord_status": "confirmed_user_theatre",
+      "coord_source": "ผู้ใช้ยืนยันพิกัดโรงละคร 26 ต.ค. 2569",
+      "lat": 16.74583,
+      "lon": 100.192896,
+      "map_note": "สถานที่เดียวกับหมุดโรงละคร (TH) บนแผนที่ใหญ่"
+    },
+    {
       "id": "plant_disease_rapid",
-      "title": "การแข่งขันตอบวาจาเนื้อเยื่อโรคพืช",
+      "title": "การแข่งขันตัดขวางเนื้อเยื่อโรคพืช",
       "time": "15:00–16:00",
       "point": "MED",
       "place": "อาคารคณะวิทยาศาสตร์การแพทย์ (MD 346/1–346/3, MD 331–334 หมุดเลขที่ 3)",
@@ -770,8 +766,8 @@ const EVENTS = {
       "point": "FB1",
       "place": "สนามฟุตบอล 1 (หมุดเลขที่ 4)",
       "status": "confirmed",
-      "lat": 16.751113952036707,
-      "lon": 100.19465433284728,
+      "lat": 16.751243364763496,
+      "lon": 100.19518017992819,
       "coord_status": "verified_master",
       "coord_source": "4JOP41 master"
     },
@@ -820,10 +816,11 @@ const EVENTS = {
       "point": "QS",
       "place": "อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8) (QS2110 จุดที่ 2)",
       "status": "confirmed",
-      "lat": 16.746589967352374,
-      "lon": 100.19253034357695,
-      "coord_status": "verified_master",
-      "coord_source": "4JOP41 master"
+      "lat": 16.7462620143,
+      "lon": 100.1927989018,
+      "coord_status": "confirmed_user_QS_v39",
+      "coord_source": "4JOP41 master",
+      "qs_zone": "1.10"
     },
     {
       "id": "herbicide_calc",
@@ -876,14 +873,15 @@ const EVENTS = {
     {
       "id": "fish_seed_pack",
       "title": "การแข่งขันบรรจุพันธุ์ลูกปลา",
-      "time": "08:00–13:00",
-      "point": "QS",
-      "place": "อาคารเรียนรวม QS (บริเวณโถง QS โซนหน้าโรงละคร, QS2108 หมุดเลขที่ 1 จุดที่ 1)",
+      "time": "08:00–12:00",
+      "point": "TH",
+      "place": "โรงละคร",
       "status": "confirmed",
-      "lat": 16.746589967352374,
-      "lon": 100.19253034357695,
-      "coord_status": "verified_master",
-      "coord_source": "4JOP41 master"
+      "lat": 16.74583,
+      "lon": 100.192896,
+      "coord_status": "confirmed_user_theatre",
+      "coord_source": "ผู้ใช้ยืนยันพิกัดโรงละคร 26 ต.ค. 2569",
+      "map_note": "สถานที่เดียวกับหมุดโรงละคร (TH) บนแผนที่ใหญ่"
     },
     {
       "id": "im_injection",
@@ -892,10 +890,11 @@ const EVENTS = {
       "point": "QS",
       "place": "อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8)",
       "status": "confirmed",
-      "lat": 16.746589967352374,
-      "lon": 100.19253034357695,
-      "coord_status": "verified_master",
-      "coord_source": "4JOP41 master"
+      "lat": 16.7462005126,
+      "lon": 100.192560307,
+      "coord_status": "confirmed_user_QS_v39",
+      "coord_source": "4JOP41 master",
+      "qs_zone": "1.9"
     },
     {
       "id": "football_m_day6",
@@ -904,8 +903,8 @@ const EVENTS = {
       "point": "FB1",
       "place": "สนามฟุตบอล 1 (หมุดเลขที่ 4)",
       "status": "confirmed",
-      "lat": 16.751113952036707,
-      "lon": 100.19465433284728,
+      "lat": 16.751243364763496,
+      "lon": 100.19518017992819,
       "coord_status": "verified_master",
       "coord_source": "4JOP41 master"
     },
@@ -967,10 +966,11 @@ const EVENTS = {
       "point": "QS",
       "place": "อาคารเรียนรวม QS (บริเวณโถง QS โซนหน้าโรงละคร, QS2108 หมุดเลขที่ 1 จุดที่ 1)",
       "status": "confirmed",
-      "lat": 16.746589967352374,
-      "lon": 100.19253034357695,
-      "coord_status": "verified_master",
-      "coord_source": "4JOP41 master"
+      "lat": 16.7462620143,
+      "lon": 100.1927989018,
+      "coord_status": "confirmed_user_QS_v39",
+      "coord_source": "4JOP41 master",
+      "qs_zone": "1.10"
     },
     {
       "id": "feed_analysis",
@@ -1003,10 +1003,10 @@ const EVENTS = {
       "point": "G",
       "place": "สนามฟุตบอล 4 ข้างคณะวิทย์ฯ (หมุดเลขที่ 8)",
       "status": "confirmed",
-      "lat": 16.74099402809978,
-      "lon": 100.19564622241427,
-      "coord_status": "verified_user",
-      "coord_source": "user-confirmed coordinates 2026-10-14"
+      "lat": 16.740479934380073,
+      "lon": 100.19581938196396,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
     },
     {
       "id": "fish_fillet",
@@ -1027,23 +1027,23 @@ const EVENTS = {
       "point": "FB1",
       "place": "สนามฟุตบอล 1 (หมุดเลขที่ 4)",
       "status": "confirmed",
-      "lat": 16.751113952036707,
-      "lon": 100.19465433284728,
-      "coord_status": "verified_user",
-      "coord_source": "user-confirmed coordinates 2026-10-14"
+      "lat": 16.751243364763496,
+      "lon": 100.19518017992819,
+      "coord_status": "verified_master",
+      "coord_source": "4JOP41 master"
     },
     {
-  "id": "traditional_sports",
-  "title": "การแข่งขันกีฬาพื้นบ้าน",
-  "time": "13:00–16:00",
-  "point": "FB1",
-  "place": "สนามฟุตบอล 1 (สถานที่แข่งขันปรับล่าสุด)",
-  "status": "confirmed",
-  "lat": 16.751113952036707,
-  "lon": 100.19465433284728,
-  "coord_status": "verified_user",
-  "coord_source": "user-confirmed coordinates 2026-10-14"
-},
+      "id": "traditional_sports",
+      "title": "การแข่งขันกีฬาพื้นบ้าน",
+      "time": "13:00–16:00",
+      "point": "GYM",
+      "place": "อาคารกีฬาอเนกประสงค์ (โดม หมุดเลขที่ 5)",
+      "status": "confirmed",
+      "lat": 16.750870335843896,
+      "lon": 100.19313140162897,
+      "coord_status": "verified_user",
+      "coord_source": "user-confirmed coordinate"
+    },
     {
       "id": "summary_meeting",
       "title": "การประชุมสรุปงานประเพณี 4 จอบแห่งชาติ ครั้งที่ 41",
@@ -1104,10 +1104,13 @@ function renderDay(day){
     const coordText = hasCoord
       ? `<div class="day-event-place" style="margin-top:4px">พิกัด: ${lat.toFixed(6)}, ${lon.toFixed(6)}</div>`
       : "";
+    const qsLink = (e.qs_zone || e.point==='TH')
+      ? `<button type="button" class="btn" data-unified-event="${e.id}" data-unified-day="${day}">ดูบนแผนที่เดียวกัน</button>` : "";
     const actions = hasCoord
       ? `<div class="day-event-actions">
            <button class="btn" data-event-lat="${lat}" data-event-lon="${lon}" data-event-title="${e.title}" type="button">ดูตำแหน่งบนแผนที่</button>
            <a class="btn blue" href="${nav}" target="_blank" rel="noopener">นำทาง</a>
+         ${qsLink}
          </div>`
       : `<div class="schedule-missing" style="margin-top:8px">ยังไม่มีพิกัดยืนยันสำหรับสถานที่นี้ จึงยังไม่เปิดปุ่มนำทาง</div>`;
     return `
@@ -1126,6 +1129,7 @@ function renderDay(day){
       </div>`;
   }).join("") + `</div>`;
 
+  box.querySelectorAll('[data-unified-event]').forEach(btn=>btn.addEventListener('click',()=>window.qsUnifiedFocusEvent(btn.dataset.unifiedDay,btn.dataset.unifiedEvent)));
   box.querySelectorAll("[data-event-lat][data-event-lon]").forEach(btn=>btn.addEventListener("click",()=>{
     const lat=parseFloat(btn.dataset.eventLat), lon=parseFloat(btn.dataset.eventLon);
     const title=btn.dataset.eventTitle||"จุดกิจกรรม";
@@ -1208,6 +1212,8 @@ const ACTIVITIES = [
   }
 ];
 
+ACTIVITIES.push(...[{"title":"การจัดสวนถาด","keywords":["การจัดสวนถาด"],"point":"QS","place":"อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 17)","time":"5 พฤศจิกายน 2569 เวลา 08:00–13:00","tag":"กีฬาทักษะ","event_id":"tray_garden","event_day":"5","lat":16.7462620143,"lon":100.1927989018},{"title":"การรีดเต้านมเทียม","keywords":["การรีดเต้านมเทียม"],"point":"QS","place":"อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8)","time":"5 พฤศจิกายน 2569 เวลา 08:00–12:00","tag":"กีฬาทักษะ","event_id":"artificial_udder","event_day":"5","lat":16.7462005126,"lon":100.192560307},{"title":"กีฬาทักษะการทอดแห","keywords":["กีฬาทักษะการทอดแห"],"point":"TH","place":"โรงละคร","time":"5 พฤศจิกายน 2569 เวลา 08:00–12:00","tag":"กีฬาทักษะ","event_id":"cast_net_skill_day5","event_day":"5","lat":16.74583,"lon":100.192896},{"title":"การขยายพันธุ์พืช (ติดตา-ต่อกิ่ง-ทาบกิ่ง)","keywords":["การขยายพันธุ์พืช (ติดตา-ต่อกิ่ง-ทาบกิ่ง)"],"point":"QS","place":"อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8) (QS2110 จุดที่ 2)","time":"6 พฤศจิกายน 2569 เวลา 08:00–13:00","tag":"กีฬาทักษะ","event_id":"plant_propagation","event_day":"6","lat":16.7462620143,"lon":100.1927989018},{"title":"การแข่งขันบรรจุพันธุ์ลูกปลา","keywords":["การแข่งขันบรรจุพันธุ์ลูกปลา"],"point":"TH","place":"โรงละคร","time":"6 พฤศจิกายน 2569 เวลา 08:00–12:00","tag":"กีฬาทักษะ","event_id":"fish_seed_pack","event_day":"6","lat":16.74583,"lon":100.192896},{"title":"การแข่งขันฉีดยาเข้ากล้ามเนื้อ (ทีมสาธิต)","keywords":["การแข่งขันฉีดยาเข้ากล้ามเนื้อ (ทีมสาธิต)"],"point":"QS","place":"อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8)","time":"6 พฤศจิกายน 2569 เวลา 08:00–13:00","tag":"กีฬาทักษะ","event_id":"im_injection","event_day":"6","lat":16.7462005126,"lon":100.192560307},{"title":"การกรอกวัสดุปลูก","keywords":["การกรอกวัสดุปลูก"],"point":"QS","place":"อาคารเรียนรวม QS (บริเวณโถง QS โซนหน้าโรงละคร, QS2108 หมุดเลขที่ 1 จุดที่ 1)","time":"7 พฤศจิกายน 2569 เวลา 08:00–13:00","tag":"กีฬาทักษะ","event_id":"planting_media_fill","event_day":"7","lat":16.7462620143,"lon":100.1927989018}]);
+
 function renderActivities(query=""){
   const box=document.getElementById("activityResults");
   const q=query.trim().toLowerCase();
@@ -1236,9 +1242,15 @@ function renderActivities(query=""){
   box.querySelectorAll("[data-act]").forEach(el=>el.addEventListener("click",()=>{
     const a=ACTIVITIES[Number(el.dataset.act)];
     const x=markers.find(m=>m.id===a.point);
-    if(!x)return;
-    map.flyTo({center:[x.lon,x.lat],zoom:18,pitch:60,bearing:-18,essential:true});
-    setTimeout(()=>x.marker.togglePopup(),550);
+    if(!x && !Number.isFinite(a.lat))return;
+    const lat=Number.isFinite(a.lat)?a.lat:x.lat;
+    const lon=Number.isFinite(a.lon)?a.lon:x.lon;
+    map.flyTo({center:[lon,lat],zoom:18,pitch:0,bearing:0,essential:true});
+    if(a.event_id){
+      if(eventMarker){eventMarker.remove();eventMarker=null;}
+      const tag=document.createElement('div');tag.className='event-context-label';tag.textContent=a.title;
+      eventMarker=new maplibregl.Marker({element:tag,anchor:'bottom'}).setLngLat([lon,lat]).addTo(map);
+    }else if(x){setTimeout(()=>x.marker.togglePopup(),550);}
   }));
 }
 
@@ -1465,11 +1477,6 @@ function mobileFocusPoint(id){
   setTimeout(()=>x.marker.togglePopup(),500);
 }
 
-
-document.querySelectorAll("[data-parking-id]").forEach(b=>b.addEventListener("click",()=>{
-  mobileFocusPoint(b.dataset.parkingId);
-}));
-
 document.getElementById("sheetClose")?.addEventListener("click",()=>document.getElementById("mobileSheet").style.display="none");
 
 document.querySelectorAll(".bottomnav button").forEach(b=>b.addEventListener("click",()=>{
@@ -1511,8 +1518,7 @@ document.querySelectorAll(".bottomnav button").forEach(b=>b.addEventListener("cl
         <option value="FB1">สนามฟุตบอล 1</option>
         <option value="G">สนามคล้องโค/ล้มโค</option>
         <option value="PGPR">เข้าด้ามจอบ / ศูนย์ PGPR</option>
-        <option value="MALE">ที่พักชาย / ห้อง พรบ.</option>
-        <option value="KW">ที่พักหญิง / อาคารขวัญเมือง</option>
+        <option value="KW">อาคารขวัญเมือง / ที่พักหญิง</option>
         <option value="HOSP">โรงพยาบาล มน.</option>
       </select>
       <div id="mGuideBox" class="guidebox"><div class="guidemeta">เลือกประเภทผู้ใช้และจุดหมาย</div></div>`);
@@ -1539,8 +1545,7 @@ document.querySelectorAll("[data-mobile-action]").forEach(b=>b.addEventListener(
   if(a==="opening") mobileFocusPoint("E");
   if(a==="qs") mobileFocusPoint("QS");
   if(a==="sports") mobileFocusPoint("FB1");
-  if(a==="male") mobileFocusPoint("MALE");
-  if(a==="female") mobileFocusPoint("KW");
+  if(a==="pgpr") mobileFocusPoint("PGPR");
   if(a==="hospital") mobileFocusPoint("HOSP");
   if(a==="parking"){
     mobileShowMap();
@@ -1573,6 +1578,72 @@ setTimeout(()=>{
     if(f) f.classList.add("show");
   }
 },12000);
+
+
+// v45 unified QS + Theatre, preserving confirmed image coordinates and main map features.
+const QS_CONFIRMED_POS = {"1.1": [100.1924817771, 16.746294201], "1.2": [100.1920133997, 16.7469076373], "1.3": [100.1920605648, 16.7469358268], "1.4": [100.1921035431, 16.7469524328], "1.5a": [100.1921793037, 16.7469381909], "1.5b": [100.1920995979, 16.7468696028], "1.6": [100.1922844569, 16.7470852869], "1.7": [100.1923632604, 16.7464018435], "1.8": [100.192212948, 16.746723357], "1.9": [100.192560307, 16.7462005126], "1.10": [100.1927989018, 16.7462620143]};
+const QS_NAMES={"1.1":"ลงทะเบียน / รับเอกสาร","1.2":"กองอำนวยการ","1.3":"ประสานงานนิสิต","1.4":"ปฐมพยาบาล","1.5a":"พักบุคลากร A","1.5b":"พักบุคลากร B","1.6":"รับประทานอาหารบุคลากร","1.7":"ประชาสัมพันธ์กลาง","1.8":"Starbucks","1.9":"แข่งขันสัตวศาสตร์","1.10":"แข่งขันพืชศาสตร์"};
+const QS_TH=[100.192896,16.745830],QS_CENTER=[100.1924536588474,16.746687398820605];
+const QS_CORNERS=[[100.19241130821324,16.747363325109188],[100.19302336689086,16.746286274136562],[100.19249600948156,16.74601147253202],[100.19188395080394,16.747088523504647]];
+let qsVisible=true; let qsActivePopup=null;const qsUnifiedMarkers={};
+function qsClearPopups(){
+  if(qsActivePopup){qsActivePopup.remove();qsActivePopup=null;}
+  for(const item of markers){const p=item.marker.getPopup();if(p && p.isOpen())p.remove();}
+}
+function qsOpenPopup(coord,head,subtitle){
+  qsClearPopups();
+  const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+  qsActivePopup=new maplibregl.Popup({offset:24,closeOnClick:true,maxWidth:'280px'})
+     .setLngLat(coord).setHTML('<b>'+safe(head)+'</b><div>'+safe(subtitle)+'</div>').addTo(map);
+}
+function qsFocusPoint(coord,head,sub){
+  qsClearPopups();
+  map.flyTo({center:coord,zoom:18.4,pitch:0,bearing:0,essential:true});
+  if(eventMarker){eventMarker.remove();eventMarker=null;}
+  if(eventLabelMarker){eventLabelMarker.remove();eventLabelMarker=null;}
+  if(head)qsOpenPopup(coord,head,sub||'');
+}
+function qsSetOverlay(v){qsVisible=v;if(map.getLayer('qs-v45-overlay'))map.setLayoutProperty('qs-v45-overlay','visibility',v?'visible':'none');document.getElementById('uToggleOverlay').textContent=v?'ซ่อนแปลน QS':'แสดงแปลน QS';}
+map.on('load',()=>{
+  map.addSource('qs-v45-image',{type:'image',url:'./QS_Floor1_GroundOverlay.png',coordinates:QS_CORNERS});
+  map.addLayer({id:'qs-v45-overlay',type:'raster',source:'qs-v45-image',layout:{visibility:'visible'},paint:{'raster-opacity':0.90}});
+  for(const [id,coord] of Object.entries(QS_CONFIRMED_POS)){
+    const el=document.createElement('button');el.className='qs-unified-pin';el.type='button';el.textContent=id.replace('1.','');el.title=id+' '+QS_NAMES[id];
+    el.addEventListener('click',e=>{e.stopPropagation();qsFocusPoint(coord,id+' '+QS_NAMES[id],'QS ชั้น 1');});
+    qsUnifiedMarkers[id]=new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(coord).addTo(map);
+  }
+  const el=document.createElement('button');el.type='button';el.className='qs-unified-pin th';el.textContent='TH';el.title='โรงละคร';
+  el.onclick=e=>{e.stopPropagation();qsFocusPoint(QS_TH,'โรงละคร','พิกัดที่ยืนยันแล้ว');};
+  qsUnifiedMarkers.TH=new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(QS_TH).addTo(map);
+  qsUpdateVisibility();
+});
+function qsUpdateVisibility(){const show=map.getZoom()>=16.9;for(const m of Object.values(qsUnifiedMarkers))m.getElement().style.display=show?'grid':'none';}
+map.on('zoom',qsUpdateVisibility);
+function qsUnifiedFocusEvent(day,id){
+  const e=(EVENTS[String(day)]||[]).find(x=>x.id===id);if(!e)return;
+  const coord=e.qs_zone?QS_CONFIRMED_POS[e.qs_zone]:(e.point==='TH'?QS_TH:(Number.isFinite(e.lon)&&Number.isFinite(e.lat)?[e.lon,e.lat]:null));
+  if(!coord)return;
+  qsSetOverlay(true);
+  qsFocusPoint(coord,e.title,`${day} พฤศจิกายน 2569 | ${e.time} | ${e.qs_zone?'QS '+e.qs_zone:e.place}`);
+}
+window.qsUnifiedFocusEvent=qsUnifiedFocusEvent;
+function qsFillRows(){
+  const day=document.getElementById('uDay').value;
+  const evs=(EVENTS[day]||[]).filter(e=>e.qs_zone||e.point==='TH');
+  document.getElementById('unifiedRows').innerHTML=evs.map(e=>`<button type="button" data-id="${e.id}"><strong>${e.title}</strong><small>${e.time} · ${e.qs_zone?'QS '+e.qs_zone:'โรงละคร'}</small></button>`).join('')||'<small>ไม่มีรายการ QS / โรงละครในวันที่เลือก</small>';
+  document.querySelectorAll('#unifiedRows button').forEach(b=>b.onclick=()=>qsUnifiedFocusEvent(day,b.dataset.id));
+}
+document.getElementById('unifiedLaunch').onclick=()=>{const p=document.getElementById('unifiedPanel');p.hidden=!p.hidden;document.getElementById('unifiedLaunch').setAttribute('aria-expanded',String(!p.hidden));if(!p.hidden)qsFillRows();};
+document.getElementById('unifiedClose').onclick=()=>document.getElementById('unifiedLaunch').click();
+document.getElementById('uDay').onchange=qsFillRows;
+document.getElementById('uFocusQS').onclick=()=>{qsSetOverlay(true);qsFocusPoint(QS_CENTER);};
+document.getElementById('uFocusTH').onclick=()=>qsFocusPoint(QS_TH,'โรงละคร','พิกัดที่ยืนยันแล้ว');
+document.getElementById('uToggleOverlay').onclick=()=>qsSetOverlay(!qsVisible);
+document.getElementById('uOverview').onclick=()=>{qsClearPopups();map.flyTo({center:[100.1939,16.7447],zoom:15.2,pitch:0,bearing:0,essential:true});};
+// Deep links from old QS URLs can be translated into the unified main map.
+const uParams=new URLSearchParams(location.search);if(uParams.has('event')&&uParams.has('day')){
+ map.once('load',()=>setTimeout(()=>qsUnifiedFocusEvent(uParams.get('day'),uParams.get('event')),700));
+}
 
 </script>
 </body>
