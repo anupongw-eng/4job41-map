@@ -1,0 +1,71 @@
+{
+  "schema": "QS_MARKERS_QA_V39",
+  "status": "USER_PLACED_UNVERIFIED",
+  "base": "QS_Floor1_GroundOverlay_ALIGNED.kmz",
+  "positions": {
+    "1.1": [
+      100.1924817771,
+      16.746294201
+    ],
+    "1.2": [
+      100.1920133997,
+      16.7469076373
+    ],
+    "1.3": [
+      100.1920605648,
+      16.7469358268
+    ],
+    "1.4": [
+      100.1921035431,
+      16.7469524328
+    ],
+    "1.5a": [
+      100.1921793037,
+      16.7469381909
+    ],
+    "1.5b": [
+      100.1920995979,
+      16.7468696028
+    ],
+    "1.6": [
+      100.1922844569,
+      16.7470852869
+    ],
+    "1.7": [
+      100.1923632604,
+      16.7464018435
+    ],
+    "1.8": [
+      100.192212948,
+      16.746723357
+    ],
+    "1.9": [
+      100.192560307,
+      16.7462005126
+    ],
+    "1.10": [
+      100.1927989018,
+      16.7462620143
+    ]
+  },
+  "source_exports": [
+    "QS_zone_markers_QA.json",
+    "QS_zone_markers_QA (1).json",
+    "QS_zone_markers_QA (2).json",
+    "QS_zone_markers_QA (3).json",
+    "QS_zone_markers_QA (4).json",
+    "QS_zone_markers_QA (5).json",
+    "QS_zone_markers_QA (6).json",
+    "QS_zone_markers_QA (7).json",
+    "QS_zone_markers_QA (8).json",
+    "QS_zone_markers_QA (9).json",
+    "QS_zone_markers_QA (10).json"
+  ],
+  "checks": {
+    "export_count": 11,
+    "cumulative_consistency": true,
+    "number_of_position_keys": 11,
+    "no_generated_coordinates": true
+  },
+  "notes": "Positions copied exactly from user-clicked v38 exports. Do not equate markers with polygon boundaries or final verified floor plan positions."
+}

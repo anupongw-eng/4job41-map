@@ -539,7 +539,10 @@ const qaRemove=document.getElementById('qsRemovePoint');
 const qaExport=document.getElementById('qsExportPoints');
 const QS_STORAGE_KEY='4job41:qs:zone-qa:v38';
 let qaPlacing=false;
-let qaPositions={};
+// v39: exact user-clicked coordinates from the final cumulative QA export.
+// These are QA anchors, NOT confirmed indoor survey positions.
+const QS_USER_PLACED_DEFAULTS = {"1.1":[100.1924817771,16.746294201],"1.2":[100.1920133997,16.7469076373],"1.3":[100.1920605648,16.7469358268],"1.4":[100.1921035431,16.7469524328],"1.5a":[100.1921793037,16.7469381909],"1.5b":[100.1920995979,16.7468696028],"1.6":[100.1922844569,16.7470852869],"1.7":[100.1923632604,16.7464018435],"1.8":[100.192212948,16.746723357],"1.9":[100.192560307,16.7462005126],"1.10":[100.1927989018,16.7462620143]};
+let qaPositions=JSON.parse(JSON.stringify(QS_USER_PLACED_DEFAULTS));
 const qaMarkers={};
 qaSelect.innerHTML=QS_ZONE_ITEMS.map(([id,name])=>`<option value="${id}">${id.startsWith('1.5')?'1.5':id} — ${name}</option>`).join('');
 try{const saved=JSON.parse(localStorage.getItem(QS_STORAGE_KEY)||'{}');if(saved && typeof saved==='object'){
@@ -556,7 +559,7 @@ function qaRenderMarker(id){
   const popup=new maplibregl.Popup({offset:21}).setHTML(`<b>${qaLabel(id)} — ${esc(info[1])}</b><div style="font-size:12px;margin-top:6px">ตำแหน่งทดสอบ ยังไม่ยืนยัน<br>คลิกเลือกพื้นที่ในแผง QA เพื่อแก้ไข</div>`);
   qaMarkers[id]=new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(p).setPopup(popup).addTo(map);
 }
-function qaRedraw(){QS_ZONE_ITEMS.forEach(([id])=>qaRenderMarker(id));qaMessage(`มีจุดทดลอง ${Object.keys(qaPositions).length}/${QS_ZONE_ITEMS.length} จุด • ยังไม่ยืนยัน`);}
+function qaRedraw(){QS_ZONE_ITEMS.forEach(([id])=>qaRenderMarker(id));qaMessage(`มีจุดที่ผู้ใช้วาง ${Object.keys(qaPositions).length}/${QS_ZONE_ITEMS.length} จุด • รอตรวจยืนยัน`);}
 function qaMode(on){qaPlacing=on;document.getElementById('map').classList.toggle('qs-placing',on);qaStart.textContent=on?'คลิกบนแปลนเพื่อวาง…':'เริ่มวางจุด';qaStart.disabled=on;qaCancel.disabled=!on;}
 qaPanelBtn.addEventListener('click',()=>{const on=!qaPanel.classList.contains('open');qaPanel.classList.toggle('open',on);qaPanelBtn.classList.toggle('active',on);if(!on)qaMode(false);if(on)qaRedraw();});
 qaStart.addEventListener('click',()=>{if(!map.getLayer(qsLayerId)){qaMessage('แปลนยังโหลดไม่ครบ');return;}map.setLayoutProperty(qsLayerId,'visibility','visible');syncQsButton();qaMode(true);qaMessage('คลิกตำแหน่งจริงบนแปลนเพื่อวาง '+qaLabel(qaSelect.value));});
@@ -583,6 +586,8 @@ qaExport.addEventListener('click',()=>{
   qaMessage('ส่งออกไฟล์ JSON แล้ว เก็บไฟล์เพื่อใช้ล็อกพิกัดต่อไป');
 });
 map.on('load',qaRedraw);
+// Existing browser edits take precedence over the bundled defaults;
+// clear site localStorage for key 4job41:qs:zone-qa:v38 to restore the bundled QA coordinates.
 
 const markers = [];
 const pts = [];
