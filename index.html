@@ -209,6 +209,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 #unifiedPanel select{width:100%}#unifiedRows{display:grid;gap:5px;max-height:35vh;overflow:auto}#unifiedRows button{text-align:left;background:#f7faf7;border:1px solid #dce6df;padding:8px;border-radius:8px;color:#20362b}
 #unifiedRows button strong{display:block}#unifiedRows button small{color:#61756a}#unifiedPanel .u-close{float:right;background:white;border:0;font-size:20px}
 .qs-unified-pin{width:34px;height:34px;border:2px solid white;border-radius:50%;background:#176b49;color:white;display:grid;place-items:center;font-size:11px;font-weight:bold;box-shadow:0 1px 8px #0008;cursor:pointer}
+.qs-unified-pin.hw{background:#b25b16;width:39px;height:39px}
 .qs-unified-pin.th{background:#7b3b9b;width:39px;height:39px}
 @media(max-width:700px){#unifiedDock{top:auto;bottom:76px;right:8px;max-width:calc(100vw - 16px)}#unifiedPanel{max-height:53vh}}
 </style>
@@ -655,7 +656,7 @@ const EVENTS = {
       "title": "การจัดสวนถาด",
       "time": "08:00–13:00",
       "point": "QS",
-      "place": "อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 17)",
+      "place": "อาคาร QS ชั้น 1 — พื้นที่แข่งขันพืชศาสตร์ (QS 1.10)",
       "status": "confirmed",
       "lat": 16.7462620143,
       "lon": 100.1927989018,
@@ -678,7 +679,7 @@ const EVENTS = {
       "title": "การรีดเต้านมเทียม",
       "time": "08:00–12:00",
       "point": "QS",
-      "place": "อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8)",
+      "place": "อาคาร QS ชั้น 1 — พื้นที่แข่งขันสัตวศาสตร์ (QS 1.9)",
       "status": "confirmed",
       "lat": 16.7462005126,
       "lon": 100.192560307,
@@ -814,7 +815,7 @@ const EVENTS = {
       "title": "การขยายพันธุ์พืช (ติดตา-ต่อกิ่ง-ทาบกิ่ง)",
       "time": "08:00–13:00",
       "point": "QS",
-      "place": "อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8) (QS2110 จุดที่ 2)",
+      "place": "อาคาร QS ชั้น 1 — พื้นที่แข่งขันพืชศาสตร์ (QS 1.10)",
       "status": "confirmed",
       "lat": 16.7462620143,
       "lon": 100.1927989018,
@@ -827,12 +828,13 @@ const EVENTS = {
       "title": "การแข่งขันคำนวณอัตราการใช้และพ่นสารกำจัดวัชพืช",
       "time": "08:00–13:00",
       "point": "QS",
-      "place": "อาคารเรียนรวม QS (QS2207, QS2209 ลานจอดหลังโรงละคร หมุดเลขที่ 1 จุดที่ 1)",
+      "place": "2 จุด: อาคาร QS เดิม (จุดที่ 1) และจุดที่ 2 ตามพิกัดที่ยืนยัน",
       "status": "confirmed",
       "lat": 16.746589967352374,
       "lon": 100.19253034357695,
       "coord_status": "verified_master",
-      "coord_source": "4JOP41 master"
+      "coord_source": "4JOP41 master",
+      "secondary_location": {"label": "จุดที่ 2", "lat": 16.74624939945406, "lon": 100.19319825828275, "source": "user-confirmed"}
     },
     {
       "id": "precision_soil",
@@ -888,7 +890,7 @@ const EVENTS = {
       "title": "การแข่งขันฉีดยาเข้ากล้ามเนื้อ (ทีมสาธิต)",
       "time": "08:00–13:00",
       "point": "QS",
-      "place": "อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8)",
+      "place": "อาคาร QS ชั้น 1 — พื้นที่แข่งขันสัตวศาสตร์ (QS 1.9)",
       "status": "confirmed",
       "lat": 16.7462005126,
       "lon": 100.192560307,
@@ -964,7 +966,7 @@ const EVENTS = {
       "title": "การกรอกวัสดุปลูก",
       "time": "08:00–13:00",
       "point": "QS",
-      "place": "อาคารเรียนรวม QS (บริเวณโถง QS โซนหน้าโรงละคร, QS2108 หมุดเลขที่ 1 จุดที่ 1)",
+      "place": "อาคาร QS ชั้น 1 — พื้นที่แข่งขันพืชศาสตร์ (QS 1.10)",
       "status": "confirmed",
       "lat": 16.7462620143,
       "lon": 100.1927989018,
@@ -1106,12 +1108,15 @@ function renderDay(day){
       : "";
     const qsLink = (e.qs_zone || e.point==='TH')
       ? `<button type="button" class="btn" data-unified-event="${e.id}" data-unified-day="${day}">ดูบนแผนที่เดียวกัน</button>` : "";
+    const second = e.secondary_location;
+    const dualLocations = (second && Number.isFinite(second.lat) && Number.isFinite(second.lon))
+      ? `<div class="day-event-place" style="margin-top:8px"><b>มี 2 จุดจัดกิจกรรม:</b><div>จุดที่ 1 — QS เดิม: ${lat.toFixed(6)}, ${lon.toFixed(6)}</div><div>จุดที่ 2 — บริเวณพิกัดที่ยืนยัน: ${second.lat.toFixed(8)}, ${second.lon.toFixed(8)}</div></div><div class="day-event-actions"><button type="button" class="btn" data-dual-view="1">ดูทั้ง 2 จุด</button><button type="button" class="btn" data-event-lat="${second.lat}" data-event-lon="${second.lon}" data-event-title="${e.title} — จุดที่ 2">ดูจุดที่ 2</button><a class="btn blue" href="https://www.google.com/maps/dir/?api=1&destination=${second.lat},${second.lon}" target="_blank" rel="noopener">นำทางจุดที่ 2</a></div>` : '';
     const actions = hasCoord
       ? `<div class="day-event-actions">
            <button class="btn" data-event-lat="${lat}" data-event-lon="${lon}" data-event-title="${e.title}" type="button">ดูตำแหน่งบนแผนที่</button>
            <a class="btn blue" href="${nav}" target="_blank" rel="noopener">นำทาง</a>
          ${qsLink}
-         </div>`
+         </div>${dualLocations}
       : `<div class="schedule-missing" style="margin-top:8px">ยังไม่มีพิกัดยืนยันสำหรับสถานที่นี้ จึงยังไม่เปิดปุ่มนำทาง</div>`;
     return `
       <div class="day-event-card">
@@ -1129,6 +1134,7 @@ function renderDay(day){
       </div>`;
   }).join("") + `</div>`;
 
+  box.querySelectorAll('[data-dual-view]').forEach(btn=>btn.addEventListener('click',()=>window.qsShowHerbicideBoth()));
   box.querySelectorAll('[data-unified-event]').forEach(btn=>btn.addEventListener('click',()=>window.qsUnifiedFocusEvent(btn.dataset.unifiedDay,btn.dataset.unifiedEvent)));
   box.querySelectorAll("[data-event-lat][data-event-lon]").forEach(btn=>btn.addEventListener("click",()=>{
     const lat=parseFloat(btn.dataset.eventLat), lon=parseFloat(btn.dataset.eventLon);
@@ -1212,7 +1218,7 @@ const ACTIVITIES = [
   }
 ];
 
-ACTIVITIES.push(...[{"title":"การจัดสวนถาด","keywords":["การจัดสวนถาด"],"point":"QS","place":"อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 17)","time":"5 พฤศจิกายน 2569 เวลา 08:00–13:00","tag":"กีฬาทักษะ","event_id":"tray_garden","event_day":"5","lat":16.7462620143,"lon":100.1927989018},{"title":"การรีดเต้านมเทียม","keywords":["การรีดเต้านมเทียม"],"point":"QS","place":"อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8)","time":"5 พฤศจิกายน 2569 เวลา 08:00–12:00","tag":"กีฬาทักษะ","event_id":"artificial_udder","event_day":"5","lat":16.7462005126,"lon":100.192560307},{"title":"กีฬาทักษะการทอดแห","keywords":["กีฬาทักษะการทอดแห"],"point":"TH","place":"โรงละคร","time":"5 พฤศจิกายน 2569 เวลา 08:00–12:00","tag":"กีฬาทักษะ","event_id":"cast_net_skill_day5","event_day":"5","lat":16.74583,"lon":100.192896},{"title":"การขยายพันธุ์พืช (ติดตา-ต่อกิ่ง-ทาบกิ่ง)","keywords":["การขยายพันธุ์พืช (ติดตา-ต่อกิ่ง-ทาบกิ่ง)"],"point":"QS","place":"อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8) (QS2110 จุดที่ 2)","time":"6 พฤศจิกายน 2569 เวลา 08:00–13:00","tag":"กีฬาทักษะ","event_id":"plant_propagation","event_day":"6","lat":16.7462620143,"lon":100.1927989018},{"title":"การแข่งขันบรรจุพันธุ์ลูกปลา","keywords":["การแข่งขันบรรจุพันธุ์ลูกปลา"],"point":"TH","place":"โรงละคร","time":"6 พฤศจิกายน 2569 เวลา 08:00–12:00","tag":"กีฬาทักษะ","event_id":"fish_seed_pack","event_day":"6","lat":16.74583,"lon":100.192896},{"title":"การแข่งขันฉีดยาเข้ากล้ามเนื้อ (ทีมสาธิต)","keywords":["การแข่งขันฉีดยาเข้ากล้ามเนื้อ (ทีมสาธิต)"],"point":"QS","place":"อาคารเรียนรวม QS (บริเวณโถง QS หมุดเลขที่ 1 จุดที่ 1.8)","time":"6 พฤศจิกายน 2569 เวลา 08:00–13:00","tag":"กีฬาทักษะ","event_id":"im_injection","event_day":"6","lat":16.7462005126,"lon":100.192560307},{"title":"การกรอกวัสดุปลูก","keywords":["การกรอกวัสดุปลูก"],"point":"QS","place":"อาคารเรียนรวม QS (บริเวณโถง QS โซนหน้าโรงละคร, QS2108 หมุดเลขที่ 1 จุดที่ 1)","time":"7 พฤศจิกายน 2569 เวลา 08:00–13:00","tag":"กีฬาทักษะ","event_id":"planting_media_fill","event_day":"7","lat":16.7462620143,"lon":100.1927989018}]);
+ACTIVITIES.push(...[{"title":"การจัดสวนถาด","keywords":["การจัดสวนถาด"],"point":"QS","place":"อาคาร QS ชั้น 1 — พื้นที่แข่งขันพืชศาสตร์ (QS 1.10)","time":"5 พฤศจิกายน 2569 เวลา 08:00–13:00","tag":"กีฬาทักษะ","event_id":"tray_garden","event_day":"5","lat":16.7462620143,"lon":100.1927989018},{"title":"การรีดเต้านมเทียม","keywords":["การรีดเต้านมเทียม"],"point":"QS","place":"อาคาร QS ชั้น 1 — พื้นที่แข่งขันสัตวศาสตร์ (QS 1.9)","time":"5 พฤศจิกายน 2569 เวลา 08:00–12:00","tag":"กีฬาทักษะ","event_id":"artificial_udder","event_day":"5","lat":16.7462005126,"lon":100.192560307},{"title":"กีฬาทักษะการทอดแห","keywords":["กีฬาทักษะการทอดแห"],"point":"TH","place":"โรงละคร","time":"5 พฤศจิกายน 2569 เวลา 08:00–12:00","tag":"กีฬาทักษะ","event_id":"cast_net_skill_day5","event_day":"5","lat":16.74583,"lon":100.192896},{"title":"การขยายพันธุ์พืช (ติดตา-ต่อกิ่ง-ทาบกิ่ง)","keywords":["การขยายพันธุ์พืช (ติดตา-ต่อกิ่ง-ทาบกิ่ง)"],"point":"QS","place":"อาคาร QS ชั้น 1 — พื้นที่แข่งขันพืชศาสตร์ (QS 1.10)","time":"6 พฤศจิกายน 2569 เวลา 08:00–13:00","tag":"กีฬาทักษะ","event_id":"plant_propagation","event_day":"6","lat":16.7462620143,"lon":100.1927989018},{"title":"การแข่งขันบรรจุพันธุ์ลูกปลา","keywords":["การแข่งขันบรรจุพันธุ์ลูกปลา"],"point":"TH","place":"โรงละคร","time":"6 พฤศจิกายน 2569 เวลา 08:00–12:00","tag":"กีฬาทักษะ","event_id":"fish_seed_pack","event_day":"6","lat":16.74583,"lon":100.192896},{"title":"การแข่งขันฉีดยาเข้ากล้ามเนื้อ (ทีมสาธิต)","keywords":["การแข่งขันฉีดยาเข้ากล้ามเนื้อ (ทีมสาธิต)"],"point":"QS","place":"อาคาร QS ชั้น 1 — พื้นที่แข่งขันสัตวศาสตร์ (QS 1.9)","time":"6 พฤศจิกายน 2569 เวลา 08:00–13:00","tag":"กีฬาทักษะ","event_id":"im_injection","event_day":"6","lat":16.7462005126,"lon":100.192560307},{"title":"การกรอกวัสดุปลูก","keywords":["การกรอกวัสดุปลูก"],"point":"QS","place":"อาคาร QS ชั้น 1 — พื้นที่แข่งขันพืชศาสตร์ (QS 1.10)","time":"7 พฤศจิกายน 2569 เวลา 08:00–13:00","tag":"กีฬาทักษะ","event_id":"planting_media_fill","event_day":"7","lat":16.7462620143,"lon":100.1927989018}]);
 
 function renderActivities(query=""){
   const box=document.getElementById("activityResults");
@@ -1580,10 +1586,32 @@ setTimeout(()=>{
 },12000);
 
 
+// v46 QA: keep one visible MapLibre popup at a time across main-map and QS markers.
+// Does not change locations, route data, or map style.
+const qsV46OriginalPopupAddTo = maplibregl.Popup.prototype.addTo;
+maplibregl.Popup.prototype.addTo = function(targetMap) {
+  if (targetMap === map) {
+    const existing = document.querySelectorAll('#map .maplibregl-popup');
+    for (const node of existing) {
+      const popup = node._qsPopupInstance;
+      if (popup && popup !== this) popup.remove();
+    }
+    if (window.__qsV46CurrentPopup && window.__qsV46CurrentPopup !== this) {
+      window.__qsV46CurrentPopup.remove();
+    }
+    window.__qsV46CurrentPopup = this;
+  }
+  const result = qsV46OriginalPopupAddTo.call(this, targetMap);
+  if (targetMap === map && this._container) this._container._qsPopupInstance = this;
+  return result;
+};
+
 // v45 unified QS + Theatre, preserving confirmed image coordinates and main map features.
 const QS_CONFIRMED_POS = {"1.1": [100.1924817771, 16.746294201], "1.2": [100.1920133997, 16.7469076373], "1.3": [100.1920605648, 16.7469358268], "1.4": [100.1921035431, 16.7469524328], "1.5a": [100.1921793037, 16.7469381909], "1.5b": [100.1920995979, 16.7468696028], "1.6": [100.1922844569, 16.7470852869], "1.7": [100.1923632604, 16.7464018435], "1.8": [100.192212948, 16.746723357], "1.9": [100.192560307, 16.7462005126], "1.10": [100.1927989018, 16.7462620143]};
 const QS_NAMES={"1.1":"ลงทะเบียน / รับเอกสาร","1.2":"กองอำนวยการ","1.3":"ประสานงานนิสิต","1.4":"ปฐมพยาบาล","1.5a":"พักบุคลากร A","1.5b":"พักบุคลากร B","1.6":"รับประทานอาหารบุคลากร","1.7":"ประชาสัมพันธ์กลาง","1.8":"Starbucks","1.9":"แข่งขันสัตวศาสตร์","1.10":"แข่งขันพืชศาสตร์"};
 const QS_TH=[100.192896,16.745830],QS_CENTER=[100.1924536588474,16.746687398820605];
+const HERBICIDE_POINT_1=[100.19253034357695,16.746589967352374];
+const HERBICIDE_POINT_2=[100.19319825828275,16.74624939945406];
 const QS_CORNERS=[[100.19241130821324,16.747363325109188],[100.19302336689086,16.746286274136562],[100.19249600948156,16.74601147253202],[100.19188395080394,16.747088523504647]];
 let qsVisible=true; let qsActivePopup=null;const qsUnifiedMarkers={};
 function qsClearPopups(){
@@ -1615,22 +1643,36 @@ map.on('load',()=>{
   const el=document.createElement('button');el.type='button';el.className='qs-unified-pin th';el.textContent='TH';el.title='โรงละคร';
   el.onclick=e=>{e.stopPropagation();qsFocusPoint(QS_TH,'โรงละคร','พิกัดที่ยืนยันแล้ว');};
   qsUnifiedMarkers.TH=new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(QS_TH).addTo(map);
+  // Separate second confirmed herbicide venue. Point 1 retains the original QS coordinate.
+  const hw=document.createElement('button');hw.type='button';hw.className='qs-unified-pin hw';hw.textContent='H2';hw.title='คำนวณอัตราการใช้และพ่นสารกำจัดวัชพืช — จุดที่ 2';
+  hw.onclick=e=>{e.stopPropagation();qsFocusPoint(HERBICIDE_POINT_2,'การแข่งขันคำนวณอัตราการใช้และพ่นสารกำจัดวัชพืช','จุดที่ 2 — พิกัดที่ผู้ใช้ยืนยัน');};
+  qsUnifiedMarkers.H2=new maplibregl.Marker({element:hw,anchor:'center'}).setLngLat(HERBICIDE_POINT_2).addTo(map);
   qsUpdateVisibility();
 });
 function qsUpdateVisibility(){const show=map.getZoom()>=16.9;for(const m of Object.values(qsUnifiedMarkers))m.getElement().style.display=show?'grid':'none';}
 map.on('zoom',qsUpdateVisibility);
 function qsUnifiedFocusEvent(day,id){
   const e=(EVENTS[String(day)]||[]).find(x=>x.id===id);if(!e)return;
+  if(id==='herbicide_calc'){qsShowHerbicideBoth();return;}
   const coord=e.qs_zone?QS_CONFIRMED_POS[e.qs_zone]:(e.point==='TH'?QS_TH:(Number.isFinite(e.lon)&&Number.isFinite(e.lat)?[e.lon,e.lat]:null));
   if(!coord)return;
   qsSetOverlay(true);
   qsFocusPoint(coord,e.title,`${day} พฤศจิกายน 2569 | ${e.time} | ${e.qs_zone?'QS '+e.qs_zone:e.place}`);
 }
 window.qsUnifiedFocusEvent=qsUnifiedFocusEvent;
+function qsShowHerbicideBoth(){
+  qsClearPopups();
+  if(eventMarker){eventMarker.remove();eventMarker=null;}
+  if(eventLabelMarker){eventLabelMarker.remove();eventLabelMarker=null;}
+  const bounds=new maplibregl.LngLatBounds(HERBICIDE_POINT_1,HERBICIDE_POINT_2);
+  map.fitBounds(bounds,{padding:85,maxZoom:18.1,pitch:0,bearing:0,duration:700});
+  qsOpenPopup(HERBICIDE_POINT_2,'การแข่งขันคำนวณอัตราการใช้และพ่นสารกำจัดวัชพืช','มี 2 จุด: จุดที่ 1 QS เดิม และจุดที่ 2 ณ ตำแหน่ง H2');
+}
+window.qsShowHerbicideBoth=qsShowHerbicideBoth;
 function qsFillRows(){
   const day=document.getElementById('uDay').value;
-  const evs=(EVENTS[day]||[]).filter(e=>e.qs_zone||e.point==='TH');
-  document.getElementById('unifiedRows').innerHTML=evs.map(e=>`<button type="button" data-id="${e.id}"><strong>${e.title}</strong><small>${e.time} · ${e.qs_zone?'QS '+e.qs_zone:'โรงละคร'}</small></button>`).join('')||'<small>ไม่มีรายการ QS / โรงละครในวันที่เลือก</small>';
+  const evs=(EVENTS[day]||[]).filter(e=>e.qs_zone||e.point==='TH'||e.id==='herbicide_calc');
+  document.getElementById('unifiedRows').innerHTML=evs.map(e=>`<button type="button" data-id="${e.id}"><strong>${e.title}</strong><small>${e.time} · ${e.id==='herbicide_calc'?'2 จุด (QS / H2)':(e.qs_zone?'QS '+e.qs_zone:'โรงละคร')}</small></button>`).join('')||'<small>ไม่มีรายการ QS / โรงละครในวันที่เลือก</small>';
   document.querySelectorAll('#unifiedRows button').forEach(b=>b.onclick=()=>qsUnifiedFocusEvent(day,b.dataset.id));
 }
 document.getElementById('unifiedLaunch').onclick=()=>{const p=document.getElementById('unifiedPanel');p.hidden=!p.hidden;document.getElementById('unifiedLaunch').setAttribute('aria-expanded',String(!p.hidden));if(!p.hidden)qsFillRows();};
