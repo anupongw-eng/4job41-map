@@ -574,7 +574,19 @@ document.getElementById("search").addEventListener("input",e=>{
 });
 
 const from=document.getElementById("from"),to=document.getElementById("to");
-[...pts].sort((a,b)=>a.name.localeCompare(b.name,"th")).forEach(p=>{from.add(new Option(p.name,p.id));to.add(new Option(p.name,p.id));});
+// v47.2: Navigation options are populated AFTER DATA markers load into pts.
+function populateNavigationOptions(){
+  const previousFrom=from.value, previousTo=to.value;
+  from.replaceChildren(new Option("เลือกต้นทาง…", ""));
+  to.replaceChildren(new Option("เลือกปลายทาง…", ""));
+  [...pts].sort((a,b)=>a.name.localeCompare(b.name,"th")).forEach(p=>{
+    from.add(new Option(p.name,p.id));
+    to.add(new Option(p.name,p.id));
+  });
+  if(pts.some(p=>p.id===previousFrom)) from.value=previousFrom;
+  if(pts.some(p=>p.id===previousTo)) to.value=previousTo;
+}
+map.on("load", populateNavigationOptions);
 const get=id=>pts.find(p=>p.id===id);
 document.getElementById("go").onclick=()=>{
  const a=get(from.value),b=get(to.value);

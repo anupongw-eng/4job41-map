@@ -1,5 +1,5 @@
-4JOP41 v47.1 — Map rendering hotfix
-แก้ JavaScript template literal ที่ขาดเครื่องหมายปิด ทำให้แผนที่หลักเป็นสีขาว
-คงพิกัด QS 11 จุด และกิจกรรมพ่นสาร 2 จุดเดิมไว้ทั้งหมด
-ติดตั้ง: สำรอง index.html เดิม แล้วอัปโหลด index.html กับ QS_Floor1_GroundOverlay.png ไปที่ root ของ GitHub repository. Commit แล้ว Ctrl+F5.
-การตรวจ: JavaScript syntax ผ่าน แต่ยังไม่ได้ทดสอบการโหลด MapLibre บนเว็บจริง
+4JOP41 v47.2 — Navigation options fix
+แก้การเติมรายการตัวเลือกต้นทาง/ปลายทางให้เกิดหลังโหลดหมุด MapLibre เสร็จ
+ไม่เปลี่ยนพิกัด แผน QS กิจกรรมหรือเส้นทาง
+ติดตั้ง: สำรอง index.html หน้าแรกใน GitHub แล้วแทนด้วยไฟล์นี้ (ไม่ใช่ /qs/) อัปโหลดรูป QS_Floor1_GroundOverlay.png ไว้ข้างกัน แล้ว Commit และ Ctrl+F5
+ตรวจ: ตัวเลือกต้นทางและปลายทางมีรายการสถานที่ให้เลือก และเปิด Google Maps หลังเลือกสองจุดได้
