@@ -219,6 +219,22 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 }
 </style>
 
+
+<style id="qs-marker-qa-css">
+#qsMarkerPanel{position:absolute;right:14px;top:134px;z-index:31;width:min(330px,calc(100vw - 30px));max-height:calc(100% - 160px);overflow:auto;background:#fff;border:1px solid #c8d9ce;border-radius:14px;box-shadow:0 5px 25px #17281b33;padding:12px;display:none;font:14px system-ui,sans-serif;color:#183e2d}
+#qsMarkerPanel.open{display:block}#qsMarkerPanel strong{font-size:15px}
+#qsMarkerPanel .qa-info{font-size:12px;color:#52665b;line-height:1.55;margin:7px 0}
+#qsMarkerPanel select,#qsMarkerPanel button{font:inherit;border-radius:8px;padding:9px;border:1px solid #baccbf;max-width:100%}
+#qsMarkerPanel select{width:100%;background:white;margin:7px 0}
+#qsMarkerPanel .qa-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+#qsMarkerPanel button{cursor:pointer;background:#f0f8f3;color:#164a2e;font-weight:700}
+#qsMarkerPanel button.qa-primary{background:#176840;color:white}
+#qsMarkerPanel button:disabled{opacity:.45;cursor:not-allowed}
+#qsMarkerStatus{margin-top:8px;font-size:12px;min-height:30px;line-height:1.5}
+.qs-zone-point{display:flex;align-items:center;justify-content:center;width:39px;height:39px;background:#176840;color:#fff;border:3px solid white;box-shadow:0 1px 7px #0005;border-radius:50%;font-weight:900;font-size:12px;cursor:pointer}
+.qs-zone-point.pending{background:#936a22}#map.qs-placing{cursor:crosshair!important}
+@media(max-width:760px){#qsMarkerPanel{top:124px;right:8px;max-height:calc(100% - 150px);width:min(300px,calc(100vw - 20px))}}
+</style>
 </head>
 <body>
 
@@ -326,6 +342,22 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 <div id="qsOverlayQA" aria-label="QS overlay QA controls">
   <button id="qsOverlayToggle" class="active" type="button">แปลน QS: เปิด</button>
   <button id="qsOverlayFocus" type="button">ดู QS</button>
+  <button id="qsMarkerPanelToggle" type="button">จุด QS (QA)</button>
+</div>
+
+<div id="qsMarkerPanel" role="region" aria-label="กำหนดจุดพื้นที่ QS">
+  <strong>จุดกิจกรรม QS — ตรวจตำแหน่ง</strong>
+  <div class="qa-info">เลือกหมายเลข → กด “เริ่มวาง” → คลิกจุดจริงบนแปลน QS ระบบยังไม่กำหนดตำแหน่งแทนคุณ และยังไม่เผยแพร่เป็นตำแหน่งยืนยัน</div>
+  <label for="qsZoneSelect">พื้นที่</label>
+  <select id="qsZoneSelect"></select>
+  <div class="qa-actions">
+    <button type="button" class="qa-primary" id="qsStartPlace">เริ่มวางจุด</button>
+    <button type="button" id="qsCancelPlace">ยกเลิกโหมดวาง</button>
+    <button type="button" id="qsRemovePoint">ลบจุดที่เลือก</button>
+    <button type="button" id="qsExportPoints">ส่งออก JSON</button>
+  </div>
+  <div id="qsMarkerStatus" role="status" aria-live="polite"></div>
+  <div class="qa-info">ตำแหน่งเก็บเฉพาะเบราว์เซอร์เครื่องนี้จนกว่าจะส่งออกไฟล์ JSON การคลิกจุดที่วางไว้จะแสดงรายละเอียดพื้นฐาน</div>
 </div>
   <section id="mobileHome" class="mobile-home">
     <div class="mobile-brand">
@@ -480,6 +512,77 @@ qsFocus.addEventListener("click", (event) => {
 map.on("load", syncQsButton);
 syncQsButton();
 
+
+
+// QS v38: user-controlled marker QA. Does not alter the aligned image coordinates.
+const QS_ZONE_ITEMS = [
+  ["1.1","ลงทะเบียน / รับใบประกาศนียบัตรและถ่ายภาพ"],
+  ["1.2","กองอำนวยการ"],
+  ["1.3","จุดประสานงานนิสิต–นักศึกษา"],
+  ["1.4","ห้องพยาบาล"],
+  ["1.5a","ห้องพักและทำงานอาจารย์–เจ้าหน้าที่ (พื้นที่ 1)"],
+  ["1.5b","ห้องพักและทำงานอาจารย์–เจ้าหน้าที่ (พื้นที่ 2)"],
+  ["1.6","พื้นที่รับประทานอาหารอาจารย์–เจ้าหน้าที่"],
+  ["1.7","จุดประชาสัมพันธ์กลาง"],
+  ["1.8","Starbucks"],
+  ["1.9","พื้นที่แข่งขันสัตวศาสตร์"],
+  ["1.10","พื้นที่แข่งขันพืชศาสตร์"]
+];
+const QS_LOCKED_IMAGE_CORNERS = [[100.19241130821324,16.747363325109188],[100.19302336689086,16.746286274136562],[100.19249600948156,16.74601147253202],[100.19188395080394,16.747088523504647]];
+const qaPanel=document.getElementById('qsMarkerPanel');
+const qaPanelBtn=document.getElementById('qsMarkerPanelToggle');
+const qaSelect=document.getElementById('qsZoneSelect');
+const qaStatus=document.getElementById('qsMarkerStatus');
+const qaStart=document.getElementById('qsStartPlace');
+const qaCancel=document.getElementById('qsCancelPlace');
+const qaRemove=document.getElementById('qsRemovePoint');
+const qaExport=document.getElementById('qsExportPoints');
+const QS_STORAGE_KEY='4job41:qs:zone-qa:v38';
+let qaPlacing=false;
+let qaPositions={};
+const qaMarkers={};
+qaSelect.innerHTML=QS_ZONE_ITEMS.map(([id,name])=>`<option value="${id}">${id.startsWith('1.5')?'1.5':id} — ${name}</option>`).join('');
+try{const saved=JSON.parse(localStorage.getItem(QS_STORAGE_KEY)||'{}');if(saved && typeof saved==='object'){
+  for(const [id,p] of Object.entries(saved)){if(QS_ZONE_ITEMS.some(z=>z[0]===id)&&Array.isArray(p)&&p.length===2&&p.every(Number.isFinite))qaPositions[id]=p;}
+}}catch(e){console.warn('QS QA restore:',e)}
+function qaMessage(s){qaStatus.textContent=s;}
+function qaPersist(){try{localStorage.setItem(QS_STORAGE_KEY,JSON.stringify(qaPositions));}catch(e){qaMessage('บันทึกในเบราว์เซอร์ไม่ได้ กรุณาส่งออก JSON');}}
+function qaLabel(id){return id.startsWith('1.5')?'1.5':id;}
+function qaRenderMarker(id){
+  if(qaMarkers[id]){qaMarkers[id].remove();delete qaMarkers[id];}
+  const p=qaPositions[id];if(!p)return;
+  const info=QS_ZONE_ITEMS.find(z=>z[0]===id);if(!info)return;
+  const el=document.createElement('div');el.className='qs-zone-point pending';el.textContent=qaLabel(id);el.title=`${info[1]} (รอตรวจตำแหน่ง)`;
+  const popup=new maplibregl.Popup({offset:21}).setHTML(`<b>${qaLabel(id)} — ${esc(info[1])}</b><div style="font-size:12px;margin-top:6px">ตำแหน่งทดสอบ ยังไม่ยืนยัน<br>คลิกเลือกพื้นที่ในแผง QA เพื่อแก้ไข</div>`);
+  qaMarkers[id]=new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(p).setPopup(popup).addTo(map);
+}
+function qaRedraw(){QS_ZONE_ITEMS.forEach(([id])=>qaRenderMarker(id));qaMessage(`มีจุดทดลอง ${Object.keys(qaPositions).length}/${QS_ZONE_ITEMS.length} จุด • ยังไม่ยืนยัน`);}
+function qaMode(on){qaPlacing=on;document.getElementById('map').classList.toggle('qs-placing',on);qaStart.textContent=on?'คลิกบนแปลนเพื่อวาง…':'เริ่มวางจุด';qaStart.disabled=on;qaCancel.disabled=!on;}
+qaPanelBtn.addEventListener('click',()=>{const on=!qaPanel.classList.contains('open');qaPanel.classList.toggle('open',on);qaPanelBtn.classList.toggle('active',on);if(!on)qaMode(false);if(on)qaRedraw();});
+qaStart.addEventListener('click',()=>{if(!map.getLayer(qsLayerId)){qaMessage('แปลนยังโหลดไม่ครบ');return;}map.setLayoutProperty(qsLayerId,'visibility','visible');syncQsButton();qaMode(true);qaMessage('คลิกตำแหน่งจริงบนแปลนเพื่อวาง '+qaLabel(qaSelect.value));});
+qaCancel.addEventListener('click',()=>{qaMode(false);qaMessage('ยกเลิกการวางจุดแล้ว');});
+qaSelect.addEventListener('change',()=>{qaMode(false);const p=qaPositions[qaSelect.value];qaMessage(p?'จุดนี้วางแล้ว เลือกเริ่มวางเพื่อย้ายได้':'จุดนี้ยังไม่กำหนดตำแหน่ง');});
+qaRemove.addEventListener('click',()=>{qaMode(false);delete qaPositions[qaSelect.value];qaPersist();qaRedraw();});
+function qaInFootprint(pixel){
+  const pp=QS_LOCKED_IMAGE_CORNERS.map(c=>map.project(c));let inside=false;
+  for(let i=0,j=pp.length-1;i<pp.length;j=i++){
+    const a=pp[i],b=pp[j];if(((a.y>pixel.y)!==(b.y>pixel.y)) && (pixel.x<(b.x-a.x)*(pixel.y-a.y)/(b.y-a.y)+a.x))inside=!inside;
+  }
+  return inside;
+}
+map.on('click',e=>{if(!qaPlacing)return;
+  if(!qaInFootprint(e.point)){qaMessage('จุดนี้อยู่นอกกรอบภาพ QS กรุณาคลิกใหม่');return;}
+  qaPositions[qaSelect.value]=[Number(e.lngLat.lng.toFixed(10)),Number(e.lngLat.lat.toFixed(10))];
+  qaPersist();qaRenderMarker(qaSelect.value);qaMode(false);
+  qaMessage('วาง '+qaLabel(qaSelect.value)+' แล้ว (รอตรวจยืนยัน) • บันทึกในเครื่องนี้แล้ว');
+});
+qaExport.addEventListener('click',()=>{
+  const obj={schema:'QS_MARKERS_QA_V38',status:'USER_PLACED_UNVERIFIED',base:'QS_Floor1_GroundOverlay_ALIGNED.kmz',positions:qaPositions,notes:'Only user-clicked positions; 1.5a / 1.5b represent two areas.'};
+  const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json;charset=utf-8'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='QS_zone_markers_QA.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+  qaMessage('ส่งออกไฟล์ JSON แล้ว เก็บไฟล์เพื่อใช้ล็อกพิกัดต่อไป');
+});
+map.on('load',qaRedraw);
 
 const markers = [];
 const pts = [];
