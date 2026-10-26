@@ -572,16 +572,32 @@ try{const saved=JSON.parse(localStorage.getItem(QS_STORAGE_KEY)||'{}');if(saved 
 function qaMessage(s){qaStatus.textContent=s;}
 function qaPersist(){try{localStorage.setItem(QS_STORAGE_KEY,JSON.stringify(qaPositions));}catch(e){qaMessage('บันทึกในเบราว์เซอร์ไม่ได้ กรุณาส่งออก JSON');}}
 function qaLabel(id){return id.startsWith('1.5')?'1.5':id;}
+// v41: keep at most ONE QS marker popup open at any time.
+function qsCloseAllPopups(exceptId=null){
+  for(const [markerId,marker] of Object.entries(qaMarkers)){
+    if(markerId===exceptId)continue;
+    const popup=marker.getPopup();
+    if(popup&&popup.isOpen())popup.remove();
+  }
+}
+function qsShowOnlyPopup(id){
+  qsCloseAllPopups(id);
+  const marker=qaMarkers[id];
+  if(!marker)return;
+  const popup=marker.getPopup();
+  if(popup&&!popup.isOpen())popup.addTo(map);
+}
+
 function qaRenderMarker(id){
   if(qaMarkers[id]){qaMarkers[id].remove();delete qaMarkers[id];}
   const p=qaPositions[id];if(!p)return;
   const info=QS_ZONE_ITEMS.find(z=>z[0]===id);if(!info)return;
-  const el=document.createElement('div');el.className='qs-zone-point pending';el.textContent=qaLabel(id);el.title=`${info[1]} (รอตรวจตำแหน่ง)`;
+  const el=document.createElement('div');el.className='qs-zone-point';el.textContent=qaLabel(id);el.title=`${info[1]} (ผู้ใช้ตรวจตำแหน่งผ่าน v39)`;
   const popup=new maplibregl.Popup({offset:21}).setHTML(`<b>${qaLabel(id)} — ${esc(info[1])}</b><div style="font-size:12px;margin-top:6px">แตะ “กิจกรรม QS” เพื่อดูรายละเอียดและกรองวัน</div>`);
   qaMarkers[id]=new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(p).setPopup(popup).addTo(map);
-  el.addEventListener('click',()=>{if(typeof actPanel!=='undefined'&&!actPanel.hidden)qsActOpenPoint(id,false);});
+  el.addEventListener('click',()=>{qsCloseAllPopups(id);if(typeof actPanel!=='undefined'&&!actPanel.hidden)qsActOpenPoint(id,false);});
 }
-function qaRedraw(){QS_ZONE_ITEMS.forEach(([id])=>qaRenderMarker(id));if(typeof qsActRender==='function'&&!actPanel.hidden)qsActRender();qaMessage(`มีจุดที่ผู้ใช้วาง ${Object.keys(qaPositions).length}/${QS_ZONE_ITEMS.length} จุด • รอตรวจยืนยัน`);}
+function qaRedraw(){QS_ZONE_ITEMS.forEach(([id])=>qaRenderMarker(id));if(typeof qsActRender==='function'&&!actPanel.hidden)qsActRender();qaMessage(`จุดที่ผู้ใช้ยืนยันแล้ว ${Object.keys(qaPositions).length}/${QS_ZONE_ITEMS.length} จุด`);}
 function qaMode(on){qaPlacing=on;document.getElementById('map').classList.toggle('qs-placing',on);qaStart.textContent=on?'คลิกบนแปลนเพื่อวาง…':'เริ่มวางจุด';qaStart.disabled=on;qaCancel.disabled=!on;}
 qaPanelBtn.addEventListener('click',()=>{const on=!qaPanel.classList.contains('open');qaPanel.classList.toggle('open',on);qaPanelBtn.classList.toggle('active',on);if(!on)qaMode(false);if(on)qaRedraw();});
 qaStart.addEventListener('click',()=>{if(!map.getLayer(qsLayerId)){qaMessage('แปลนยังโหลดไม่ครบ');return;}map.setLayoutProperty(qsLayerId,'visibility','visible');syncQsButton();qaMode(true);qaMessage('คลิกตำแหน่งจริงบนแปลนเพื่อวาง '+qaLabel(qaSelect.value));});
@@ -644,12 +660,19 @@ function qsActOpenPoint(id, fly=true){
   const details=QS_ACTIVITIES[id]||{};
   const events=qsActEntries(id);
   const service=details.service?`<p>${esc(details.service)}</p><small>จุดบริการ: ไม่ระบุวัน/เวลาเปิดให้บริการ</small>`:'';
-  const schedule=events.map(x=>`<p><b>${x.day} พ.ย.</b> — ${esc(x.text)}</p>`).join('');
-  actDetail.innerHTML=`<h3>${esc(qaLabel(id))} — ${esc(qsActName(id))}</h3>${service}${schedule||(!details.service?'<p>ไม่มีรายการในวันที่เลือก</p>':'')}<p><small>เวลา: ยังไม่ได้ยืนยันในฐานข้อมูล</small></p>`;
+  const schedule=events.map(x=>{
+    const matched=(EVENTS[String(x.day)]||[]).find(e=>e.qs_zone===id && (
+      (id==='1.10' && ((x.day===5&&e.id==='tray_garden')||(x.day===6&&e.id==='plant_propagation')||(x.day===7&&e.id==='planting_media_fill'))) ||
+      (id==='1.9' && ((x.day===5&&e.id==='artificial_udder')||(x.day===6&&e.id==='im_injection')))
+    ));
+    return `<p><b>${x.day} พ.ย.</b> — ${esc(x.text)}${matched ? ` <strong>(${esc(matched.time)})</strong>` : ' <small>(ยังไม่ยืนยันเวลา)</small>'}</p>`;
+  }).join('');
+  actDetail.innerHTML=`<h3>${esc(qaLabel(id))} — ${esc(qsActName(id))}</h3>${service}${schedule||(!details.service?'<p>ไม่มีรายการในวันที่เลือก</p>':'')}<p><small>เวลาแสดงเฉพาะรายการที่มีอยู่ในกำหนดการแผนที่ใหญ่</small></p>`;
   if(fly&&qaPositions[id])map.easeTo({center:qaPositions[id],zoom:Math.max(18.2,map.getZoom()),pitch:0,duration:650});
-  const marker=qaMarkers[id];if(marker&&fly)marker.togglePopup();
+  qsShowOnlyPopup(id);
 }
 function qsActRender(){
+  qsCloseAllPopups();
   actList.replaceChildren();
   for(const [id,name] of QS_ZONE_ITEMS){
     const visible=qsActVisible(id);
@@ -669,7 +692,7 @@ function qsActSetOpen(on){
   actPanel.hidden=!on;actToggle.classList.toggle('active',on);
   actToggle.setAttribute('aria-expanded',String(on));
   if(on){qaPanel.classList.remove('open');qaPanelBtn.classList.remove('active');qaMode(false);qsActRender();}
-  else {for(const x of Object.values(qaMarkers))x.getElement().style.display='';}
+  else {qsCloseAllPopups();for(const x of Object.values(qaMarkers))x.getElement().style.display='';}
 }
 actToggle.addEventListener('click',()=>qsActSetOpen(actPanel.hidden));
 document.getElementById('qsActClose').addEventListener('click',()=>qsActSetOpen(false));
@@ -1309,6 +1332,38 @@ const EVENTS = {
   "8": []
 };
 
+// v41: exact activity-to-room mapping. Only events supported by the confirmed QS zones.
+// Do NOT remap QS classroom/behind-theatre activities to an indoor zone without verification.
+const QS_SHARED_EVENT_ANCHORS = Object.freeze({
+  tray_garden: '1.10',
+  plant_propagation: '1.10',
+  artificial_udder: '1.9',
+  im_injection: '1.9',
+  planting_media_fill: '1.10'
+});
+for(const dayEntries of Object.values(EVENTS)){
+  for(const item of dayEntries){
+    const zoneId=QS_SHARED_EVENT_ANCHORS[item.id];
+    if(!zoneId||!QS_USER_PLACED_DEFAULTS[zoneId])continue;
+    const anchor=QS_USER_PLACED_DEFAULTS[zoneId];
+    item.lon=anchor[0];item.lat=anchor[1];
+    item.qs_zone=zoneId;
+    item.coord_status='verified_user_QS_v39';
+    item.coord_source='QS v39 user-confirmed zone '+zoneId;
+    item.map_note='จุดเดียวกับ QS '+zoneId+' — '+qsActName(zoneId);
+    // Older event descriptions have conflicting indoor point labels; retain for provenance.
+    item.source_place=item.place;
+    item.place='อาคาร QS — '+zoneId+' '+qsActName(zoneId);
+  }
+}
+function qsResolveEventCoordinate(event){
+  if(event.qs_zone && qaPositions[event.qs_zone]){
+    const p=qaPositions[event.qs_zone];
+    return {lon:p[0],lat:p[1],zone:event.qs_zone};
+  }
+  return {lon:event.lon,lat:event.lat,zone:null};
+}
+
 let eventMarker = null;
 let eventLabelMarker = null;
 function renderDay(day){
@@ -1330,8 +1385,9 @@ function renderDay(day){
 
   box.innerHTML=`<div class="day-events">` + evs.map(e=>{
     const point=markers.find(m=>m.id===e.point);
-    const lat = Number.isFinite(e.lat) ? e.lat : (point ? point.lat : null);
-    const lon = Number.isFinite(e.lon) ? e.lon : (point ? point.lon : null);
+    const resolved=qsResolveEventCoordinate(e);
+    const lat = Number.isFinite(resolved.lat) ? resolved.lat : (point ? point.lat : null);
+    const lon = Number.isFinite(resolved.lon) ? resolved.lon : (point ? point.lon : null);
     const hasCoord = Number.isFinite(lat) && Number.isFinite(lon);
     const nav = hasCoord
       ? `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`
@@ -1367,8 +1423,19 @@ function renderDay(day){
     const lat=parseFloat(btn.dataset.eventLat), lon=parseFloat(btn.dataset.eventLon);
     const title=btn.dataset.eventTitle||"จุดกิจกรรม";
     if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
-    map.flyTo({center:[lon,lat],zoom:18,pitch:60,bearing:-18,essential:true});
+    qsCloseAllPopups();
+    const selectedDayEvent=(EVENTS[day]||[]).find(e=>e.title===title && Math.abs(qsResolveEventCoordinate(e).lat-lat)<0.0000001);
+    if(selectedDayEvent?.qs_zone){
+      qsActSelected=selectedDayEvent.qs_zone;
+      qsShowOnlyPopup(selectedDayEvent.qs_zone);
+    }
+    map.flyTo({center:[lon,lat],zoom:selectedDayEvent?.qs_zone?18.5:18,pitch:selectedDayEvent?.qs_zone?0:60,bearing:-18,essential:true});
 
+    if(selectedDayEvent?.qs_zone){
+      if(eventMarker){eventMarker.remove();eventMarker=null;}
+      if(eventLabelMarker){eventLabelMarker.remove();eventLabelMarker=null;}
+      return;
+    }
     const pulse=document.createElement("div");
     pulse.className="eventpulse";
     if(eventMarker) eventMarker.remove();
@@ -1630,8 +1697,9 @@ function renderMobileDay(day){
 
   box.innerHTML=evs.map(e=>{
     const point=markers.find(m=>m.id===e.point);
-    const lat=Number.isFinite(e.lat)?e.lat:(point?point.lat:null);
-    const lon=Number.isFinite(e.lon)?e.lon:(point?point.lon:null);
+    const resolved=qsResolveEventCoordinate(e);
+    const lat=Number.isFinite(resolved.lat)?resolved.lat:(point?point.lat:null);
+    const lon=Number.isFinite(resolved.lon)?resolved.lon:(point?point.lon:null);
     const hasCoord=Number.isFinite(lat)&&Number.isFinite(lon);
     const nav=hasCoord?`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`:"";
     return `<div class="mobile-event-card">
@@ -1650,7 +1718,18 @@ function renderMobileDay(day){
       const lat=parseFloat(btn.dataset.mobileEventLat), lon=parseFloat(btn.dataset.mobileEventLon);
       if(!Number.isFinite(lat)||!Number.isFinite(lon)) return;
       mobileShowMap();
-      map.flyTo({center:[lon,lat],zoom:18,pitch:60,bearing:-18,essential:true});
+      qsCloseAllPopups();
+      const selected=(EVENTS[day]||[]).find(e=>e.title===(btn.dataset.mobileEventTitle||'') && Math.abs(qsResolveEventCoordinate(e).lat-lat)<0.0000001);
+      if(selected?.qs_zone){
+        qsActSelected=selected.qs_zone;
+        qsShowOnlyPopup(selected.qs_zone);
+      }
+      map.flyTo({center:[lon,lat],zoom:selected?.qs_zone?18.5:18,pitch:selected?.qs_zone?0:60,bearing:-18,essential:true});
+      if(selected?.qs_zone){
+        if(eventMarker){eventMarker.remove();eventMarker=null;}
+        if(eventLabelMarker){eventLabelMarker.remove();eventLabelMarker=null;}
+        return;
+      }
 
       const pulse=document.createElement("div");
       pulse.className="eventpulse";
