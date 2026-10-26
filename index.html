@@ -221,6 +221,22 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 .safety-on-map{position:absolute;z-index:5;left:12px;top:12px;max-width:190px;padding:9px 11px;font-size:12px}
 @media(max-width:760px){.safety-desktop{display:none}.safety-on-map{top:12px;left:10px}.safety-on-map small{display:none}}
 @media(min-width:761px){.safety-mobile{display:none}.safety-on-map{display:none}}
+
+/* v49.2: Mobile-only display fix. No JS, map, georeference or navigation changes. */
+@media (max-width:760px){
+  /* The mobile home is already displaying the main Safety Center card.
+     Hide map-only floating controls until the user enters map mode. */
+  #mobileHome:not(.hidden) ~ .safety-on-map,
+  #mobileHome:not(.hidden) ~ #unifiedDock { display:none !important; }
+  /* Map mode: avoid collision with the bottom navigation. */
+  #unifiedDock { bottom:calc(92px + env(safe-area-inset-bottom)); right:10px; }
+  .safety-on-map { top:calc(12px + env(safe-area-inset-top)); left:10px; }
+  /* Home header and its single Safety card retain natural document flow. */
+  .mobile-brand { min-width:0; }
+  .mobile-brand > div { min-width:0; }
+  .mobile-title { overflow-wrap:anywhere; }
+  .safety-mobile { position:relative; z-index:0; max-width:100%; }
+}
 </style>
 </head>
 <body>
@@ -1677,12 +1693,31 @@ function qsOpenPopup(coord,head,subtitle){
   qsActivePopup=new maplibregl.Popup({offset:24,closeOnClick:true,maxWidth:'280px'})
      .setLngLat(coord).setHTML('<b>'+safe(head)+'</b><div>'+safe(subtitle)+'</div>').addTo(map);
 }
+// v49.3: Mobile focus bridge. Close the dock and expose/resize the map before camera movement.
+function qsPrepareFocus(callback){
+  const panel=document.getElementById('unifiedPanel');
+  const launcher=document.getElementById('unifiedLaunch');
+  if(panel)panel.hidden=true;
+  if(launcher)launcher.setAttribute('aria-expanded','false');
+  if(window.matchMedia('(max-width:760px)').matches){
+    mobileShowMap();
+    // Wait for mobile view layout to become measurable before animated camera movement.
+    requestAnimationFrame(()=>setTimeout(()=>{
+      map.resize();
+      callback();
+    },130));
+  } else {
+    callback();
+  }
+}
 function qsFocusPoint(coord,head,sub){
   qsClearPopups();
-  map.flyTo({center:coord,zoom:18.4,pitch:0,bearing:0,essential:true});
   if(eventMarker){eventMarker.remove();eventMarker=null;}
   if(eventLabelMarker){eventLabelMarker.remove();eventLabelMarker=null;}
-  if(head)qsOpenPopup(coord,head,sub||'');
+  qsPrepareFocus(()=>{
+    map.flyTo({center:coord,zoom:18.4,pitch:0,bearing:0,essential:true});
+    if(head)map.once('moveend',()=>qsOpenPopup(coord,head,sub||''));
+  });
 }
 function qsSetOverlay(v){qsVisible=v;if(map.getLayer('qs-v45-overlay'))map.setLayoutProperty('qs-v45-overlay','visibility',v?'visible':'none');document.getElementById('uToggleOverlay').textContent=v?'ซ่อนแปลน QS':'แสดงแปลน QS';}
 map.on('load',()=>{
@@ -1718,8 +1753,10 @@ function qsShowHerbicideBoth(){
   if(eventMarker){eventMarker.remove();eventMarker=null;}
   if(eventLabelMarker){eventLabelMarker.remove();eventLabelMarker=null;}
   const bounds=new maplibregl.LngLatBounds(HERBICIDE_POINT_1,HERBICIDE_POINT_2);
-  map.fitBounds(bounds,{padding:85,maxZoom:18.1,pitch:0,bearing:0,duration:700});
-  qsOpenPopup(HERBICIDE_POINT_2,'การแข่งขันคำนวณอัตราการใช้และพ่นสารกำจัดวัชพืช','มี 2 จุด: จุดที่ 1 QS เดิม และจุดที่ 2 ณ ตำแหน่ง H2');
+  qsPrepareFocus(()=>{
+    map.fitBounds(bounds,{padding:50,maxZoom:18.1,pitch:0,bearing:0,duration:700});
+    map.once('moveend',()=>qsOpenPopup(HERBICIDE_POINT_2,'การแข่งขันคำนวณอัตราการใช้และพ่นสารกำจัดวัชพืช','มี 2 จุด: จุดที่ 1 QS เดิม และจุดที่ 2 ณ ตำแหน่ง H2'));
+  });
 }
 window.qsShowHerbicideBoth=qsShowHerbicideBoth;
 function qsFillRows(){
@@ -1734,7 +1771,7 @@ document.getElementById('uDay').onchange=qsFillRows;
 document.getElementById('uFocusQS').onclick=()=>{qsSetOverlay(true);qsFocusPoint(QS_CENTER);};
 document.getElementById('uFocusTH').onclick=()=>qsFocusPoint(QS_TH,'โรงละคร','พิกัดที่ยืนยันแล้ว');
 document.getElementById('uToggleOverlay').onclick=()=>qsSetOverlay(!qsVisible);
-document.getElementById('uOverview').onclick=()=>{qsClearPopups();map.flyTo({center:[100.1939,16.7447],zoom:15.2,pitch:0,bearing:0,essential:true});};
+document.getElementById('uOverview').onclick=()=>{qsClearPopups();qsPrepareFocus(()=>map.flyTo({center:[100.1939,16.7447],zoom:15.2,pitch:0,bearing:0,essential:true}));};
 // Deep links from old QS URLs can be translated into the unified main map.
 const uParams=new URLSearchParams(location.search);if(uParams.has('event')&&uParams.has('day')){
  map.once('load',()=>setTimeout(()=>qsUnifiedFocusEvent(uParams.get('day'),uParams.get('event')),700));
