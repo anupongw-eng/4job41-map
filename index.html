@@ -212,6 +212,15 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 .qs-unified-pin.hw{background:#b25b16;width:39px;height:39px}
 .qs-unified-pin.th{background:#7b3b9b;width:39px;height:39px}
 @media(max-width:700px){#unifiedDock{top:auto;bottom:76px;right:8px;max-width:calc(100vw - 16px)}#unifiedPanel{max-height:53vh}}
+
+/* v49.1: Safety Center prominently accessible on desktop and mobile */
+.safety-quicklink{display:flex;align-items:center;gap:9px;background:#fff4ee;border:2px solid #ba5b2c;color:#672b12;border-radius:12px;padding:11px 13px;font-weight:900;text-decoration:none;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.safety-quicklink small{display:block;font-weight:500;font-size:11px;color:#703d28;margin-top:2px}
+.safety-desktop{margin-bottom:12px}
+.safety-mobile{margin-top:13px;margin-bottom:7px}
+.safety-on-map{position:absolute;z-index:5;left:12px;top:12px;max-width:190px;padding:9px 11px;font-size:12px}
+@media(max-width:760px){.safety-desktop{display:none}.safety-on-map{top:12px;left:10px}.safety-on-map small{display:none}}
+@media(min-width:761px){.safety-mobile{display:none}.safety-on-map{display:none}}
 </style>
 </head>
 <body>
@@ -225,6 +234,10 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
     </div>
   </div>
   
+  <a class="safety-quicklink safety-desktop" href="./safety/" target="_blank" rel="noopener" aria-label="เปิดศูนย์ความปลอดภัย Safety Center">
+    <span aria-hidden="true">🛡️</span><span>Safety Center — แจ้งเหตุฉุกเฉิน<small>เบอร์ติดต่อ • ขั้นตอนความปลอดภัย • เปิดในแท็บใหม่</small></span>
+  </a>
+
   <input id="search" class="search" placeholder="ค้นหา QS, PGPR, P3, ขวัญเมือง…">
 
   <div class="title">ค้นหากิจกรรม</div>
@@ -331,6 +344,10 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
       </div>
     </div>
 
+    <a class="safety-quicklink safety-mobile" href="./safety/" target="_blank" rel="noopener" aria-label="เปิดศูนย์ความปลอดภัย Safety Center">
+      <span aria-hidden="true">🛡️</span><span>Safety Center — แจ้งเหตุฉุกเฉิน<small>เบอร์ติดต่อ • ขั้นตอนความปลอดภัย</small></span>
+    </a>
+
     <div class="mobile-search">
       <input id="mobileActivitySearch" class="search" placeholder="ค้นหา พิธีเปิด, เซทแมลง, ฟุตบอล, PGPR…">
       <div id="mobileActivityResults" class="finder-results"></div>
@@ -384,6 +401,8 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
   </div>
 
   <div id="map"></div>
+  <a class="safety-quicklink safety-on-map" href="./safety/" target="_blank" rel="noopener" aria-label="เปิด Safety Center">🛡️ Safety Center</a>
+
 <div id="unifiedDock"><button id="unifiedLaunch" type="button" aria-expanded="false">📍 QS / โรงละคร</button>
 <div id="unifiedPanel" hidden><button class="u-close" id="unifiedClose" aria-label="ปิด">×</button><b>แผนที่เดียว • QS ชั้น 1 และโรงละคร</b>
 <div class="u-actions"><button id="uFocusQS">ดู QS</button><button id="uFocusTH">ดูโรงละคร</button><button id="uToggleOverlay">ซ่อนแปลน QS</button><button id="uOverview">ภาพรวม</button></div>
