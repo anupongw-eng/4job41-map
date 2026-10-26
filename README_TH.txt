@@ -1,5 +1,5 @@
-4JOP41 v49.3 Mobile QS/โรงละคร Focus Fix
-อัปโหลด index.html ไปที่ root ของ repository (เก็บ PNG เดิมไว้)
-ทดสอบ iPhone: เปิดแผนที่ > QS / โรงละคร > ดู QS / ดูโรงละคร / เลือกกิจกรรม / ภาพรวม
-เมื่อเลือกจะปิดแผง, resize map, แล้วไปยังพิกัดที่ยืนยันไว้
-ยังไม่ผ่านการทดสอบจริงบน iPhone
+v49.4 Mobile Navigation Parity QA
+อัปโหลด index.html ไปหน้าแรกของ repository (สำรองเดิมก่อน)
+ใช้เมนู นำทาง ที่แถบล่างบนมือถือ: เลือก GPS หรือสถานที่, เลือกปลายทาง, กด Google Maps
+รายการสถานที่ใช้ข้อมูลเดียวกับ desktop; คง QS overlay และพิกัดเดิม
+ต้องทดสอบจริงบน Safari/Chrome

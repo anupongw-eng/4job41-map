@@ -77,7 +77,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 .home-action small{display:block;color:var(--muted);font-size:11px;line-height:1.35;margin-top:3px}
 .hero-note{background:#eef6f1;border:1px solid #cfe2d6;border-radius:14px;padding:12px;margin-top:12px}
 .hero-note b{display:block;margin-bottom:3px}
-.mobile-sheet{position:absolute;left:10px;right:10px;bottom:76px;z-index:4;background:rgba(255,255,255,.98);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 12px 34px rgba(0,0,0,.14);max-height:46%;overflow:auto}
+.mobile-sheet{position:absolute;left:10px;right:10px;bottom:76px;z-index:4;background:rgba(255,255,255,.98);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 12px 34px rgba(0,0,0,.14);max-height:65%;overflow:auto}
 .sheet-title{font-weight:900;margin-bottom:8px}
 .sheet-close{float:right;border:0;background:#eef3ef;border-radius:8px;padding:5px 8px;cursor:pointer}
 @media(max-width:760px){
@@ -1577,41 +1577,31 @@ document.querySelectorAll(".bottomnav button").forEach(b=>b.addEventListener("cl
     return;
   }
   if(tab==="guide"){
-    mobileOpenSheet("นำทางสำหรับผู้เข้าร่วมงาน",`
-      <div class="guidegrid">
-        
-        
-        
-      </div>
-      <div style="height:8px"></div>
-      <select id="mGuideDest">
-        <option value="">เลือกจุดหมาย…</option>
-        <option value="E">พิธีเปิด–ปิด / ลานกิจกรรมประตู 5</option>
-        <option value="QS">อาคาร QS</option>
-        <option value="AG">คณะเกษตรศาสตร์ฯ</option>
-        <option value="MED">คณะวิทยาศาสตร์การแพทย์</option>
-        <option value="FB1">สนามฟุตบอล 1</option>
-        <option value="G">สนามคล้องโค/ล้มโค</option>
-        <option value="PGPR">เข้าด้ามจอบ / ศูนย์ PGPR</option>
-        <option value="KW">อาคารขวัญเมือง / ที่พักหญิง</option>
-        <option value="HOSP">โรงพยาบาล มน.</option>
-      </select>
-      <div id="mGuideBox" class="guidebox"><div class="guidemeta">เลือกประเภทผู้ใช้และจุดหมาย</div></div>`);
-    let mu="student";
-    const md=document.getElementById("mGuideDest"), mb=document.getElementById("mGuideBox");
-    const draw=()=>{
-      const d=md.value; if(!d){mb.innerHTML='<div class="guidemeta">เลือกประเภทผู้ใช้และจุดหมาย</div>';return;}
-      const g=(GUIDE[mu]||{})[d]; if(!g){mb.innerHTML='<div class="guidemeta">ยังไม่มีคำแนะนำที่ยืนยันแล้ว</div>';return;}
-      const x=markers.find(m=>m.id===d);
-      let second=x?`<a class="btn blue" href="https://www.google.com/maps/dir/?api=1&destination=${x.lat},${x.lon}" target="_blank">Google Maps</a>`:"";
-      if(g.preset){const h=document.getElementById(g.preset)?.href;if(h)second=`<a class="btn blue" href="${h}" target="_blank">เส้นทางงาน</a>`;}
-      mb.innerHTML=`<div class="guidetitle">${g.title}</div><div class="guidemeta">${g.text}</div><div class="guide-actions"><button class="btn" id="mFocus">ดูบนแผนที่</button>${second}</div>`;
-      document.getElementById("mFocus")?.addEventListener("click",()=>mobileFocusPoint(g.focus));
-    };
-    document.querySelectorAll("[data-muser]").forEach(x=>x.addEventListener("click",()=>{
-      document.querySelectorAll("[data-muser]").forEach(y=>y.classList.remove("active"));x.classList.add("active");mu=x.dataset.muser;draw();
-    }));
-    md.addEventListener("change",draw);
+    // One navigation control for mobile, sharing the desktop's existing source data.
+    mobileOpenSheet("นำทางด้วย Google Maps", `
+      <label for="mFrom">ต้นทาง</label>
+      <select id="mFrom" aria-label="เลือกต้นทาง"></select>
+      <div style="height:10px"></div>
+      <label for="mTo">ปลายทาง</label>
+      <select id="mTo" aria-label="เลือกปลายทาง"></select>
+      <div style="height:12px"></div>
+      <button class="btn" type="button" id="mGo" style="width:100%;min-height:48px">เปิดเส้นทางใน Google Maps</button>
+      <div class="guidemeta" style="margin-top:9px">หากไม่ทราบตำแหน่งปัจจุบัน ให้ใช้ “ตำแหน่งของคุณ (GPS)” และอนุญาตตำแหน่งใน Google Maps</div>
+    `);
+    // Sync from the same dropdowns as desktop; do not introduce another venue list.
+    populateNavigationOptions();
+    const mf=document.getElementById("mFrom"), mt=document.getElementById("mTo");
+    mf.innerHTML=from.innerHTML;
+    mt.innerHTML=to.innerHTML;
+    mf.value="__CURRENT_LOCATION__";
+    document.getElementById("mGo").addEventListener("click",()=>{
+      const selectedFrom=mf.value, selectedTo=mt.value;
+      if(!selectedTo){ alert("กรุณาเลือกปลายทาง"); return; }
+      if(!selectedFrom){ alert("กรุณาเลือกต้นทาง"); return; }
+      from.value=selectedFrom;
+      to.value=selectedTo;
+      document.getElementById("go").click();
+    });
   }
 }));
 
