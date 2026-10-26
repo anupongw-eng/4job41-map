@@ -1116,7 +1116,7 @@ function renderDay(day){
            <button class="btn" data-event-lat="${lat}" data-event-lon="${lon}" data-event-title="${e.title}" type="button">ดูตำแหน่งบนแผนที่</button>
            <a class="btn blue" href="${nav}" target="_blank" rel="noopener">นำทาง</a>
          ${qsLink}
-         </div>${dualLocations}
+         </div>${dualLocations}`
       : `<div class="schedule-missing" style="margin-top:8px">ยังไม่มีพิกัดยืนยันสำหรับสถานที่นี้ จึงยังไม่เปิดปุ่มนำทาง</div>`;
     return `
       <div class="day-event-card">
