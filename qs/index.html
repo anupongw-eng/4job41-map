@@ -204,7 +204,7 @@ h1{font-size:20px;margin:0 0 4px} .sub{font-size:12px;color:var(--muted);margin-
 
 <style id="qs-overlay-qa-style">
 #qsOverlayQA{
-  position:absolute; right:14px; top:82px; z-index:30;
+  position:absolute; right:14px; top:82px; z-index:30; pointer-events:auto;
   display:flex; gap:7px; flex-wrap:wrap; max-width:300px;
 }
 #qsOverlayQA button{
@@ -446,40 +446,39 @@ const map = new maplibregl.Map({
 });
 map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"bottom-right");
 
-// v37 FIX: QS controls share the same module scope as the MapLibre map.
-// The aligned image source, geographic coordinates and visual overlay remain unchanged.
+// QS v37.1 — button handlers live inside the same module as `map`.
+// The image-overlay coordinates and all other map features are unchanged.
 const qsToggle = document.getElementById("qsOverlayToggle");
 const qsFocus = document.getElementById("qsOverlayFocus");
-let qsOverlayVisible = true;
-
-function updateQsButton(){
-  qsToggle.textContent = `แปลน QS: ${qsOverlayVisible ? "เปิด" : "ปิด"}`;
-  qsToggle.classList.toggle("active", qsOverlayVisible);
-  qsToggle.setAttribute("aria-pressed", String(qsOverlayVisible));
+const qsLayerId = "qs-floor-overlay-layer";
+function syncQsButton() {
+  const ready = Boolean(map.getLayer(qsLayerId));
+  qsToggle.disabled = !ready;
+  const visible = ready && map.getLayoutProperty(qsLayerId, "visibility") !== "none";
+  qsToggle.textContent = ready ? `แปลน QS: ${visible ? "เปิด" : "ปิด"}` : "แปลน QS: กำลังโหลด";
+  qsToggle.classList.toggle("active", visible);
+  qsToggle.setAttribute("aria-pressed", String(visible));
 }
-
-qsToggle.addEventListener("click", () => {
-  const layerId = "qs-floor-overlay-layer";
-  if (!map.getLayer(layerId)) {
-    // Avoid showing a changed state if the style/overlay has not loaded.
-    qsToggle.title = "กำลังโหลดแปลน QS กรุณาลองอีกครั้ง";
-    return;
-  }
-  qsOverlayVisible = !qsOverlayVisible;
-  map.setLayoutProperty(layerId, "visibility", qsOverlayVisible ? "visible" : "none");
-  updateQsButton();
+qsToggle.addEventListener("click", (event) => {
+  event.preventDefault();
+  if (!map.getLayer(qsLayerId)) return;
+  const visible = map.getLayoutProperty(qsLayerId, "visibility") !== "none";
+  map.setLayoutProperty(qsLayerId, "visibility", visible ? "none" : "visible");
+  syncQsButton();
 });
-
-qsFocus.addEventListener("click", () => {
+qsFocus.addEventListener("click", (event) => {
+  event.preventDefault();
+  // Focus always re-enables the plan when available.
+  if (map.getLayer(qsLayerId)) map.setLayoutProperty(qsLayerId,"visibility","visible");
   map.easeTo({
     center:[100.1924536588474,16.746687398820605],
-    zoom:18.35,
-    pitch:0,
-    bearing:28.55375671386719,
-    duration:900
+    zoom:18.35, pitch:0, bearing:28.55375671386719, duration:900
   });
+  syncQsButton();
 });
-updateQsButton();
+// Overlay layer is registered in map.on('load') below.
+map.on("load", syncQsButton);
+syncQsButton();
 
 
 const markers = [];
@@ -594,6 +593,7 @@ map.on("load",()=>{
       }
     });
   }
+  syncQsButton();
 
   for(const f of DATA.features){
     const [lon,lat]=f.geometry.coordinates, p=f.properties, g=p.group||group(p.category);
