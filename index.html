@@ -577,20 +577,29 @@ const from=document.getElementById("from"),to=document.getElementById("to");
 // v47.2: Navigation options are populated AFTER DATA markers load into pts.
 function populateNavigationOptions(){
   const previousFrom=from.value, previousTo=to.value;
-  from.replaceChildren(new Option("เลือกต้นทาง…", ""));
+  from.replaceChildren(new Option("เลือกต้นทาง…", ""), new Option("📍 ตำแหน่งของคุณ (GPS ผ่าน Google Maps)", "__CURRENT_LOCATION__"));
   to.replaceChildren(new Option("เลือกปลายทาง…", ""));
   [...pts].sort((a,b)=>a.name.localeCompare(b.name,"th")).forEach(p=>{
     from.add(new Option(p.name,p.id));
     to.add(new Option(p.name,p.id));
   });
-  if(pts.some(p=>p.id===previousFrom)) from.value=previousFrom;
+  if(previousFrom==="__CURRENT_LOCATION__" || pts.some(p=>p.id===previousFrom)) from.value=previousFrom;
   if(pts.some(p=>p.id===previousTo)) to.value=previousTo;
 }
 map.on("load", populateNavigationOptions);
 const get=id=>pts.find(p=>p.id===id);
 document.getElementById("go").onclick=()=>{
- const a=get(from.value),b=get(to.value);
- if(!a||!b){alert("กรุณาเลือกต้นทางและปลายทาง");return;}
+ const b=get(to.value);
+ if(!b){alert("กรุณาเลือกปลายทาง");return;}
+ // Google Maps determines the user's current location after the user chooses to allow it.
+ // No coordinates are stored or sent to this event website.
+ if(from.value==="__CURRENT_LOCATION__"){
+   const url=`https://www.google.com/maps/dir/?api=1&destination=${b.lat},${b.lon}&travelmode=driving`;
+   window.open(url,"_blank","noopener");
+   return;
+ }
+ const a=get(from.value);
+ if(!a){alert("กรุณาเลือกต้นทาง หรือเลือกตำแหน่งของคุณ (GPS)");return;}
  if(a.id===b.id){alert("ต้นทางและปลายทางเป็นจุดเดียวกัน");return;}
  window.open(`https://www.google.com/maps/dir/?api=1&origin=${a.lat},${a.lon}&destination=${b.lat},${b.lon}&travelmode=driving`,"_blank","noopener");
 };
